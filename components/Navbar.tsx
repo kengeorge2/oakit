@@ -1,57 +1,83 @@
-'use client'
+'use client';
 
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
-import Logo from './Logo';
-import dynamic from 'next/dynamic';
+import Logo from '@/components/component/Logo';
+import { FiMenu, FiX } from 'react-icons/fi';
+/* import {NavbarProps}  from './Navbar'; */
 
-interface NavbarProps {
-  className?: string;
-}
 
-const Navbar: React.FC<NavbarProps> = ({ className }) => {
-  return (
-    <header
-      className={`px-4 lg:px-6 h-14 flex items-center bg-gray-900 text-gray-50 dark:bg-gray-950 dark:text-gray-50 ${className}`}
-    >
-      <Link className="flex items-center justify-center" href="#">
-         <Logo  / > 
-        <span className="ml-2 text-lg font-semibold">IT Solutions</span>
-      </Link> 
-      <nav className="ml-auto flex gap-4 sm:gap-6">
-        <Link
-          className="text-sm font-medium hover:underline underline-offset-4"
-          href="#"
+export const Navbar: React.FC<NavbarProps> = ({ className }) => {
+    const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+    const toggleMenu = () => {
+        setIsMenuOpen(!isMenuOpen);
+    };
+
+    return (
+        <header
+            className={`px-4 lg:px-6 py-3 flex items-center justify-between bg-gray-900 text-gray-50 dark:bg-gray-950 dark:text-gray-50 ${className}`}
         >
-          Services
-        </Link>
-        <Link
-          className="text-sm font-medium hover:underline underline-offset-4"
-          href="#"
-        >
-          About
-        </Link>
-        <Link
-          className="text-sm font-medium hover:underline underline-offset-4"
-          href="#"
-        >
-          Blog
-        </Link>
-        <Link
-          className="text-sm font-medium hover:underline underline-offset-4"
-          href="#"
-        >
-          Contact
-        </Link>
-        <Link
-          className="text-sm font-medium hover:underline underline-offset-4"
-          href="#"
-        >
-          Pricing
-        </Link>
-      </nav>
-    </header>
-  );
+            <Link className="flex items-center" href="/">
+                <Logo />
+                <span className="ml-2 text-lg font-semibold">IT Solutions
+                </span></Link>
+            <nav
+                className={`${isMenuOpen
+                        ? 'absolute top-14 left-0 w-full bg-gray-900 dark:bg-gray-950 p-4 z-10'
+                        : 'hidden lg:block lg:static lg:w-auto lg:p-0'}`}
+            >
+                <ul className="flex flex-col lg:flex-row lg:gap-4 sm:gap-6 text-sm font-medium">
+                    <li>
+                        <Link
+                            className="block py-2 hover:underline underline-offset-4"
+                            href="#"
+                        >
+                            Services
+                        </Link>
+                    </li>
+                    <li>
+                        <Link
+                            className="block py-2 hover:underline underline-offset-4"
+                            href="#"
+                        >
+                            About
+                        </Link>
+                    </li>
+                    <li>
+                        <Link
+                            className="block py-2 hover:underline underline-offset-4"
+                            href="#"
+                        >
+                            Blog
+                        </Link>
+                    </li>
+                    <li>
+                        <Link
+                            className="block py-2 hover:underline underline-offset-4"
+                            href="#"
+                        >
+                            Contact
+                        </Link>
+                    </li>
+                    <li>
+                        <Link
+                            className="block py-2 hover:underline underline-offset-4"
+                            href="#"
+                        >
+                            Pricing
+                        </Link>
+                    </li>
+                </ul>
+            </nav>
+            <button
+                className="lg:hidden text-gray-50 hover:text-gray-400 focus:outline-none"
+                onClick={toggleMenu}
+            >
+                {isMenuOpen ? <FiX size={24} /> : <FiMenu size={24} />}
+            </button>
+        </header>
+    );
 };
 
 export default Navbar;

@@ -25,54 +25,35 @@ import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 
+
 export function Oakit() {
   return (
-    <div key="1" className="flex flex-col min-h-[100dvh]">
-      <header className="px-4 lg:px-6 h-14 flex items-center bg-gray-900 text-gray-50 dark:bg-gray-950 dark:text-gray-50">
-        <Link className="flex items-center justify-center" href="#">
-          <MountainIcon className="h-6 w-6" />
-          <span className="ml-2 text-lg font-semibold">IT Solutions</span>
-        </Link>
-        <nav className="ml-auto flex gap-4 sm:gap-6">
-          <Link className="text-sm font-medium hover:underline underline-offset-4" href="#">
-            Services
-          </Link>
-          <Link className="text-sm font-medium hover:underline underline-offset-4" href="#">
-            About
-          </Link>
-          <Link className="text-sm font-medium hover:underline underline-offset-4" href="#">
-            Blog
-          </Link>
-          <Link className="text-sm font-medium hover:underline underline-offset-4" href="#">
-            Contact
-          </Link>
-          <Link className="text-sm font-medium hover:underline underline-offset-4" href="#">
-            Pricing
-          </Link>
-        </nav>
-      </header>
-      <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48 bg-gray-900 text-gray-50 dark:bg-gray-950 dark:text-gray-50">
-        <div className="container px-4 md:px-6">
-          <div className="flex flex-col items-center space-y-4 text-center">
-            <div className="space-y-2">
-              <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none bg-gradient-to-r from-purple-500 to-lime-500 via-blue-500 text-transparent bg-clip-text">
-                Elevate Your Business with IT Solutions
-              </h1>
-              <p className="mx-auto max-w-[700px] text-gray-300 md:text-xl dark:text-gray-400">
-                Our team of experts provides tailored IT solutions to help your business thrive in the digital age.
-              </p>
-            </div>
-            <div className="space-x-4">
-              <Link
-                className="inline-flex h-9 items-center justify-center rounded-md bg-gradient-to-r from-purple-500 to-blue-500 px-4 py-2 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gradient-to-r hover:from-purple-600 hover:to-blue-600 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 dark:bg-gray-50 dark:text-gray-900 dark:hover:bg-gray-50/90 dark:focus-visible:ring-gray-300 border-4 border-lime-500 hover:border-8 hover:border-lime-600 transition-all duration-300 ease-in-out"
-                href="#"
-              >
-                Get Started
-              </Link>
-            </div>
-          </div>
+    <div className="flex flex-col items-center space-y-4 text-center">
+      <div class="flex flex-col items-center space-y-4 text-center">
+  <section class="w-full py-12 md:py-24 lg:py-32 xl:py-48 bg-gray-900 text-gray-50 dark:bg-gray-950 dark:text-gray-50">
+    <div class="container px-4 md:px-6">
+      <div class="flex flex-col items-center space-y-4 text-center">
+        <div class="space-y-2">
+          <h1 class="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none bg-gradient-to-r from-purple-500 to-lime-500 via-blue-500 text-transparent bg-clip-text">
+            Elevate Your Business with IT Solutions
+          </h1>
+          <p class="mx-auto max-w-[700px] text-gray-300 md:text-xl dark:text-gray-400">
+            Our team of experts provides tailored IT solutions to help your business thrive in the digital age.
+          </p>
         </div>
-      </section>
+        <div class="space-x-4">
+          <Link
+            className="inline-flex h-9 items-center justify-center rounded-md bg-gradient-to-r from-purple-500 to-blue-500 px-4 py-2 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gradient-to-r hover:from-purple-600 hover:to-blue-600 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 dark:bg-gray-50 dark:text-gray-900 dark:hover:bg-gray-50/90 dark:focus-visible:ring-gray-300 border-4 border-lime-500 hover:border-8 hover:border-lime-600 transition-all duration-300 ease-in-out"
+            href="#"
+          >
+            Get Started
+          </Link>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
       <section className="w-full py-12 md:py-24 lg:py-32">
         <div className="container px-4 md:px-6 flex flex-col items-center">
           <div className="space-y-4 text-center">
@@ -445,35 +426,7 @@ export function Oakit() {
                   <Button>Submit</Button>
                 </div>
               </div>
-              <footer className="w-full bg-gray-900 text-gray-50 py-8">
-                <div className="container px-4 md:px-6 flex flex-col md:flex-row items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <MountainIcon className="h-6 w-6" />
-                    <span className="text-lg font-semibold">IT Solutions</span>
-                  </div>
-                  <nav className="flex gap-4 sm:gap-6 mt-4 md:mt-0">
-                    <Link className="text-sm font-medium hover:underline underline-offset-4" href="#">
-                      Privacy Policy
-                    </Link>
-                    <Link className="text-sm font-medium hover:underline underline-offset-4" href="#">
-                      Pricing
-                    </Link>
-                    <Link className="text-sm font-medium hover:underline underline-offset-4" href="#">
-                      Terms of Service
-                    </Link>
-                    <Link className="text-sm font-medium hover:underline underline-offset-4" href="#">
-                      Contact Us
-                    </Link>
-                  </nav>
-                  <div className="space-y-2 mt-4 md:mt-0">
-                    <h3 className="text-lg font-semibold">Location</h3>
-                    <p>123 Main Street, Anytown USA</p>
-                    <p>Phone: (555) 555-5555</p>
-                    <p>Email: info@itsolutions.com</p>
-                  </div>
-                  <p className="fixed bottom-4 right-4 text-sm">© 2024 IT Solutions. All rights reserved.</p>
-                </div>
-              </footer>
+              
             </div>
           </div>
         </div>
