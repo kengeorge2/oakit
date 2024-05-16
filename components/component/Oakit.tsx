@@ -24,6 +24,7 @@ import { AvatarImage, AvatarFallback, Avatar } from "@/components/ui/avatar"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
+import Image from 'next/image';
 
 
 export function Oakit() {
@@ -43,7 +44,7 @@ export function Oakit() {
         </div>
         <div class="space-x-4">
           <Link
-            className="inline-flex h-9 items-center justify-center rounded-md bg-gradient-to-r from-purple-500 to-blue-500 px-4 py-2 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gradient-to-r hover:from-purple-600 hover:to-blue-600 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 dark:bg-gray-50 dark:text-gray-900 dark:hover:bg-gray-50/90 dark:focus-visible:ring-gray-300 border-4 border-lime-500 hover:border-8 hover:border-lime-600 transition-all duration-300 ease-in-out"
+            className="inline-flex h-9 iWarning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-elementtems-center justify-center rounded-md bg-gradient-to-r from-purple-500 to-blue-500 px-4 py-2 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gradient-to-r hover:from-purple-600 hover:to-blue-600 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 dark:bg-gray-50 dark:text-gray-900 dark:hover:bg-gray-50/90 dark:focus-visible:ring-gray-300 border-4 border-lime-500 hover:border-8 hover:border-lime-600 transition-all duration-300 ease-in-out"
             href="#"
           >
             Get Started
@@ -181,13 +182,14 @@ export function Oakit() {
           <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 mt-8">
             <div className="rounded-lg bg-white p-6 shadow-md dark:bg-gray-950">
               <div className="space-y-4">
-                <img
-                  alt="Blog Post Image"
-                  className="rounded-lg object-cover aspect-video"
-                  height={360}
-                  src="/placeholder.svg"
-                  width={640}
-                />
+                    <Image
+                    alt="Blog Post Image"
+                    className="rounded-lg object-cover aspect-video"
+                    src="/placeholder.svg"
+                    width={640}
+                    height={360}
+                    priority
+                  />
                 <div className="space-y-2">
                   <h3 className="text-xl font-semibold">Unlocking the Power of Cloud Computing for Your Business</h3>
                   <p className="text-gray-500 dark:text-gray-400">
@@ -206,7 +208,7 @@ export function Oakit() {
             </div>
             <div className="rounded-lg bg-white p-6 shadow-md dark:bg-gray-950">
               <div className="space-y-4">
-                <img
+                <Image
                   alt="Blog Post Image"
                   className="rounded-lg object-cover aspect-video"
                   height={360}
@@ -231,7 +233,7 @@ export function Oakit() {
             </div>
             <div className="rounded-lg bg-white p-6 shadow-md dark:bg-gray-950">
               <div className="space-y-4">
-                <img
+                <Image
                   alt="Blog Post Image"
                   className="rounded-lg object-cover aspect-video"
                   height={360}
@@ -362,6 +364,7 @@ export function Oakit() {
                   </div>
                   <blockquote className="text-gray-500 dark:text-gray-400">
                     "The team's expertise and responsiveness have been invaluable in solving our complex IT challenges.
+                    // eslint-disable-next-line react/no-unescaped-entities
                     Highly satisfied with their services."
                   </blockquote>
                 </div>
