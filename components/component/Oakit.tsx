@@ -345,8 +345,8 @@ export function Oakit() {
                     </div>
                   </div>
                   <blockquote className="text-gray-500 dark:text-gray-400">
-                    "The IT solutions provided by this company have been instrumental in driving our business growth.
-                    Highly recommended!"
+                    The IT solutions provided by this company have been instrumental in driving our business growth.
+                    Highly recommended!
                   </blockquote>
                 </div>
               </div>
@@ -363,10 +363,11 @@ export function Oakit() {
                     </div>
                   </div>
                   <blockquote className="text-gray-500 dark:text-gray-400">
-                    "The team's expertise and responsiveness have been invaluable in solving our complex IT challenges.
-                    // eslint-disable-next-line react/no-unescaped-entities
-                    Highly satisfied with their services."
+                    {"// eslint-disable-next-line react/no-unescaped-entities"}
+                    The OAK IT team&apos;s expertise and responsiveness have been invaluable in solving our complex IT challenges.
+                    Highly satisfied with their services.
                   </blockquote>
+
                 </div>
               </div>
               <div className="rounded-lg bg-white p-6 shadow-md dark:bg-gray-950">
@@ -382,8 +383,8 @@ export function Oakit() {
                     </div>
                   </div>
                   <blockquote className="text-gray-500 dark:text-gray-400">
-                    "The IT solutions provided by this company have been a game-changer for our business. Highly
-                    recommended to any organization looking to improve their IT infrastructure."
+                    The IT solutions provided by this company have been a game-changer for our business. Highly
+                    recommended to any organization looking to improve their IT infrastructure.
                   </blockquote>
                 </div>
               </div>
@@ -408,7 +409,7 @@ export function Oakit() {
               <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">Get in Touch</h2>
               <p className="max-w-[600px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-gray-400">
                 Have a question or need assistance? Our team is here to help. Fill out the form below or give us a call,
-                and we'll be in touch as soon as possible.
+                and we&apos;ll be in touch as soon as possible.
               </p>
               <div className="space-y-2 p-6 bg-gray-100 rounded-lg border-4 border-lime-500 border-gray-300 animate-pulse">
                 <div className="grid grid-cols-2 gap-4">
