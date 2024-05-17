@@ -5,7 +5,7 @@ import Logo from '@/components/component/Logo';
 
 const Footer: React.FC = () => {
   return (
-    <footer className="w-full bg-gray-900 text-gray-50 py-8">
+    <section className="w-full bg-gray-900 text-gray-50 py-8">
       <div className="container mx-auto px-4 md:px-6 flex flex-col md:flex-row items-center justify-between">
         <div className="flex items-center gap-2">
           <Logo />
@@ -46,7 +46,7 @@ const Footer: React.FC = () => {
         </div>
       </div>
       
-    </footer>
+    </section>
   );
 };
 
