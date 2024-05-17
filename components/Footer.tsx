@@ -8,7 +8,7 @@ const Footer: React.FC = () => {
     <footer className="w-full bg-gray-900 text-gray-50 py-8">
       <div className="container mx-auto px-4 md:px-6 flex flex-col md:flex-row items-center justify-between">
         <div className="flex items-center gap-2">
-          <Logo className="h-6 w-6" />
+          <Logo />
           <span className="text-lg font-semibold">OAK IT Solutions</span>
         </div>
         <nav className="flex flex-col sm:flex-row gap-4 sm:gap-6 mt-4 md:mt-0">
@@ -42,8 +42,7 @@ const Footer: React.FC = () => {
           <p>Central Road, Komamboga Total Bahai, UG, Kampala</p>
           <p>Phone: (256) 704 302 335</p>
           <p>Email: info@oakitsolutionsandsupplies.com</p>
-          <p className="text-sm">Copyright © 2024 OAK IT Solutions and Supplies Ltd. All rights reserved.
-      </p>
+          <p className="text-sm">Copyright © 2024 OAK IT Solutions and Supplies Ltd. All rights reserved.</p>
         </div>
       </div>
       
