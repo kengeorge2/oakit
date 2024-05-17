@@ -30,32 +30,7 @@ import Image from 'next/image';
 export function Oakit() {
   return (
     <div className="flex flex-col items-center space-y-4 text-center">
-      <div className="flex flex-col items-center space-y-4 text-center">
-  <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48 bg-gray-900 text-gray-50 dark:bg-gray-950 dark:text-gray-50">
-    <div className="container px-4 md:px-6">
-      <div className="flex flex-col items-center space-y-4 text-center">
-        <div className="space-y-2">
-          <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none bg-gradient-to-r from-purple-500 to-lime-500 via-blue-500 text-transparent bg-clip-text">
-            Elevate Your Business with IT Solutions
-          </h1>
-          <p className="mx-auto max-w-[700px] text-gray-300 md:text-xl dark:text-gray-400">
-            Our team of experts provides tailored IT solutions to help your business thrive in the digital age.
-          </p>
-        </div>
-        <div className="space-x-4">
-          <Link
-            className="inline-flex h-9 iWarning: Using `<img>` could result in slower LCP and higher bandwidth. Consider using `<Image />` from `next/image` to automatically optimize images. This may incur additional usage or cost from your provider. See: https://nextjs.org/docs/messages/no-img-element  @next/next/no-img-elementtems-center justify-center rounded-md bg-gradient-to-r from-purple-500 to-blue-500 px-4 py-2 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gradient-to-r hover:from-purple-600 hover:to-blue-600 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 dark:bg-gray-50 dark:text-gray-900 dark:hover:bg-gray-50/90 dark:focus-visible:ring-gray-300 border-4 border-lime-500 hover:border-8 hover:border-lime-600 transition-all duration-300 ease-in-out"
-            href="#"
-          >
-            Get Started
-          </Link>
-        </div>
-      </div>
-    </div>
-  </section>
-</div>
-
-      <section className="w-full py-12 md:py-24 lg:py-32">
+            <section className="w-full py-12 md:py-24 lg:py-32">
         <div className="container px-4 md:px-6 flex flex-col items-center">
           <div className="space-y-4 text-center">
             <div className="inline-block rounded-lg bg-gray-100 px-3 py-1 text-sm dark:bg-gray-700">Our Services</div>

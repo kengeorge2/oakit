@@ -188,14 +188,16 @@ export const Navbar: React.FC<NavbarProps> = ({ className }) => {
     };
 
     return (
-        <header
-            className={`px-4 lg:px-6 py-3 flex items-center justify-between bg-gray-900 text-gray-50 dark:bg-gray-950 dark:text-gray-50 ${className}`}
-        >
+        <header>
+            <div className={`px-4 lg:px-6 py-3 flex items-center justify-between bg-gray-900 text-gray-50 dark:bg-gray-950 dark:text-gray-50 ${className}`}>
             <Link href="/">
-                <div className="flex items-center">
+            <div className="flex items-center">
+            
+                
                     <Logo />
                     <span className="ml-2 text-lg font-semibold">OAK IT Solutions</span>
-                </div>
+           
+            </div>
             </Link>
             <nav
                 className={`${isMenuOpen
@@ -236,6 +238,7 @@ export const Navbar: React.FC<NavbarProps> = ({ className }) => {
             >
                 {isMenuOpen ? <FiX size={24} /> : <FiMenu size={24} />}
             </button>
+            </div>
         </header>
     );
 };
