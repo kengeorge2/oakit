@@ -315,8 +315,8 @@ export function Oakit() {
                       <AvatarFallback>C1</AvatarFallback>
                     </Avatar>
                     <div>
-                      <h4 className="text-lg font-semibold">John Doe</h4>
-                      <p className="text-gray-500 dark:text-gray-400">CEO, Acme Inc.</p>
+                      <h4 className="text-lg font-semibold">Tonny M</h4>
+                      <p className="text-gray-500 dark:text-gray-400">Sr. IT Manager Bar Aviation</p>
                     </div>
                   </div>
                   <blockquote className="text-gray-500 dark:text-gray-400">
@@ -333,12 +333,11 @@ export function Oakit() {
                       <AvatarFallback>C2</AvatarFallback>
                     </Avatar>
                     <div>
-                      <h4 className="text-lg font-semibold">Jane Smith</h4>
-                      <p className="text-gray-500 dark:text-gray-400">CTO, Globex Inc.</p>
+                      <h4 className="text-lg font-semibold">Patrick T</h4>
+                      <p className="text-gray-500 dark:text-gray-400">ED Uganda Debt Network</p>
                     </div>
                   </div>
                   <blockquote className="text-gray-500 dark:text-gray-400">
-                    {"// eslint-disable-next-line react/no-unescaped-entities"}
                     The OAK IT team&apos;s expertise and responsiveness have been invaluable in solving our complex IT challenges.
                     Highly satisfied with their services.
                   </blockquote>
@@ -354,7 +353,7 @@ export function Oakit() {
                     </Avatar>
                     <div>
                       <h4 className="text-lg font-semibold">Michael Johnson</h4>
-                      <p className="text-gray-500 dark:text-gray-400">IT Manager, Stark Industries</p>
+                      <p className="text-gray-500 dark:text-gray-400">CEO - Hillcrest Brokers</p>
                     </div>
                   </div>
                   <blockquote className="text-gray-500 dark:text-gray-400">
@@ -379,34 +378,6 @@ export function Oakit() {
             </div>
           </div>
           <div>
-            <div className="flex flex-col items-center space-y-4">
-              <div className="inline-block rounded-lg bg-gray-100 px-3 py-1 text-sm dark:bg-gray-700">Contact Us</div>
-              <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl">Get in Touch</h2>
-              <p className="max-w-[600px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-gray-400">
-                Have a question or need assistance? Our team is here to help. Fill out the form below or give us a call,
-                and we&apos;ll be in touch as soon as possible.
-              </p>
-              <div className="space-y-2 p-6 bg-gray-100 rounded-lg border-4 border-lime-500 border-gray-300 animate-pulse">
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="name">Name</Label>
-                    <Input id="name" placeholder="Enter your name" />
-                  </div>
-                  <div className="space-y-2">
-                    <Label htmlFor="email">Email</Label>
-                    <Input id="email" placeholder="Enter your email" type="email" />
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="message">Message</Label>
-                  <Textarea className="min-h-[100px]" id="message" placeholder="Enter your message" />
-                </div>
-                <div className="flex justify-center">
-                  <Button>Submit</Button>
-                </div>
-              </div>
-              
-            </div>
           </div>
         </div>
       </section>
@@ -416,16 +387,26 @@ export function Oakit() {
 
 export default Oakit;
 
-function BriefcaseIcon(props) {
+
+// BriefcaseIcon.tsx
+
+interface BriefcaseIconProps {
+  width?: string; // Optional width prop
+  height?: string; // Optional height prop
+  color?: string; // Optional color prop
+}
+
+function BriefcaseIcon(props: BriefcaseIconProps) {
+  const { width = "24", height = "24", color = "currentColor" } = props;
+
   return (
     <svg
-      {...props}
       xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
+      width={width}
+      height={height}
       viewBox="0 0 24 24"
       fill="none"
-      stroke="currentColor"
+      stroke={color}
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
@@ -433,34 +414,44 @@ function BriefcaseIcon(props) {
       <path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
       <rect width="20" height="14" x="2" y="6" rx="2" />
     </svg>
-  )
+  );
 }
 
+// CloudIcon.tsx
 
-function CloudIcon(props) {
+interface CloudIconProps {
+  color?: string; // Optional color prop
+}
+
+function CloudIcon(props: CloudIconProps) {
+  const { color = "currentColor" } = props;
+
   return (
     <svg
-      {...props}
       xmlns="http://www.w3.org/2000/svg"
       width="24"
       height="24"
       viewBox="0 0 24 24"
       fill="none"
-      stroke="currentColor"
+      stroke={color}
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
     >
       <path d="M17.5 19H9a7 7 0 1 1 6.71-9h1.79a4.5 4.5 0 1 1 0 9Z" />
     </svg>
-  )
+  );
 }
 
+// CodeIcon.tsx
 
-function CodeIcon(props) {
+interface CodeIconProps {
+  // You can define additional props here if needed
+}
+
+function CodeIcon(props: CodeIconProps) {
   return (
     <svg
-      {...props}
       xmlns="http://www.w3.org/2000/svg"
       width="24"
       height="24"
@@ -470,18 +461,29 @@ function CodeIcon(props) {
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
+      {...props} // Spread operator after fixed attributes
     >
       <polyline points="16 18 22 12 16 6" />
       <polyline points="8 6 2 12 8 18" />
     </svg>
-  )
+  );
 }
 
+// GraduationCapIcon.tsx
 
-function GraduationCapIcon(props) {
+interface GraduationCapIconProps {
+  // You can define additional props here if needed
+}
+
+// GraduationCapIcon.tsx
+
+interface GraduationCapIconProps {
+  // You can define additional props here if needed
+}
+
+function GraduationCapIcon(props: GraduationCapIconProps) {
   return (
     <svg
-      {...props}
       xmlns="http://www.w3.org/2000/svg"
       width="24"
       height="24"
@@ -491,19 +493,24 @@ function GraduationCapIcon(props) {
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
+      {...props} // Spread operator after fixed attributes
     >
       <path d="M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z" />
       <path d="M22 10v6" />
       <path d="M6 12.5V16a6 3 0 0 0 12 0v-3.5" />
     </svg>
-  )
+  );
 }
 
+// MountainIcon.tsx
 
-function MountainIcon(props) {
+interface MountainIconProps {
+  // You can define additional props here if needed
+}
+
+function MountainIcon(props: MountainIconProps) {
   return (
     <svg
-      {...props}
       xmlns="http://www.w3.org/2000/svg"
       width="24"
       height="24"
@@ -513,17 +520,22 @@ function MountainIcon(props) {
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
+      {...props} // Spread operator after fixed attributes
     >
       <path d="m8 3 4 8 5-5 5 15H2L8 3z" />
     </svg>
-  )
+  );
 }
 
+// ServerIcon.tsx
 
-function ServerIcon(props) {
+interface ServerIconProps {
+  // You can define additional props here if needed
+}
+
+function ServerIcon(props: ServerIconProps) {
   return (
     <svg
-      {...props}
       xmlns="http://www.w3.org/2000/svg"
       width="24"
       height="24"
@@ -533,33 +545,46 @@ function ServerIcon(props) {
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
+      {...props} // Spread operator after fixed attributes
     >
       <rect width="20" height="8" x="2" y="2" rx="2" ry="2" />
       <rect width="20" height="8" x="2" y="14" rx="2" ry="2" />
       <line x1="6" x2="6.01" y1="6" y2="6" />
       <line x1="6" x2="6.01" y1="18" y2="18" />
     </svg>
-  )
+  );
 }
 
 
-function ShieldIcon(props) {
+// ShieldIcon.tsx
+
+interface ShieldIconProps {
+  color?: string; // Optional color prop
+}
+
+function ShieldIcon(props: ShieldIconProps) {
+  const { color = "currentColor" } = props;
+
   return (
     <svg
-      {...props}
       xmlns="http://www.w3.org/2000/svg"
       width="24"
       height="24"
       viewBox="0 0 24 24"
       fill="none"
-      stroke="currentColor"
+      stroke={color}
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
     >
       <path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z" />
     </svg>
-  )
+  );
 }
+
+
+
+
+
 
 
