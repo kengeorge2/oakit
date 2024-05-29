@@ -4,6 +4,7 @@ import Link from 'next/link';
 
 const FullStackCourse: React.FC = () => {
   return (
+    <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48 bg-gray-900 text-gray-50 dark:bg-gray-950 dark:text-gray-50" id="full-stack-course">
     <div className="bg-gray-950 text-white">
       <section className="container mx-auto py-20 px-4 md:px-6 lg:py-32">
         <div className="mx-auto max-w-3xl text-center">
@@ -54,6 +55,7 @@ const FullStackCourse: React.FC = () => {
         </div>
       </section>
     </div>
+    </section>
   );
 };
 

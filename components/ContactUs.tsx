@@ -140,6 +140,7 @@ const ContactUs = () => {
   };
 
   return (
+    <section id="contactUs">
     <div>
       <div className="flex flex-col items-center space-y-4 py-12">
         <div className="inline-block rounded-lg bg-gray-100 px-3 py-1 text-sm dark:bg-gray-700">
@@ -193,6 +194,7 @@ const ContactUs = () => {
         </form>
       </div>
     </div>
+    </section>
   );
 };
 

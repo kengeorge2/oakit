@@ -4,6 +4,8 @@ import React from 'react';
 
 const ServicesList = () => {
   return (
+
+    <section className="w-full py-8 md:py-16 lg:py-24 bg-gray-100 dark:bg-gray-800" id="services">
     <div className="w-full py-8 md:py-16 lg:py-24 dark:bg-gray-800 container mx-auto px-4 py-8  md:px-6 text-white">
       <h1 className="text-3xl font-bold mb-4 text-center text-black" >IT Services Offered</h1>
       
@@ -157,6 +159,7 @@ const ServicesList = () => {
 
     </div>
     </div>
+    </section>
   );
 };
 

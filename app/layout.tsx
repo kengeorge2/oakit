@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import React, { useState } from 'react';
 
 
+
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -22,10 +23,13 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={inter.className}>
-        <Navbar  />
+        <Navbar className="z-60 relative" />
         {children}
+       
         <Footer />
+        
       </body>
+     
     </html>
   );
 }
