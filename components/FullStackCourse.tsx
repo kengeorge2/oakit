@@ -18,7 +18,7 @@ const FullStackCourse: React.FC = () => {
           <p className="mt-6 text-lg leading-8">Become a full-stack web developer in just 5 weeks.</p>
           <div className="mt-10 flex items-center justify-center gap-x-6">
             <Button size="lg" variant="default">
-              <link href="https://forms.zohopublic.com/adminoakitsolutio1/form/FULLSTACKBOOTCAMPCOURSEREGISTRATION/formperma/yJZvCbkmD9gqGFOZGpI1S16cT02VhHJPLpsvSoHoCBA">Apply and Book your Seat Now</link>
+              <Link href="https://forms.zohopublic.com/adminoakitsolutio1/form/FULLSTACKBOOTCAMPCOURSEREGISTRATION/formperma/yJZvCbkmD9gqGFOZGpI1S16cT02VhHJPLpsvSoHoCBA">Apply and Book your Seat Now</Link>
             </Button>
             <Link className="text-lg font-semibold leading-6 hover:text-gray-300" href="https://forms.zohopublic.com/adminoakitsolutio1/form/FULLSTACKBOOTCAMPCOURSEREGISTRATION/formperma/yJZvCbkmD9gqGFOZGpI1S16cT02VhHJPLpsvSoHoCBA">
               Learn More
