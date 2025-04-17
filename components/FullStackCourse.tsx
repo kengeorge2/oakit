@@ -20,7 +20,7 @@ const FullStackCourse: React.FC = () => {
             <Button size="lg" variant="default">
               Apply and Book your Seat Now
             </Button>
-            <Link className="text-lg font-semibold leading-6 hover:text-gray-300" href="#">
+            <Link className="text-lg font-semibold leading-6 hover:text-gray-300" href="https://forms.zohopublic.com/adminoakitsolutio1/form/FULLSTACKBOOTCAMPCOURSEREGISTRATION/formperma/yJZvCbkmD9gqGFOZGpI1S16cT02VhHJPLpsvSoHoCBA">
               Learn More
             </Link>
           </div>
