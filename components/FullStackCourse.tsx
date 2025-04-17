@@ -9,7 +9,7 @@ const FullStackCourse: React.FC = () => {
       <section className="container mx-auto py-20 px-4 md:px-6 lg:py-32">
         <div className="mx-auto max-w-3xl text-center">
         <h3 className="text-3xl font-bold tracking-tighter sm:text-5xl bg-gradient-to-r from-blue-500 to-purple-500 text-transparent bg-clip-text">
-        <h4 className="text-3xl font-bold tracking-tighter sm:text-5xl text-lime-500 bg-clip-text">NEW </h4>DON&apos;T MISS OUT - Starting this Fall. | 1st AUGUST. Admissions Now Open |
+        <h4 className="text-3xl font-bold tracking-tighter sm:text-5xl text-lime-500 bg-clip-text">NEW </h4>DON&apos;T MISS OUT - Starting this Fall. | 1st JUNE 2025. Admissions Now Open |
              Limited Seats Only.
             </h3>
           <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
