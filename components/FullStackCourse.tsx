@@ -1,9 +1,33 @@
+"use client";
+
 import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 
 const FullStackCourse: React.FC = () => {
-  const [activeTrack, setActiveTrack] = useState<string | null>(null);
+  const [activePopup, setActivePopup] = useState<string | null>(null);
+
+  const fullCourseDetails = (
+    <div className="p-6 bg-gray-800 rounded-lg text-white">
+      <h2 className="text-2xl font-bold">Full Stack Web Development Program</h2>
+      <p className="mt-4">
+        Become a full-stack web developer in just 1.5 months through an instructor-led program.  
+        Master both frontend (HTML, CSS, JavaScript, React, Next.js) and backend (Node.js, Express.js, MongoDB) development.  
+        Build 4 capstone projects and a portfolio website to showcase your skills.  
+      </p>
+      <p className="mt-4 font-semibold">💵 Course Fee: 200 USD / 750,000 UGX</p>
+      <div className="mt-6 text-center">
+        <Button size="lg" variant="default">
+          <Link href="https://forms.zohopublic.com/adminoakitsolutio1/form/FULLSTACKBOOTCAMPCOURSEREGISTRATION/formperma/yJZvCbkmD9gqGFOZGpI1S16cT02VhHJPLpsvSoHoCBA">
+            Register Now
+          </Link>
+        </Button>
+      </div>
+      <Button size="lg" variant="secondary" className="mt-4" onClick={() => setActivePopup(null)}>
+        Close
+      </Button>
+    </div>
+  );
 
   const frontendSchedule = (
     <div className="p-6 bg-gray-800 rounded-lg text-white">
@@ -20,7 +44,7 @@ const FullStackCourse: React.FC = () => {
           </Link>
         </Button>
       </div>
-      <Button size="lg" variant="secondary" className="mt-4" onClick={() => setActiveTrack(null)}>
+      <Button size="lg" variant="secondary" className="mt-4" onClick={() => setActivePopup(null)}>
         Close
       </Button>
     </div>
@@ -41,7 +65,7 @@ const FullStackCourse: React.FC = () => {
           </Link>
         </Button>
       </div>
-      <Button size="lg" variant="secondary" className="mt-4" onClick={() => setActiveTrack(null)}>
+      <Button size="lg" variant="secondary" className="mt-4" onClick={() => setActivePopup(null)}>
         Close
       </Button>
     </div>
@@ -58,16 +82,16 @@ const FullStackCourse: React.FC = () => {
             <h1 className="text-4xl font-bold tracking-tight sm:text-5xl lg:text-6xl">
               Full Stack Web Development and Engineering Program
             </h1>
-            <p className="mt-6 text-lg leading-8">Become a full-stack web developer in just 5 weeks.</p>
+            <p className="mt-6 text-lg leading-8">Become a full-stack web developer in just 1.5 months.</p>
             <div className="mt-10 flex items-center justify-center gap-x-6">
+              <Button size="lg" variant="secondary" onClick={() => setActivePopup('fullCourse')}>
+                Learn More
+              </Button>
               <Button size="lg" variant="default">
                 <Link href="https://forms.zohopublic.com/adminoakitsolutio1/form/FULLSTACKBOOTCAMPCOURSEREGISTRATION/formperma/yJZvCbkmD9gqGFOZGpI1S16cT02VhHJPLpsvSoHoCBA">
-                  Apply and Book Your Seat Now
+                  Register Now
                 </Link>
               </Button>
-              <Link className="text-lg font-semibold leading-6 hover:text-gray-300" href="https://forms.zohopublic.com/adminoakitsolutio1/form/FULLSTACKBOOTCAMPCOURSEREGISTRATION/formperma/yJZvCbkmD9gqGFOZGpI1S16cT02VhHJPLpsvSoHoCBA">
-                Learn More
-              </Link>
             </div>
           </div>
         </section>
@@ -79,7 +103,7 @@ const FullStackCourse: React.FC = () => {
                 Master the essential skills of front-end web development, including HTML, CSS, JavaScript, and popular frameworks like React.
               </p>
               <div className="mt-8">
-                <Button size="lg" variant="secondary" onClick={() => setActiveTrack('frontend')}>
+                <Button size="lg" variant="secondary" onClick={() => setActivePopup('frontend')}>
                   Learn More
                 </Button>
               </div>
@@ -90,15 +114,16 @@ const FullStackCourse: React.FC = () => {
                 Dive into the world of back-end development, learning technologies like Node.js, Express.js, and databases like MongoDB.
               </p>
               <div className="mt-8">
-                <Button size="lg" variant="secondary" onClick={() => setActiveTrack('backend')}>
+                <Button size="lg" variant="secondary" onClick={() => setActivePopup('backend')}>
                   Learn More
                 </Button>
               </div>
             </div>
           </div>
         </section>
-        {activeTrack === 'frontend' && <div className="container mx-auto py-12">{frontendSchedule}</div>}
-        {activeTrack === 'backend' && <div className="container mx-auto py-12">{backendSchedule}</div>}
+        {activePopup === 'fullCourse' && <div className="container mx-auto py-12">{fullCourseDetails}</div>}
+        {activePopup === 'frontend' && <div className="container mx-auto py-12">{frontendSchedule}</div>}
+        {activePopup === 'backend' && <div className="container mx-auto py-12">{backendSchedule}</div>}
       </div>
     </section>
   );
