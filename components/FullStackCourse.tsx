@@ -17,7 +17,7 @@ const FullStackCourse: React.FC = () => {
             <p className="mt-6 text-lg leading-8">Become a full-stack web developer in just 1.5 months.</p>
             <div className="mt-10 flex items-center justify-center gap-x-6">
               <Button size="lg" variant="secondary">
-                <Link href="/fullstacklearnmore">Learn More</Link>
+                <Link href="/Fullstacklearnmore">Learn More</Link>
               </Button>
               <Button size="lg" variant="default">
                 <Link href="https://forms.zohopublic.com/adminoakitsolutio1/form/FULLSTACKBOOTCAMPCOURSEREGISTRATION/formperma/yJZvCbkmD9gqGFOZGpI1S16cT02VhHJPLpsvSoHoCBA">
@@ -36,7 +36,7 @@ const FullStackCourse: React.FC = () => {
               </p>
               <div className="mt-8">
                 <Button size="lg" variant="secondary">
-                  <Link href="/frontendstack">Learn More</Link>
+                  <Link href="/Frontendstack">Learn More</Link>
                 </Button>
               </div>
             </div>
@@ -47,7 +47,7 @@ const FullStackCourse: React.FC = () => {
               </p>
               <div className="mt-8">
                 <Button size="lg" variant="secondary">
-                  <Link href="/backendstack">Learn More</Link>
+                  <Link href="/Backendstack">Learn More</Link>
                 </Button>
               </div>
             </div>
