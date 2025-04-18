@@ -29,48 +29,6 @@ const FullStackCourse: React.FC = () => {
     </div>
   );
 
-  const frontendSchedule = (
-    <div className="p-6 bg-gray-800 rounded-lg text-white">
-      <h2 className="text-2xl font-bold">Frontend Track Schedule</h2>
-      <ul className="mt-4 space-y-2">
-        <li><strong>Week 1:</strong> HTML, CSS basics, Responsive layouts, Capstone: Portfolio Landing Page.</li>
-        <li><strong>Week 2:</strong> React basics, Router, Hooks, API integration, Capstone: Task Manager App.</li>
-        <li><strong>Week 3:</strong> Next.js: Routing, APIs, and integration with React.</li>
-      </ul>
-      <div className="mt-6 text-center">
-        <Button size="lg" variant="default">
-          <Link href="https://forms.zohopublic.com/adminoakitsolutio1/form/FULLSTACKBOOTCAMPCOURSEREGISTRATION/formperma/yJZvCbkmD9gqGFOZGpI1S16cT02VhHJPLpsvSoHoCBA">
-            Register Now for Frontend Track
-          </Link>
-        </Button>
-      </div>
-      <Button size="lg" variant="secondary" className="mt-4" onClick={() => setActivePopup(null)}>
-        Close
-      </Button>
-    </div>
-  );
-
-  const backendSchedule = (
-    <div className="p-6 bg-gray-800 rounded-lg text-white">
-      <h2 className="text-2xl font-bold">Backend Track Schedule</h2>
-      <ul className="mt-4 space-y-2">
-        <li><strong>Week 1:</strong> Node.js basics, Express.js routing, MongoDB CRUD, Capstone: REST API.</li>
-        <li><strong>Week 2:</strong> Authentication, JWT, Secure APIs, Capstone: Blog API.</li>
-        <li><strong>Week 3:</strong> Advanced querying, Backend integration, optional GraphQL basics.</li>
-      </ul>
-      <div className="mt-6 text-center">
-        <Button size="lg" variant="default">
-          <Link href="https://forms.zohopublic.com/adminoakitsolutio1/form/FULLSTACKBOOTCAMPCOURSEREGISTRATION/formperma/yJZvCbkmD9gqGFOZGpI1S16cT02VhHJPLpsvSoHoCBA">
-            Register Now for Backend Track
-          </Link>
-        </Button>
-      </div>
-      <Button size="lg" variant="secondary" className="mt-4" onClick={() => setActivePopup(null)}>
-        Close
-      </Button>
-    </div>
-  );
-
   return (
     <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48 bg-gray-900 text-gray-50 dark:bg-gray-950 dark:text-gray-50" id="full-stack-course">
       <div className="bg-gray-950 text-white">
@@ -95,35 +53,7 @@ const FullStackCourse: React.FC = () => {
             </div>
           </div>
         </section>
-        <section className="container mx-auto py-20 px-4 md:px-6 lg:py-32">
-          <div className="grid grid-cols-1 gap-12 md:grid-cols-2">
-            <div className="rounded-xl bg-white/10 p-8 shadow-lg backdrop-blur-sm">
-              <h2 className="text-3xl font-bold tracking-tight">Front End Track</h2>
-              <p className="mt-4 text-lg leading-8">
-                Master the essential skills of front-end web development, including HTML, CSS, JavaScript, and popular frameworks like React.
-              </p>
-              <div className="mt-8">
-                <Button size="lg" variant="secondary" onClick={() => setActivePopup('frontend')}>
-                  Learn More
-                </Button>
-              </div>
-            </div>
-            <div className="rounded-xl bg-white/10 p-8 shadow-lg backdrop-blur-sm">
-              <h2 className="text-3xl font-bold tracking-tight">Back End Track</h2>
-              <p className="mt-4 text-lg leading-8">
-                Dive into the world of back-end development, learning technologies like Node.js, Express.js, and databases like MongoDB.
-              </p>
-              <div className="mt-8">
-                <Button size="lg" variant="secondary" onClick={() => setActivePopup('backend')}>
-                  Learn More
-                </Button>
-              </div>
-            </div>
-          </div>
-        </section>
         {activePopup === 'fullCourse' && <div className="container mx-auto py-12">{fullCourseDetails}</div>}
-        {activePopup === 'frontend' && <div className="container mx-auto py-12">{frontendSchedule}</div>}
-        {activePopup === 'backend' && <div className="container mx-auto py-12">{backendSchedule}</div>}
       </div>
     </section>
   );
