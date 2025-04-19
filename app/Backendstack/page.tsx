@@ -22,7 +22,7 @@ const BackendStack: React.FC = () => {
 
         <div className="mt-12 flex justify-center gap-6">
           <Button size="lg" variant="default">
-            <Link href="https://forms.zohopublic.com/adminoakitsolutio1/form/FULLSTACKBOOTCAMPCOURSEREGISTRATION">
+            <Link href="https://forms.zohopublic.com/adminoakitsolutio1/form/FULLSTACKBOOTCAMPCOURSEREGISTRATION/formperma/yJZvCbkmD9gqGFOZGpI1S16cT02VhHJPLpsvSoHoCBA">
               Register Now
             </Link>
           </Button>
