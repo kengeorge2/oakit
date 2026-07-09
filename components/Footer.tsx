@@ -6,7 +6,7 @@ const Footer: React.FC = () => {
   return (
     <footer className="w-full bg-gray-900 text-gray-50 border-t border-gray-800">
       <div className="container mx-auto px-4 md:px-6 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           <div className="flex flex-col gap-4">
             <div className="flex items-center gap-2">
               <Logo />
@@ -26,6 +26,9 @@ const Footer: React.FC = () => {
               <Link href="/aboutUs" className="text-gray-400 hover:text-white transition-colors w-fit">
                 About
               </Link>
+              <Link href="/products" className="text-gray-400 hover:text-white transition-colors w-fit">
+                Products
+              </Link>
               <Link href="/blog" className="text-gray-400 hover:text-white transition-colors w-fit">
                 Blog
               </Link>
@@ -37,6 +40,24 @@ const Footer: React.FC = () => {
               </Link>
               <Link href="/#full-stack-course" className="text-gray-400 hover:text-white transition-colors w-fit">
                 Bootcamp
+              </Link>
+            </nav>
+          </div>
+
+          <div className="flex flex-col gap-4">
+            <h3 className="text-lg font-semibold">Products</h3>
+            <nav className="flex flex-col gap-2 text-sm">
+              <a href="https://pos.oakitsolutionsandsupplies.com/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors w-fit">
+                ClassicPOS
+              </a>
+              <a href="https://quizapp.oakitsolutionsandsupplies.com/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors w-fit">
+                QuizApp
+              </a>
+              <a href="https://blog.oakitsolutionsandsupplies.com/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors w-fit">
+                Blog
+              </a>
+              <Link href="/products" className="text-gray-400 hover:text-white transition-colors w-fit">
+                View All Products
               </Link>
             </nav>
           </div>

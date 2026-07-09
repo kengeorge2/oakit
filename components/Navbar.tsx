@@ -40,6 +40,9 @@ export const Navbar: React.FC = () => {
           <Link href="/#services" className="hover:text-white transition-colors">
             Services
           </Link>
+          <Link href="/products" className={`hover:text-white transition-colors ${isActive('/products') ? 'text-white' : ''}`}>
+            Products
+          </Link>
 
           <div className="relative" ref={dropdownRef}>
             <button
@@ -119,6 +122,9 @@ export const Navbar: React.FC = () => {
           <nav className="container mx-auto px-4 py-4 flex flex-col gap-4 text-sm font-medium text-gray-300">
             <Link href="/#services" className="py-2 hover:text-white transition-colors" onClick={() => setIsMenuOpen(false)}>
               Services
+            </Link>
+            <Link href="/products" className="py-2 hover:text-white transition-colors" onClick={() => setIsMenuOpen(false)}>
+              Products
             </Link>
 
             <button

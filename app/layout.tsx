@@ -10,7 +10,7 @@ const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "OAK IT Solutions | IT Services & Digital Transformation",
   description: "Providing cutting-edge IT solutions, POS systems, web development, and digital transformation services globally.",
-  keywords: ["IT solutions", "POS systems", "web development", "digital transformation", "Uganda"],
+  keywords: ["IT solutions", "POS systems", "web development", "digital transformation", "Uganda", "software products", "ClassicPOS", "QuizApp"],
   openGraph: {
     title: "OAK IT Solutions",
     description: "IT Solutions and Services Globally",
