@@ -14,6 +14,12 @@ const Footer: React.FC = () => {
         <nav className="flex flex-col sm:flex-row gap-4 sm:gap-6 mt-4 md:mt-0">
           <Link
             className="text-sm font-medium hover:underline underline-offset-4"
+            href="/blog"
+          >
+            Blog
+          </Link>
+          <Link
+            className="text-sm font-medium hover:underline underline-offset-4"
             href="#"
           >
             Privacy Policy

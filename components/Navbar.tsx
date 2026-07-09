@@ -341,7 +341,7 @@ export const Navbar: React.FC<NavbarProps> = ({ className }) => {
                             )}
                         </li>
                         <li>
-                            <Link href="/#blog" className="block py-2 hover:underline underline-offset-4">
+                            <Link href="/blog" className="block py-2 hover:underline underline-offset-4">
                                 Blog
                             </Link>
                         </li>
