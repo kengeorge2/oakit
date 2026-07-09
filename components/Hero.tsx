@@ -18,10 +18,10 @@ const Hero: React.FC = () => {
           </div>
           <div className="space-x-4">
             <Link
-              href="#"
+              href="/#contactUs"
               className="inline-flex h-9 items-center justify-center rounded-md bg-gradient-to-r from-purple-500 to-blue-500 px-4 py-2 text-sm font-medium text-gray-50 shadow transition-colors hover:bg-gradient-to-r hover:from-purple-600 hover:to-blue-600 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-gray-950 disabled:pointer-events-none disabled:opacity-50 dark:bg-gray-50 dark:text-gray-900 dark:hover:bg-gray-50/90 dark:focus-visible:ring-gray-300 border-4 border-lime-500 hover:border-8 hover:border-lime-600 transition-all duration-300 ease-in-out"
             >
-              Get Started
+              Contact Us
             </Link>
           </div>
         </div>

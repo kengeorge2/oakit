@@ -1,13 +1,14 @@
 import React from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import  { Button } from '@/components/ui/button';
+import Link from 'next/link';
 
 
 
 const ServicesPricing = () => {
   return (
     
-    <section className="w-full py-8 md:py-16 lg:py-24 bg-gray-100 dark:bg-gray-800 md:-mt-20 py-8 lg:py-24 " id="servicesPricing" >
+    <section className="w-full py-8 md:py-16 lg:py-24 bg-gray-100 dark:bg-gray-800 md:-mt-20 " id="servicesPricing" >
 
 
             <div className="mt-12 space-y-4 bg-gray-950 p-6 rounded-lg">
@@ -33,9 +34,11 @@ const ServicesPricing = () => {
                     <div className="text-4xl font-bold">Starts from $700</div>
                     <p className="text-gray-400">Includes basic IT support and maintenance.</p>
                     <div className="flex justify-center pb-6">
-                      <Button className="w-full py-3 bg-gradient-to-r from-purple-500 to-indigo-500 hover:bg-gradient-to-r hover:from-purple-600 hover:to-indigo-600 text-gray-200">
-                        Get Started
-                      </Button>
+                      <Link href="/#contactUs">
+                        <Button className="w-full py-3 bg-gradient-to-r from-purple-500 to-indigo-500 hover:bg-gradient-to-r hover:from-purple-600 hover:to-indigo-600 text-gray-200">
+                          Get Started
+                        </Button>
+                      </Link>
                     </div>
                   </div>
                 </CardContent>
@@ -52,9 +55,11 @@ const ServicesPricing = () => {
                     <div className="text-4xl font-bold">Starts from $1,500</div>
                     <p className="text-gray-400">Includes comprehensive IT support and management.</p>
                     <div className="flex justify-center pb-6">
-                      <Button className="w-full py-3 bg-gradient-to-r from-blue-500 to-purple-500 hover:bg-gradient-to-r hover:from-blue-600 hover:to-purple-600 text-gray-200">
-                        Get Started
-                      </Button>
+                      <Link href="/#contactUs">
+                        <Button className="w-full py-3 bg-gradient-to-r from-blue-500 to-purple-500 hover:bg-gradient-to-r hover:from-blue-600 hover:to-purple-600 text-gray-200">
+                          Get Started
+                        </Button>
+                      </Link>
                     </div>
                   </div>
                 </CardContent>

@@ -1,21 +1,6 @@
 
 'use client'; 
 
-//import { Button } from "@/components/ui/button"
-//import { Label } from "@/components/ui/label"
-//import { Input } from "@/components/ui/input"
-//import { Textarea } from "@/components/ui/textarea"
-
-// Import component definitions
-// Assuming basic form validation and success/error handling logic
-// Assuming EmailIcon and UserIcon are defined elsewhere
-
-
-//import { Form, Formik, Field, ErrorMessage } from 'formik';
-//import * as Yup from 'yup';
-//import { useRouter } from 'next/router';
-
-
 import React, { useState, ChangeEvent, FormEvent } from 'react';
 
 // Define a type for the form data
@@ -52,7 +37,7 @@ interface ButtonProps {
 }
 
 const Label = ({ htmlFor, children }: LabelProps) => (
-  <label htmlFor={htmlFor} className="block text-sm font-medium text-gray-700">
+  <label htmlFor={htmlFor} className="block text-sm font-medium text-gray-700 dark:text-gray-300">
     {children}
   </label>
 );
@@ -64,7 +49,7 @@ const Input = ({ id, type = 'text', placeholder, value, onChange }: InputProps) 
     placeholder={placeholder}
     value={value}
     onChange={onChange}
-    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
+    className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
   />
 );
 
@@ -74,7 +59,7 @@ const Textarea = ({ id, placeholder, value, onChange }: TextareaProps) => (
     placeholder={placeholder}
     value={value}
     onChange={onChange}
-    className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 min-h-[100px]"
+    className="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-gray-100 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 min-h-[100px]"
   />
 );
 
@@ -153,9 +138,9 @@ const ContactUs = () => {
         </p>
         <form
           onSubmit={handleSubmit}
-          className="space-y-2 p-6 bg-gray-100 rounded-lg border-4 border-lime-500 border-gray-300 animate-pulse"
+          className="space-y-2 p-6 bg-gray-100 dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700"
         >
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="name">Name</Label>
               <Input
