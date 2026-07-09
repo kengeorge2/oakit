@@ -1,13 +1,19 @@
 import GhostContentAPI from '@tryghost/content-api';
 
-const ghostUrl = process.env.NEXT_PUBLIC_GHOST_URL || 'https://blog.oakitsolutionsandsupplies.com';
-const ghostKey = process.env.NEXT_PUBLIC_GHOST_CONTENT_KEY || '';
+const ghostUrl = (process.env.NEXT_PUBLIC_GHOST_URL || 'https://blog.oakitsolutionsandsupplies.com').trim();
+const ghostKey = (process.env.NEXT_PUBLIC_GHOST_CONTENT_KEY || '').trim();
 
-const api = new GhostContentAPI({
-  url: ghostUrl,
-  key: ghostKey,
-  version: 'v5.0',
-});
+let api: InstanceType<typeof GhostContentAPI> | null = null;
+
+function getApi(): InstanceType<typeof GhostContentAPI> | null {
+  if (api) return api;
+  if (!ghostKey || ghostKey.length !== 26 || !/^[0-9a-f]{26}$/i.test(ghostKey)) {
+    console.warn('Ghost Content API key is missing or invalid (must be 26 hex chars). Blog features disabled.');
+    return null;
+  }
+  api = new GhostContentAPI({ url: ghostUrl, key: ghostKey, version: 'v5.0' });
+  return api;
+}
 
 export interface GhostPost {
   slug: string;
@@ -28,7 +34,9 @@ export interface GhostPostDetail extends GhostPost {
 
 export async function getPosts(limit = 10, page = 1): Promise<GhostPost[]> {
   try {
-    const posts = await api.posts.browse({
+    const client = getApi();
+    if (!client) return [];
+    const posts = await client.posts.browse({
       limit,
       page,
       include: ['tags', 'authors'],
@@ -43,7 +51,9 @@ export async function getPosts(limit = 10, page = 1): Promise<GhostPost[]> {
 
 export async function getPost(slug: string): Promise<GhostPostDetail | null> {
   try {
-    const post = await api.posts.read(
+    const client = getApi();
+    if (!client) return null;
+    const post = await client.posts.read(
       { slug },
       { include: ['tags', 'authors'], formats: ['html', 'plaintext'] }
     );
@@ -56,7 +66,9 @@ export async function getPost(slug: string): Promise<GhostPostDetail | null> {
 
 export async function getTags(): Promise<Array<{ name: string; slug: string }>> {
   try {
-    const tags = await api.tags.browse();
+    const client = getApi();
+    if (!client) return [];
+    const tags = await client.tags.browse();
     return tags as unknown as Array<{ name: string; slug: string }>;
   } catch (error) {
     console.error('Failed to fetch Ghost tags:', error);
