@@ -8,6 +8,8 @@ import Mission from "@/components/Mission";
 import Faq from "@/components/Faq";
 import FullStackCourse from "@/components/FullStackCourse";
 
+export const revalidate = 3600;
+
 export default function Home() {
   return (
     <main className="flex flex-col items-center">

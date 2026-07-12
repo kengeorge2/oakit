@@ -3,6 +3,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { getPosts } from '@/lib/ghost';
 
+export const revalidate = 3600;
+
 const Blog = async () => {
   const posts = await getPosts(3);
 
