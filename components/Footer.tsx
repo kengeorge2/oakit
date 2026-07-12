@@ -65,7 +65,7 @@ const Footer: React.FC = () => {
           <div className="flex flex-col gap-4">
             <h3 className="text-lg font-semibold">Contact</h3>
             <div className="flex flex-col gap-2 text-sm text-gray-400">
-              <p>Central Road, Komamboga Total Bahai, UG, Kampala</p>
+              <p>Central Road, next to Total Bahai, Kampala, Uganda</p>
               <p>Phone: (256) 704 302 335</p>
               <p>Email: info@oakitsolutionsandsupplies.com</p>
             </div>

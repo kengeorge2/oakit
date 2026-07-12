@@ -19,7 +19,7 @@ const ServicesPricing = () => {
             <p className="text-gray-400 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
               Choose the IT service plan that best fits your business requirements and budget.
             </p>
-            <p className="text-gray-400 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed" text-red>
+            <p className="text-gray-400 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
              * Final cost subject to change. Based on services selected, users, and inventory. </p>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-end  py-8 md:py-16  container mx-auto   "  >
               <Card className="bg-gray-800 text-gray-200 border-4 border-purple-500 hover:border-8 hover:border-purple-600 transition-all duration-300 ease-in-out">
@@ -76,9 +76,11 @@ const ServicesPricing = () => {
                     <div className="text-4xl font-bold">Request Quote</div>
                     <p className="text-gray-400">Customized IT solutions for enterprise-level businesses.</p>
                     <div className="flex justify-center pb-6">
-                      <Button className="w-full py-3 bg-gradient-to-r from-lime-500 to-purple-500 hover:bg-gradient-to-r hover:from-lime-600 hover:to-purple-600 text-gray-200">
-                        Get Quote
-                      </Button>
+                      <Link href="/#contactUs">
+                        <Button className="w-full py-3 bg-gradient-to-r from-lime-500 to-purple-500 hover:bg-gradient-to-r hover:from-lime-600 hover:to-purple-600 text-gray-200">
+                          Get Quote
+                        </Button>
+                      </Link>
                     </div>
                   </div>
                 </CardContent>

@@ -1,8 +1,12 @@
-"use client";
-
 import React from "react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Frontend Track | OAK IT Solutions Bootcamp",
+  description: "Master HTML, CSS, JavaScript, React, and Next.js in our intensive 2.5-week frontend development program.",
+};
 
 const FrontendStack: React.FC = () => {
   return (
@@ -10,14 +14,14 @@ const FrontendStack: React.FC = () => {
       <div className="container mx-auto px-6">
         <h1 className="text-4xl font-bold mb-6">Frontend Track Overview</h1>
         <p className="text-lg mb-6">
-          Master **HTML, CSS, JavaScript, React, and Next.js** in an intensive **2.5-week program**. Build interactive user interfaces and dynamic web applications.
+          Master <strong>HTML, CSS, JavaScript, React, and Next.js</strong> in an intensive <strong>2.5-week program</strong>. Build interactive user interfaces and dynamic web applications.
         </p>
 
         <h2 className="text-3xl font-semibold mt-8 mb-4">Frontend Curriculum</h2>
         <ul className="text-lg list-disc list-inside mb-8 space-y-4 text-left mx-auto max-w-2xl">
-          <li>📌 **Week 1:** HTML, CSS, JavaScript fundamentals + Portfolio Landing Page</li>
-          <li>📌 **Week 2:** React development, API integration + Task Manager App</li>
-          <li>📌 **Week 3:** Next.js mastery, dynamic routing, API fetching</li>
+          <li>📌 <strong>Week 1:</strong> HTML, CSS, JavaScript fundamentals + Portfolio Landing Page</li>
+          <li>📌 <strong>Week 2:</strong> React development, API integration + Task Manager App</li>
+          <li>📌 <strong>Week 3:</strong> Next.js mastery, dynamic routing, API fetching</li>
         </ul>
 
         <div className="mt-12 flex justify-center gap-6">

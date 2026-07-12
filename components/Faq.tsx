@@ -53,7 +53,7 @@ const Faq = () => {
             >
               <button
                 onClick={() => setOpenIndex(openIndex === index ? null : index)}
-                className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 dark:hover:bg-gray-750 transition-colors"
+                className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
               >
                 <span className="font-medium text-gray-900 dark:text-gray-100">{faq.question}</span>
                 <span className={`ml-4 transform transition-transform ${openIndex === index ? 'rotate-180' : ''}`}>
