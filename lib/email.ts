@@ -1,6 +1,13 @@
 import { Resend } from 'resend';
 
-const resend = new Resend(process.env.RESEND_API_KEY);
+let resend: Resend;
+
+function getResend(): Resend {
+  if (!resend) {
+    resend = new Resend(process.env.RESEND_API_KEY);
+  }
+  return resend;
+}
 
 const CONTACT_TO = process.env.CONTACT_EMAIL_TO || 'info@oakitsolutionsandsupplies.com';
 const CONTACT_FROM = process.env.CONTACT_EMAIL_FROM || 'Contact Form <onboarding@resend.dev>';
@@ -17,7 +24,7 @@ export async function sendAdminNotification(data: ContactEmailData) {
   console.log('[Contact Form] API key present:', !!process.env.RESEND_API_KEY);
   console.log('[Contact Form] Sending admin notification to:', CONTACT_TO);
 
-  const result = await resend.emails.send({
+  const result = await getResend().emails.send({
     from: CONTACT_FROM,
     to: CONTACT_TO,
     subject: `New Contact Form Submission from ${name}`,
@@ -62,7 +69,7 @@ export async function sendUserAutoReply(data: ContactEmailData) {
 
   console.log('[Contact Form] Sending auto-reply to:', email);
 
-  const result = await resend.emails.send({
+  const result = await getResend().emails.send({
     from: CONTACT_FROM,
     to: email,
     subject: 'Thank you for contacting OAK IT Solutions',
