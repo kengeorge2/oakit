@@ -21,8 +21,8 @@ interface ContactEmailData {
 export async function sendAdminNotification(data: ContactEmailData) {
   const { name, email, message } = data;
 
-  console.log('[Contact Form] API key present:', !!process.env.RESEND_API_KEY);
   console.log('[Contact Form] Sending admin notification to:', CONTACT_TO);
+  console.log('[Contact Form] From:', CONTACT_FROM);
 
   const result = await getResend().emails.send({
     from: CONTACT_FROM,
@@ -57,7 +57,7 @@ export async function sendAdminNotification(data: ContactEmailData) {
   });
 
   if (result.error) {
-    console.error('[Contact Form] Resend admin email error:', JSON.stringify(result.error));
+    console.error('[Contact Form] Admin email error:', JSON.stringify(result.error));
     throw new Error(`Admin email failed: ${result.error.message}`);
   }
 
@@ -92,7 +92,7 @@ export async function sendUserAutoReply(data: ContactEmailData) {
   });
 
   if (result.error) {
-    console.error('[Contact Form] Resend auto-reply error:', JSON.stringify(result.error));
+    console.error('[Contact Form] Auto-reply error:', JSON.stringify(result.error));
     throw new Error(`Auto-reply failed: ${result.error.message}`);
   }
 
