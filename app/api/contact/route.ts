@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import { sendAdminNotification, sendUserAutoReply } from '@/lib/email';
 
 const rateLimit = new Map<string, { count: number; resetAt: number }>();
-const RATE_LIMIT_WINDOW = 60 * 60 * 1000; // 1 hour
+const RATE_LIMIT_WINDOW = 60 * 60 * 1000;
 const RATE_LIMIT_MAX = 5;
 
 function checkRateLimit(ip: string): boolean {
@@ -27,13 +27,11 @@ export async function POST(request: Request) {
     const body = await request.json();
     const { name, email, message, honeypot } = body;
 
-    // Honeypot check
     if (honeypot) {
-      console.log('[Contact Form] Honeypot triggered, silently rejecting');
+      console.log('[Contact Form] Honeypot triggered');
       return NextResponse.json({ success: true });
     }
 
-    // Validation
     if (!name || typeof name !== 'string' || name.trim().length === 0) {
       return NextResponse.json({ error: 'Name is required' }, { status: 400 });
     }
@@ -47,47 +45,36 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Input too long' }, { status: 400 });
     }
 
-    // Rate limit
     const forwarded = request.headers.get('x-forwarded-for');
     const ip = forwarded?.split(',')[0]?.trim() || 'unknown';
     if (!checkRateLimit(ip)) {
-      console.log('[Contact Form] Rate limited IP:', ip);
       return NextResponse.json(
         { error: 'Too many requests. Please try again later.' },
         { status: 429 }
       );
     }
 
-    // Send emails
     const emailData = { name: name.trim(), email: email.trim(), message: message.trim() };
-    console.log('[Contact Form] Sending emails for:', emailData.email);
 
-    const [adminResult, autoReplyResult] = await Promise.allSettled([
-      sendAdminNotification(emailData),
-      sendUserAutoReply(emailData),
-    ]);
-
-    const errors: string[] = [];
-    if (adminResult.status === 'rejected') {
-      errors.push(`Admin email: ${adminResult.reason?.message || 'unknown error'}`);
-    }
-    if (autoReplyResult.status === 'rejected') {
-      errors.push(`Auto-reply: ${autoReplyResult.reason?.message || 'unknown error'}`);
+    // Send admin notification (non-fatal — log error but don't fail user)
+    try {
+      await sendAdminNotification(emailData);
+    } catch (err) {
+      console.error('[Contact Form] Admin email failed (non-fatal):', err);
     }
 
-    if (errors.length > 0) {
-      console.error('[Contact Form] Email errors:', errors);
-      // Still return success to user but log the errors
-      // The admin notification is the critical one
-      if (adminResult.status === 'rejected') {
-        return NextResponse.json(
-          { error: 'Failed to send message. Please try again or email us directly.' },
-          { status: 500 }
-        );
-      }
+    // Send user auto-reply (critical — fail if this breaks)
+    try {
+      await sendUserAutoReply(emailData);
+    } catch (err) {
+      console.error('[Contact Form] Auto-reply failed:', err);
+      return NextResponse.json(
+        { error: 'Failed to send message. Please try again or email us directly.' },
+        { status: 500 }
+      );
     }
 
-    console.log('[Contact Form] Emails sent successfully');
+    console.log('[Contact Form] Success for:', emailData.email);
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('[Contact Form] Unexpected error:', error);
