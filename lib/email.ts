@@ -14,7 +14,10 @@ interface ContactEmailData {
 export async function sendAdminNotification(data: ContactEmailData) {
   const { name, email, message } = data;
 
-  await resend.emails.send({
+  console.log('[Contact Form] API key present:', !!process.env.RESEND_API_KEY);
+  console.log('[Contact Form] Sending admin notification to:', CONTACT_TO);
+
+  const result = await resend.emails.send({
     from: CONTACT_FROM,
     to: CONTACT_TO,
     subject: `New Contact Form Submission from ${name}`,
@@ -45,12 +48,21 @@ export async function sendAdminNotification(data: ContactEmailData) {
       </div>
     `,
   });
+
+  if (result.error) {
+    console.error('[Contact Form] Resend admin email error:', JSON.stringify(result.error));
+    throw new Error(`Admin email failed: ${result.error.message}`);
+  }
+
+  console.log('[Contact Form] Admin notification sent, id:', result.data?.id);
 }
 
 export async function sendUserAutoReply(data: ContactEmailData) {
   const { name, email } = data;
 
-  await resend.emails.send({
+  console.log('[Contact Form] Sending auto-reply to:', email);
+
+  const result = await resend.emails.send({
     from: CONTACT_FROM,
     to: email,
     subject: 'Thank you for contacting OAK IT Solutions',
@@ -71,4 +83,11 @@ export async function sendUserAutoReply(data: ContactEmailData) {
       </div>
     `,
   });
+
+  if (result.error) {
+    console.error('[Contact Form] Resend auto-reply error:', JSON.stringify(result.error));
+    throw new Error(`Auto-reply failed: ${result.error.message}`);
+  }
+
+  console.log('[Contact Form] Auto-reply sent, id:', result.data?.id);
 }

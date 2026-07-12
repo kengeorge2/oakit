@@ -21,13 +21,16 @@ function checkRateLimit(ip: string): boolean {
 }
 
 export async function POST(request: Request) {
+  console.log('[Contact Form] Received POST request');
+
   try {
     const body = await request.json();
     const { name, email, message, honeypot } = body;
 
-    // Honeypot check — bots fill this, humans don't
+    // Honeypot check
     if (honeypot) {
-      return NextResponse.json({ success: true }); // Silent reject
+      console.log('[Contact Form] Honeypot triggered, silently rejecting');
+      return NextResponse.json({ success: true });
     }
 
     // Validation
@@ -48,6 +51,7 @@ export async function POST(request: Request) {
     const forwarded = request.headers.get('x-forwarded-for');
     const ip = forwarded?.split(',')[0]?.trim() || 'unknown';
     if (!checkRateLimit(ip)) {
+      console.log('[Contact Form] Rate limited IP:', ip);
       return NextResponse.json(
         { error: 'Too many requests. Please try again later.' },
         { status: 429 }
@@ -56,14 +60,37 @@ export async function POST(request: Request) {
 
     // Send emails
     const emailData = { name: name.trim(), email: email.trim(), message: message.trim() };
-    await Promise.all([
+    console.log('[Contact Form] Sending emails for:', emailData.email);
+
+    const [adminResult, autoReplyResult] = await Promise.allSettled([
       sendAdminNotification(emailData),
       sendUserAutoReply(emailData),
     ]);
 
+    const errors: string[] = [];
+    if (adminResult.status === 'rejected') {
+      errors.push(`Admin email: ${adminResult.reason?.message || 'unknown error'}`);
+    }
+    if (autoReplyResult.status === 'rejected') {
+      errors.push(`Auto-reply: ${autoReplyResult.reason?.message || 'unknown error'}`);
+    }
+
+    if (errors.length > 0) {
+      console.error('[Contact Form] Email errors:', errors);
+      // Still return success to user but log the errors
+      // The admin notification is the critical one
+      if (adminResult.status === 'rejected') {
+        return NextResponse.json(
+          { error: 'Failed to send message. Please try again or email us directly.' },
+          { status: 500 }
+        );
+      }
+    }
+
+    console.log('[Contact Form] Emails sent successfully');
     return NextResponse.json({ success: true });
   } catch (error) {
-    console.error('Contact form error:', error);
+    console.error('[Contact Form] Unexpected error:', error);
     return NextResponse.json(
       { error: 'Failed to send message. Please try again or email us directly.' },
       { status: 500 }
