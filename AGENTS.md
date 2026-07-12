@@ -18,7 +18,9 @@ Marketing website for **OAK IT Solutions and Supplies Ltd.**, an IT services com
 | UI | React 18, shadcn/ui (Radix UI) |
 | Styling | Tailwind CSS 3.4.1 |
 | Theming | next-themes (dark/light mode) |
-| Icons | react-icons |
+| Icons | lucide-react |
+| Email | Resend |
+| Toast | Sonner |
 | CMS/Blog | Ghost Content API (`@tryghost/content-api`) |
 
 ---
@@ -45,6 +47,8 @@ npm run lint       # ESLint check
 | `/Backendstack` | `app/Backendstack/page.tsx` | Backend track curriculum |
 | `/Frontendstack` | `app/Frontendstack/page.tsx` | Frontend track curriculum |
 | `/Fullstacklearnmore` | `app/Fullstacklearnmore/page.tsx` | Full-stack bootcamp details |
+| `/services/[slug]` | `app/services/[slug]/page.tsx` | Service detail page (13 services) |
+| `/api/contact` | `app/api/contact/route.ts` | Contact form API endpoint |
 
 ---
 
@@ -78,22 +82,23 @@ All 14 identified gaps have been patched:
 ## Way Forward — Remaining Items
 
 ### High Priority
-- [ ] **Contact Form Backend** — Current implementation uses `mailto:` fallback. Add a real API route or integrate with a service (Formspree, Resend, SendGrid) for server-side email delivery.
 - [ ] **API Key Security** — `NEXT_PUBLIC_GHOST_CONTENT_KEY` is exposed to the browser. Move to server-only env var (remove `NEXT_PUBLIC_` prefix).
 - [ ] **Blog HTML Sanitization** — `dangerouslySetInnerHTML` for Ghost content has no sanitization. Add DOMPurify or equivalent.
+- [ ] **Resend Domain Verification** — Contact form uses `onboarding@resend.dev`. Verify domain for production use.
 
 ### Medium Priority
 - [ ] **Footer Social Links** — Twitter/X, LinkedIn, GitHub icons link to `#`. Update with real company social URLs when available.
-- [ ] **Route Naming** — Inconsistent conventions: `aboutUs` (camelCase), `Backendstack` (PascalCase), `Fullstacklearnmore` (no separators). Standardize to kebab-case: `about-us`, `backend-stack`, `frontend-stack`, `fullstack-learn-more`.
+- [ ] **Route Naming** — Inconsistent conventions: `aboutUs` (camelCase), `Backendstack` (PascalCase), `Fullstacklearnmore` (no separators). Standardize to kebab-case.
 - [ ] **Loading States** — Add `loading.tsx` files for routes with server-side data fetching (blog pages).
-- [ ] **Hardcoded URLs** — Production URLs (`oakitsolutionsandsupplies.com`, Zoho form URL) are hardcoded in 10+ files. Extract to environment variables.
-- [ ] **Missing Metadata** — Individual blog post pages use `generateMetadata` (fine), but no OpenGraph images are configured.
+- [ ] **Hardcoded URLs** — Production URLs are hardcoded in 10+ files. Extract to environment variables.
+- [ ] **Missing Metadata** — No OpenGraph images configured for any pages.
 
 ### Low Priority
 - [ ] **README.md** — Still the default create-next-app boilerplate. Replace with project-specific documentation.
-- [ ] **Unused shadcn/ui Components** — `input.tsx`, `label.tsx`, `textarea.tsx` exist but are unused (ContactUs defines its own inline versions).
+- [ ] **Unused shadcn/ui Components** — `input.tsx`, `label.tsx`, `textarea.tsx` exist but are unused.
 - [ ] **`getTags()` in lib/ghost.ts** — Exported but never imported anywhere.
-- [ ] **ServicesList Content** — Each service category shows only 3 items with placeholder comments removed. Add more items as content becomes available.
+- [ ] **ServicesList Content** — Each service category shows only 3 items. Add more items as content becomes available.
+- [ ] **Services CMS Migration** — Move services config from `lib/services.ts` to Ghost CMS for admin-editable content.
 
 ---
 
@@ -101,6 +106,9 @@ All 14 identified gaps have been patched:
 
 ```
 NEXT_PUBLIC_GHOST_CONTENT_KEY=...   # Ghost CMS API key (currently exposed to client)
+RESEND_API_KEY=re_...               # Resend API for contact form emails
+CONTACT_EMAIL_TO=info@oakitsolutionsandsupplies.com
+CONTACT_EMAIL_FROM=Contact Form <onboarding@resend.dev>
 ```
 
 Ghost API URL fallback: `https://blog.oakitsolutionsandsupplies.com`

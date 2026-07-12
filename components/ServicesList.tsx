@@ -1,4 +1,6 @@
 import React from 'react';
+import Link from 'next/link';
+import { services } from '@/lib/services';
 
 const ServicesList = () => {
   return (
@@ -7,122 +9,31 @@ const ServicesList = () => {
         <h1 className="text-3xl font-bold mb-4 text-center text-black">IT Services Offered</h1>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-          <div className="bg-gray-700 rounded-lg p-4">
-            <h2 className="text-xl font-semibold mb-2 bg-black text-white px-4 py-2 rounded-md">Automation and Collaboration</h2>
-            <ul className="list-disc list-inside">
-              <li>Workflow Automation Solutions</li>
-              <li>Collaboration Tools Implementation</li>
-              <li>Business Process Optimization</li>
-            </ul>
-          </div>
-
-          <div className="bg-gray-700 rounded-lg p-4">
-            <h2 className="text-xl font-semibold mb-2 bg-black text-white px-4 py-2 rounded-md">AI Integrations</h2>
-            <ul className="list-disc list-inside">
-              <li>AI Chatbots for Customer Support</li>
-              <li>Predictive Analytics Solutions</li>
-              <li>Machine Learning Algorithms for Data Analysis</li>
-            </ul>
-          </div>
-
-          <div className="bg-gray-700 rounded-lg p-4">
-            <h2 className="text-xl font-semibold mb-2 bg-black text-white px-4 py-2 rounded-md">Database and Data Management</h2>
-            <ul className="list-disc list-inside">
-              <li>Database Design and Implementation</li>
-              <li>Database Administration and Maintenance</li>
-              <li>Data Warehousing Solutions</li>
-            </ul>
-          </div>
-
-          <div className="bg-gray-700 rounded-lg p-4">
-            <h2 className="text-xl font-semibold mb-2 bg-black text-white px-4 py-2 rounded-md">Cybersecurity</h2>
-            <ul className="list-disc list-inside">
-              <li>Network Security Assessments</li>
-              <li>Firewall Configuration and Management</li>
-              <li>Intrusion Detection and Prevention Systems</li>
-            </ul>
-          </div>
-
-          <div className="bg-gray-700 rounded-lg p-4">
-            <h2 className="text-xl font-semibold mb-2 bg-black text-white px-4 py-2 rounded-md">Software Development</h2>
-            <ul className="list-disc list-inside">
-              <li>Custom Software Development</li>
-              <li>Mobile App Development</li>
-              <li>Enterprise Application Development</li>
-            </ul>
-          </div>
-
-          <div className="bg-gray-700 rounded-lg p-4">
-            <h2 className="text-xl font-semibold mb-2 bg-black text-white px-4 py-2 rounded-md">Web Applications</h2>
-            <ul className="list-disc list-inside">
-              <li>Web Development Services</li>
-              <li>Content Management System Development</li>
-              <li>E-commerce Solutions Development</li>
-            </ul>
-          </div>
-
-          <div className="bg-gray-700 rounded-lg p-4">
-            <h2 className="text-xl font-semibold mb-2 bg-black text-white px-4 py-2 rounded-md">Content Creation and Social Media Management</h2>
-            <ul className="list-disc list-inside">
-              <li>Content Strategy and Planning</li>
-              <li>Social Media Management Tools Implementation</li>
-              <li>Social Media Marketing Campaigns</li>
-            </ul>
-          </div>
-
-          <div className="bg-gray-700 rounded-lg p-4">
-            <h2 className="text-xl font-semibold mb-2 bg-black text-white px-4 py-2 rounded-md">Cloud Computing Solutions</h2>
-            <ul className="list-disc list-inside">
-              <li>Cloud Strategy Consulting</li>
-              <li>Cloud Migration Services</li>
-              <li>Infrastructure as a Service (IaaS) Provisioning</li>
-            </ul>
-          </div>
-
-          <div className="bg-gray-700 rounded-lg p-4">
-            <h2 className="text-xl font-semibold mb-2 bg-black text-white px-4 py-2 rounded-md">IT Infrastructure Installation and Management</h2>
-            <ul className="list-disc list-inside">
-              <li>Network Design and Implementation</li>
-              <li>Server Installation and Configuration</li>
-              <li>Storage Solutions Deployment</li>
-            </ul>
-          </div>
-
-          <div className="bg-gray-700 rounded-lg p-4">
-            <h2 className="text-xl font-semibold mb-2 bg-black text-white px-4 py-2 rounded-md">Email and Collaboration Solutions</h2>
-            <ul className="list-disc list-inside">
-              <li>Email Hosting Services</li>
-              <li>Collaboration Platform Implementation</li>
-              <li>Document Sharing and Version Control Systems</li>
-            </ul>
-          </div>
-
-          <div className="bg-gray-700 rounded-lg p-4">
-            <h2 className="text-xl font-semibold mb-2 bg-black text-white px-4 py-2 rounded-md">Internal Tools</h2>
-            <ul className="list-disc list-inside">
-              <li>Intranet Development and Deployment</li>
-              <li>Employee Onboarding and Training Platforms</li>
-              <li>Knowledge Management Systems</li>
-            </ul>
-          </div>
-
-          <div className="bg-gray-700 rounded-lg p-4">
-            <h2 className="text-xl font-semibold mb-2 bg-black text-white px-4 py-2 rounded-md">Remote IT Support 24/7 - SLA</h2>
-            <ul className="list-disc list-inside">
-              <li>Remote Troubleshooting and Issue Resolution</li>
-              <li>24/7 Availability and Response Time SLAs</li>
-              <li>Proactive Monitoring and Maintenance</li>
-            </ul>
-          </div>
-
-          <div className="bg-gray-700 rounded-lg p-4">
-            <h2 className="text-xl font-semibold mb-2 bg-black text-white px-4 py-2 rounded-md">IT Training and R&D Solutions</h2>
-            <ul className="list-disc list-inside">
-              <li>IT Training and Certifications Consultation Services</li>
-              <li>IT Lab based Pragmatic Training</li>
-              <li>Project Based and Team effort Training</li>
-            </ul>
-          </div>
+          {services.map((service) => {
+            const Icon = service.icon;
+            return (
+              <Link
+                key={service.slug}
+                href={`/services/${service.slug}`}
+                className="bg-gray-700 rounded-lg p-4 hover:bg-gray-600 hover:scale-[1.02] transition-all duration-200 group"
+              >
+                <div className="flex items-center gap-2 mb-2">
+                  <Icon className="w-5 h-5 text-blue-400 group-hover:text-blue-300" />
+                  <h2 className="text-xl font-semibold bg-black text-white px-4 py-2 rounded-md flex-1">
+                    {service.title}
+                  </h2>
+                </div>
+                <ul className="list-disc list-inside text-gray-300">
+                  {service.features.slice(0, 3).map((feature, i) => (
+                    <li key={i}>{feature}</li>
+                  ))}
+                </ul>
+                <span className="inline-block mt-3 text-blue-400 text-sm group-hover:text-blue-300">
+                  Learn more &rarr;
+                </span>
+              </Link>
+            );
+          })}
         </div>
       </div>
     </section>

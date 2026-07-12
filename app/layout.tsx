@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "next-themes";
 import Navbar from '@/components/Navbar';
 import Footer from "@/components/Footer";
+import { Toaster } from "sonner";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -29,6 +30,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
           <Navbar />
           {children}
           <Footer />
+          <Toaster position="top-right" richColors />
         </ThemeProvider>
       </body>
     </html>
