@@ -1,10 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 
-export default function SignupPage() {
+function SignupForm() {
   const searchParams = useSearchParams();
   const planParam = searchParams.get('plan') || 'regular';
 
@@ -66,6 +66,84 @@ export default function SignupPage() {
   const selectedPlan = plans.find((p) => p.id === form.plan_id);
 
   return (
+    <form onSubmit={handleSubmit} className="space-y-4 rounded-lg border border-gray-800 bg-gray-900 p-6 shadow-sm">
+      {error && (
+        <div className="rounded-md bg-red-500/10 p-3 text-sm text-red-400">{error}</div>
+      )}
+
+      <div className="space-y-2">
+        <label className="text-sm font-medium text-gray-300" htmlFor="name">Full Name</label>
+        <input id="name" type="text" value={form.name} onChange={update('name')} required
+          className="flex h-10 w-full rounded-md border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-white" />
+      </div>
+
+      <div className="space-y-2">
+        <label className="text-sm font-medium text-gray-300" htmlFor="email">Email</label>
+        <input id="email" type="email" value={form.email} onChange={update('email')} required
+          className="flex h-10 w-full rounded-md border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-white" />
+      </div>
+
+      <div className="space-y-2">
+        <label className="text-sm font-medium text-gray-300" htmlFor="company_name">Company Name</label>
+        <input id="company_name" type="text" value={form.company_name} onChange={update('company_name')}
+          className="flex h-10 w-full rounded-md border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-white" />
+      </div>
+
+      <div className="space-y-2">
+        <label className="text-sm font-medium text-gray-300" htmlFor="company_phone">Company Phone</label>
+        <input id="company_phone" type="tel" value={form.company_phone} onChange={update('company_phone')}
+          className="flex h-10 w-full rounded-md border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-white" />
+      </div>
+
+      <div className="space-y-2">
+        <label className="text-sm font-medium text-gray-300" htmlFor="plan_id">Select Plan</label>
+        <select id="plan_id" value={form.plan_id} onChange={update('plan_id')} required
+          className="flex h-10 w-full rounded-md border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-white">
+          <option value="">Choose a plan</option>
+          {plans.map((p) => (
+            <option key={p.id} value={p.id}>
+              {p.name} — ${p.price_monthly}/mo{p.price_yearly > 0 ? ` ($${p.price_yearly}/yr)` : ''}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {selectedPlan && (
+        <div className="rounded-md bg-blue-500/10 p-3 text-sm text-blue-400">
+          <p className="font-medium">{selectedPlan.name} Plan</p>
+          <p>{selectedPlan.description}</p>
+          {selectedPlan.features && (
+            <ul className="mt-2 space-y-1">
+              {selectedPlan.features.slice(0, 3).map((f: string, i: number) => (
+                <li key={i}>✓ {f}</li>
+              ))}
+            </ul>
+          )}
+        </div>
+      )}
+
+      <div className="space-y-2">
+        <label className="text-sm font-medium text-gray-300" htmlFor="password">Password</label>
+        <input id="password" type="password" value={form.password} onChange={update('password')} required minLength={8}
+          className="flex h-10 w-full rounded-md border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-white" />
+      </div>
+
+      <div className="space-y-2">
+        <label className="text-sm font-medium text-gray-300" htmlFor="password_confirmation">Confirm Password</label>
+        <input id="password_confirmation" type="password" value={form.password_confirmation} onChange={update('password_confirmation')} required minLength={8}
+          className="flex h-10 w-full rounded-md border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-white" />
+      </div>
+
+      <button type="submit" disabled={isLoading}
+        className="flex h-10 w-full items-center justify-center rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50">
+        {isLoading ? 'Creating account...' : 'Create Account'}
+      </button>
+    </form>
+  );
+}
+
+export default function SignupPage() {
+  return (
     <div className="flex min-h-screen items-center justify-center bg-gray-950 p-4">
       <div className="w-full max-w-md space-y-6">
         <div className="text-center">
@@ -73,79 +151,9 @@ export default function SignupPage() {
           <p className="text-gray-400 mt-2">Create your account</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="space-y-4 rounded-lg border border-gray-800 bg-gray-900 p-6 shadow-sm">
-          {error && (
-            <div className="rounded-md bg-red-500/10 p-3 text-sm text-red-400">{error}</div>
-          )}
-
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-300" htmlFor="name">Full Name</label>
-            <input id="name" type="text" value={form.name} onChange={update('name')} required
-              className="flex h-10 w-full rounded-md border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-white" />
-          </div>
-
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-300" htmlFor="email">Email</label>
-            <input id="email" type="email" value={form.email} onChange={update('email')} required
-              className="flex h-10 w-full rounded-md border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-white" />
-          </div>
-
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-300" htmlFor="company_name">Company Name</label>
-            <input id="company_name" type="text" value={form.company_name} onChange={update('company_name')}
-              className="flex h-10 w-full rounded-md border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-white" />
-          </div>
-
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-300" htmlFor="company_phone">Company Phone</label>
-            <input id="company_phone" type="tel" value={form.company_phone} onChange={update('company_phone')}
-              className="flex h-10 w-full rounded-md border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-white" />
-          </div>
-
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-300" htmlFor="plan_id">Select Plan</label>
-            <select id="plan_id" value={form.plan_id} onChange={update('plan_id')} required
-              className="flex h-10 w-full rounded-md border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-white">
-              <option value="">Choose a plan</option>
-              {plans.map((p) => (
-                <option key={p.id} value={p.id}>
-                  {p.name} — ${p.price_monthly}/mo{p.price_yearly > 0 ? ` ($${p.price_yearly}/yr)` : ''}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {selectedPlan && (
-            <div className="rounded-md bg-blue-500/10 p-3 text-sm text-blue-400">
-              <p className="font-medium">{selectedPlan.name} Plan</p>
-              <p>{selectedPlan.description}</p>
-              {selectedPlan.features && (
-                <ul className="mt-2 space-y-1">
-                  {selectedPlan.features.slice(0, 3).map((f: string, i: number) => (
-                    <li key={i}>✓ {f}</li>
-                  ))}
-                </ul>
-              )}
-            </div>
-          )}
-
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-300" htmlFor="password">Password</label>
-            <input id="password" type="password" value={form.password} onChange={update('password')} required minLength={8}
-              className="flex h-10 w-full rounded-md border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-white" />
-          </div>
-
-          <div className="space-y-2">
-            <label className="text-sm font-medium text-gray-300" htmlFor="password_confirmation">Confirm Password</label>
-            <input id="password_confirmation" type="password" value={form.password_confirmation} onChange={update('password_confirmation')} required minLength={8}
-              className="flex h-10 w-full rounded-md border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-white" />
-          </div>
-
-          <button type="submit" disabled={isLoading}
-            className="flex h-10 w-full items-center justify-center rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 disabled:opacity-50">
-            {isLoading ? 'Creating account...' : 'Create Account'}
-          </button>
-        </form>
+        <Suspense fallback={<div className="text-center text-gray-400">Loading plans...</div>}>
+          <SignupForm />
+        </Suspense>
 
         <p className="text-center text-sm text-gray-400">
           Already have an account?{' '}
