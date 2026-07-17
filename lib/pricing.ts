@@ -23,7 +23,7 @@ export const pricingTiers: PricingTier[] = [
       'Email & Phone Support',
       'Monthly Health Reports',
     ],
-    cta: { label: 'Get Started', href: '/#contactUs', variant: 'default' },
+    cta: { label: 'Get Started', href: '/auth/signup?plan=basic', variant: 'default' },
     popular: false,
   },
   {
@@ -40,7 +40,7 @@ export const pricingTiers: PricingTier[] = [
       'Quarterly Business Reviews',
       'Priority Response (4hr SLA)',
     ],
-    cta: { label: 'Get Started', href: '/#contactUs', variant: 'default' },
+    cta: { label: 'Get Started', href: '/auth/signup?plan=regular', variant: 'default' },
     popular: true,
   },
   {

@@ -106,7 +106,7 @@ const ServicesPricing = () => {
                       ))}
                     </ul>
                     <div className="flex justify-center pb-6">
-                      <Link href={tier.cta.href}>
+                      <Link href={tier.id === 'advanced' ? '/#contactUs' : tier.cta.href}>
                         <Button
                           className={`w-full py-3 bg-gradient-to-r ${colors.gradient} hover:brightness-110 text-gray-200`}
                           variant={tier.cta.variant === 'outline' ? 'outline' : 'default'}
