@@ -183,6 +183,9 @@ Full SaaS client dashboard system for OAK IT Solutions customers. When users sub
 8. **TenantResolution intercepting client routes** — added skip for `/v1/client` paths
 9. **Vercel build failing** — `client-dashboard/` folder inside oakit repo caused TypeScript errors, removed
 10. **`useSearchParams` without Suspense** — Next.js 14 requires Suspense boundary, wrapped in Suspense
+11. **CORS missing oakitsolutionsandsupplies.com** — browser blocked plans fetch, added to CORS allowed origins
+12. **Laravel error response format** — frontend expected string, got nested object `{"error":{"details":{...}}}`, fixed parsing
+13. **React crash rendering object** — `setError(data.error)` where error was object, now extracts message string
 
 ---
 
@@ -231,6 +234,26 @@ docker exec classicpos-app php artisan route:clear
 docker exec classicpos-app php artisan config:clear
 docker exec classicpos-app php artisan cache:clear
 ```
+
+---
+
+## Known Issues
+
+### Email Delivery (Resend)
+- **Status:** Registration works, but verification email not delivering
+- **Cause:** Likely `onboarding@resend.dev` sandbox address limitations or Resend free tier restrictions
+- **Workaround:** Admin can manually verify users via `php artisan tinker`:
+  ```php
+  DB::connection('landlord')->table('client_users')->where('email','user@email.com')->update(['email_verified_at'=>now()]);
+  ```
+- **Fix needed:** Verify `oakitsolutionsandsupplies.com` domain in Resend dashboard, or use a verified domain for the from address
+- **Check:** Vercel function logs for `[Verification] Resend error:` to see actual error
+
+### React Hydration Warnings (#418, #423)
+- **Status:** Console warnings on page load
+- **Cause:** Next.js SSR/client mismatch with dynamic plans data
+- **Impact:** Cosmetic only — doesn't break functionality
+- **Fix:** Can be resolved by adding `suppressHydrationWarning` or using proper Suspense boundaries
 
 ---
 
