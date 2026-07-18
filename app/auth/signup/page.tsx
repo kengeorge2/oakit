@@ -93,14 +93,23 @@ function SignupForm() {
       const data = await res.json();
 
       if (!res.ok) {
-        if (data.errors) {
+        if (data.error?.details) {
+          const serverErrors: Record<string, string> = {};
+          for (const [field, msgs] of Object.entries(data.error.details)) {
+            serverErrors[field] = (msgs as string[])[0];
+          }
+          setErrors(serverErrors);
+          setError('Please fix the errors below');
+        } else if (data.errors) {
           const serverErrors: Record<string, string> = {};
           for (const [field, msgs] of Object.entries(data.errors)) {
             serverErrors[field] = (msgs as string[])[0];
           }
           setErrors(serverErrors);
+          setError('Please fix the errors below');
         } else {
-          setError(data.error || 'Registration failed');
+          const msg = typeof data.error === 'string' ? data.error : data.error?.message || data.message || 'Registration failed';
+          setError(msg);
         }
         return;
       }
@@ -247,7 +256,7 @@ function SignupForm() {
         <label className="text-sm font-medium text-gray-300" htmlFor="password">
           Password <span className="text-red-400">*</span>
         </label>
-        <input id="password" type="password" value={form.password} onChange={update('password')}
+        <input id="password" type="password" autoComplete="new-password" value={form.password} onChange={update('password')}
           className={`flex h-10 w-full rounded-md border bg-gray-800 px-3 py-2 text-sm text-white ${errors.password ? 'border-red-500' : 'border-gray-700'}`}
           placeholder="Min 8 characters" />
         {errors.password && <p className="text-xs text-red-400">{errors.password}</p>}
@@ -257,7 +266,7 @@ function SignupForm() {
         <label className="text-sm font-medium text-gray-300" htmlFor="password_confirmation">
           Confirm Password <span className="text-red-400">*</span>
         </label>
-        <input id="password_confirmation" type="password" value={form.password_confirmation} onChange={update('password_confirmation')}
+        <input id="password_confirmation" type="password" autoComplete="new-password" value={form.password_confirmation} onChange={update('password_confirmation')}
           className={`flex h-10 w-full rounded-md border bg-gray-800 px-3 py-2 text-sm text-white ${errors.password_confirmation ? 'border-red-500' : 'border-gray-700'}`}
           placeholder="Re-enter password" />
         {errors.password_confirmation && <p className="text-xs text-red-400">{errors.password_confirmation}</p>}

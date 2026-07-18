@@ -30,7 +30,8 @@ export default function SigninPage() {
           setVerificationRequired(true);
           return;
         }
-        throw new Error(data.error || 'Login failed');
+        const msg = typeof data.error === 'string' ? data.error : data.error?.message || data.message || 'Login failed';
+        throw new Error(msg);
       }
 
       localStorage.setItem('auth_token', data.token);
