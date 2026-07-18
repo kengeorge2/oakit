@@ -133,7 +133,7 @@ const ServicesPricing = () => {
               >
                 <button
                   onClick={() => setOpenFaq(openFaq === index ? null : index)}
-                  className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-750 transition-colors"
+                  className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-700 transition-colors"
                 >
                   <span className="font-medium text-gray-100">{faq.question}</span>
                   <span className={`ml-4 transform transition-transform ${openFaq === index ? 'rotate-180' : ''}`}>
