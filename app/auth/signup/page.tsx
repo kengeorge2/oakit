@@ -139,12 +139,15 @@ function SignupForm() {
   if (step === 'verify-sent') {
     return (
       <div className="rounded-lg border border-gray-800 bg-gray-900 p-8 shadow-sm text-center space-y-4">
-        <div className="rounded-full h-16 w-16 bg-blue-500/20 flex items-center justify-center mx-auto">
-          <svg className="w-8 h-8 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+        <div className="rounded-full h-16 w-16 bg-green-500/20 flex items-center justify-center mx-auto">
+          <svg className="w-8 h-8 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
           </svg>
         </div>
-        <h2 className="text-xl font-bold text-white">Check Your Email</h2>
+        <h2 className="text-xl font-bold text-white">Account Created!</h2>
+        <p className="text-gray-400">
+          Your OAK IT Solutions account has been created successfully.
+        </p>
         <p className="text-gray-400">
           We&apos;ve sent a verification link to<br />
           <span className="text-white font-medium">{form.email}</span>
@@ -152,6 +155,9 @@ function SignupForm() {
         <p className="text-gray-500 text-sm">
           Click the link in the email to verify your account and access the dashboard.
           The link expires in 24 hours.
+        </p>
+        <p className="text-gray-600 text-xs">
+          Don&apos;t forget to check your spam/junk folder if you don&apos;t see the email.
         </p>
         <div className="pt-4 space-y-2">
           <button
@@ -196,7 +202,7 @@ function SignupForm() {
         <label className="text-sm font-medium text-gray-300" htmlFor="email">
           Email <span className="text-red-400">*</span>
         </label>
-        <input id="email" type="email" value={form.email} onChange={update('email')}
+        <input id="email" type="email" autoComplete="username" value={form.email} onChange={update('email')}
           className={`flex h-10 w-full rounded-md border bg-gray-800 px-3 py-2 text-sm text-white ${errors.email ? 'border-red-500' : 'border-gray-700'}`}
           placeholder="you@company.com" />
         {errors.email && <p className="text-xs text-red-400">{errors.email}</p>}
