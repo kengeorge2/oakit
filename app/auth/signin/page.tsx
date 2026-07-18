@@ -7,6 +7,7 @@ export default function SigninPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [verificationRequired, setVerificationRequired] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
   const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://posapp.oakitsolutionsandsupplies.com/api/v1/client';
@@ -14,6 +15,7 @@ export default function SigninPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+    setVerificationRequired(false);
     setIsLoading(true);
     try {
       const res = await fetch(`${API_URL}/auth/login`, {
@@ -22,7 +24,14 @@ export default function SigninPage() {
         body: JSON.stringify({ email, password }),
       });
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Login failed');
+
+      if (!res.ok) {
+        if (data.verification_required) {
+          setVerificationRequired(true);
+          return;
+        }
+        throw new Error(data.error || 'Login failed');
+      }
 
       localStorage.setItem('auth_token', data.token);
       window.location.href = 'https://dashboard.oakitsolutionsandsupplies.com/dashboard';
@@ -31,6 +40,16 @@ export default function SigninPage() {
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const resendVerification = async () => {
+    try {
+      await fetch('/api/auth/send-verification', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+    } catch {}
   };
 
   return (
@@ -44,6 +63,16 @@ export default function SigninPage() {
         <form onSubmit={handleSubmit} className="space-y-4 rounded-lg border border-gray-800 bg-gray-900 p-6 shadow-sm">
           {error && (
             <div className="rounded-md bg-red-500/10 p-3 text-sm text-red-400">{error}</div>
+          )}
+
+          {verificationRequired && (
+            <div className="rounded-md bg-yellow-500/10 p-3 text-sm text-yellow-400">
+              <p className="font-medium">Email not verified</p>
+              <p className="mt-1">Please check your email for the verification link.</p>
+              <button type="button" onClick={resendVerification} className="mt-2 text-yellow-300 underline hover:text-yellow-200">
+                Resend verification email
+              </button>
+            </div>
           )}
 
           <div className="space-y-2">
