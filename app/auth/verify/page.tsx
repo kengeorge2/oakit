@@ -4,13 +4,19 @@ import { useState, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
 
+function extractError(data: any): string {
+  if (typeof data.error === 'string') return data.error;
+  if (data.error?.message) return data.error.message;
+  if (data.message) return data.message;
+  return 'An unexpected error occurred';
+}
+
 function VerifyForm() {
   const searchParams = useSearchParams();
   const token = searchParams.get('token');
 
   const [status, setStatus] = useState<'loading' | 'success' | 'error'>('loading');
   const [message, setMessage] = useState('');
-  const [tokenData, setTokenData] = useState<any>(null);
 
   useEffect(() => {
     if (!token) {
@@ -26,13 +32,19 @@ function VerifyForm() {
     })
       .then((res) => res.json())
       .then((data) => {
-        if (data.error) {
+        if (!data.success) {
           setStatus('error');
-          setMessage(data.error);
+          const errMsg = extractError(data);
+          if (errMsg.includes('already used') || errMsg.includes('already been used')) {
+            setMessage('This verification link has already been used. Please sign in to access your account.');
+          } else if (errMsg.includes('expired')) {
+            setMessage('This verification link has expired. Please request a new one from the sign-in page.');
+          } else {
+            setMessage(errMsg);
+          }
         } else {
           setStatus('success');
           setMessage('Email verified successfully! Redirecting to dashboard...');
-          setTokenData(data);
           localStorage.setItem('auth_token', data.token);
           setTimeout(() => {
             window.location.href = 'https://dashboard.oakitsolutionsandsupplies.com/dashboard';
@@ -79,16 +91,19 @@ function VerifyForm() {
               </svg>
             </div>
             <p className="text-red-400">{message}</p>
-            <Link href="/auth/signup" className="inline-block text-blue-400 hover:underline mt-2">
-              Create a new account
-            </Link>
+            <div className="pt-2 space-y-2">
+              <Link href="/auth/signin" className="inline-block text-blue-400 hover:underline">
+                Go to Sign In
+              </Link>
+              <div>
+                <Link href="/auth/signup" className="text-gray-500 hover:text-gray-300 text-sm">
+                  Create a new account
+                </Link>
+              </div>
+            </div>
           </div>
         )}
       </div>
-
-      <p className="text-center text-sm text-gray-400">
-        <Link href="/auth/signin" className="text-blue-400 hover:underline">Back to Sign In</Link>
-      </p>
     </div>
   );
 }

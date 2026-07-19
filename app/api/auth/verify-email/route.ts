@@ -2,6 +2,13 @@ import { NextRequest, NextResponse } from 'next/server';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://posapp.oakitsolutionsandsupplies.com/api/v1/client';
 
+function extractError(data: any): string {
+  if (typeof data.error === 'string') return data.error;
+  if (data.error?.message) return data.error.message;
+  if (data.message) return data.message;
+  return 'Verification failed';
+}
+
 export async function POST(request: NextRequest) {
   try {
     const { token } = await request.json();
@@ -19,12 +26,12 @@ export async function POST(request: NextRequest) {
     const data = await res.json();
 
     if (!res.ok) {
-      return NextResponse.json({ error: data.error || 'Verification failed' }, { status: res.status });
+      return NextResponse.json({ error: extractError(data), success: false }, { status: res.status });
     }
 
     return NextResponse.json(data);
   } catch (err: any) {
     console.error('[Verify Email] Error:', err.message);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    return NextResponse.json({ error: 'Internal server error', success: false }, { status: 500 });
   }
 }

@@ -3,7 +3,14 @@ import { Resend } from 'resend';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://posapp.oakitsolutionsandsupplies.com/api/v1/client';
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
-const CONTACT_FROM = process.env.CONTACT_EMAIL_FROM || 'OAK IT Solutions <onboarding@resend.dev>';
+const CONTACT_FROM = process.env.CONTACT_EMAIL_FROM || 'notifications@notifications.oakitsolutionsandsupplies.com';
+
+function extractError(data: any): string {
+  if (typeof data.error === 'string') return data.error;
+  if (data.error?.message) return data.error.message;
+  if (data.message) return data.message;
+  return 'Failed to generate token';
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -22,14 +29,14 @@ export async function POST(request: NextRequest) {
     const tokenData = await tokenRes.json();
 
     if (!tokenRes.ok) {
-      return NextResponse.json({ error: tokenData.error || 'Failed to generate token' }, { status: tokenRes.status });
+      return NextResponse.json({ error: extractError(tokenData) }, { status: tokenRes.status });
     }
 
     const verificationUrl = `https://oakitsolutionsandsupplies.com/auth/verify?token=${tokenData.token}`;
 
     if (!RESEND_API_KEY) {
       console.error('[Verification] RESEND_API_KEY not set');
-      return NextResponse.json({ error: 'Email service not configured' }, { status: 500 });
+      return NextResponse.json({ success: true, message: 'Account created but email service not configured. Please contact support.' });
     }
 
     const resend = new Resend(RESEND_API_KEY);
@@ -41,7 +48,7 @@ export async function POST(request: NextRequest) {
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
           <h2 style="color: #1f2937; border-bottom: 2px solid #3b82f6; padding-bottom: 8px;">
-            Verify Your Email Address
+            Welcome to OAK IT Solutions!
           </h2>
           <p style="color: #374151; line-height: 1.6; margin-top: 16px;">
             Thank you for creating an account with OAK IT Solutions. Please click the button below to verify your email address and activate your account.
@@ -75,6 +82,6 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ success: true, message: 'Verification email sent' });
   } catch (err: any) {
     console.error('[Verification] Error:', err.message);
-    return NextResponse.json({ error: 'Internal server error' }, { status: 500 });
+    return NextResponse.json({ error: 'Internal server error', success: false }, { status: 500 });
   }
 }

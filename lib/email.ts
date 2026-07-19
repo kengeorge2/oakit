@@ -9,8 +9,8 @@ function getResend(): Resend {
   return resend;
 }
 
-const CONTACT_TO = process.env.CONTACT_EMAIL_TO || 'info@oakitsolutionsandsupplies.com';
-const CONTACT_FROM = process.env.CONTACT_EMAIL_FROM || 'Contact Form <onboarding@resend.dev>';
+const CONTACT_TO = (process.env.CONTACT_EMAIL_TO || 'kokello@oakitsolutionsandsupplies.com,kengeorge2@yahoo.com').split(',');
+const CONTACT_FROM = process.env.CONTACT_EMAIL_FROM || 'website-form@notifications.oakitsolutionsandsupplies.com';
 
 interface ContactEmailData {
   name: string;
@@ -27,6 +27,7 @@ export async function sendAdminNotification(data: ContactEmailData) {
   const result = await getResend().emails.send({
     from: CONTACT_FROM,
     to: CONTACT_TO,
+    reply_to: email,
     subject: `New Contact Form Submission from ${name}`,
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
@@ -50,7 +51,7 @@ export async function sendAdminNotification(data: ContactEmailData) {
           <p style="color: #1f2937; margin: 0; white-space: pre-wrap;">${message}</p>
         </div>
         <p style="margin-top: 16px; font-size: 12px; color: #9ca3af;">
-          Submitted via OAK IT Solutions contact form
+          Submitted via OAK IT Solutions contact form — Reply to this email to respond directly to ${name}.
         </p>
       </div>
     `,

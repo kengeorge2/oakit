@@ -12,6 +12,13 @@ export default function SigninPage() {
 
   const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://posapp.oakitsolutionsandsupplies.com/api/v1/client';
 
+  const extractError = (data: any): string => {
+    if (typeof data.error === 'string') return data.error;
+    if (data.error?.message) return data.error.message;
+    if (data.message) return data.message;
+    return 'Login failed';
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
@@ -30,8 +37,7 @@ export default function SigninPage() {
           setVerificationRequired(true);
           return;
         }
-        const msg = typeof data.error === 'string' ? data.error : data.error?.message || data.message || 'Login failed';
-        throw new Error(msg);
+        throw new Error(extractError(data));
       }
 
       localStorage.setItem('auth_token', data.token);
