@@ -9,6 +9,7 @@ export default function SigninPage() {
   const [error, setError] = useState('');
   const [verificationRequired, setVerificationRequired] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [resendStatus, setResendStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
 
   const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://posapp.oakitsolutionsandsupplies.com/api/v1/client';
 
@@ -23,6 +24,7 @@ export default function SigninPage() {
     e.preventDefault();
     setError('');
     setVerificationRequired(false);
+    setResendStatus('idle');
     setIsLoading(true);
     try {
       const res = await fetch(`${API_URL}/auth/login`, {
@@ -50,13 +52,21 @@ export default function SigninPage() {
   };
 
   const resendVerification = async () => {
+    setResendStatus('sending');
     try {
-      await fetch('/api/auth/send-verification', {
+      const res = await fetch('/api/auth/send-verification', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ email }),
       });
-    } catch {}
+      if (res.ok) {
+        setResendStatus('sent');
+      } else {
+        setResendStatus('error');
+      }
+    } catch {
+      setResendStatus('error');
+    }
   };
 
   return (
@@ -76,22 +86,41 @@ export default function SigninPage() {
             <div className="rounded-md bg-yellow-500/10 p-3 text-sm text-yellow-400">
               <p className="font-medium">Email not verified</p>
               <p className="mt-1">Please check your email for the verification link.</p>
-              <button type="button" onClick={resendVerification} className="mt-2 text-yellow-300 underline hover:text-yellow-200">
-                Resend verification email
-              </button>
+
+              {resendStatus === 'idle' && (
+                <button type="button" onClick={resendVerification}
+                  className="mt-2 text-yellow-300 underline hover:text-yellow-200">
+                  Resend verification email
+                </button>
+              )}
+              {resendStatus === 'sending' && (
+                <p className="mt-2 text-yellow-300">Sending...</p>
+              )}
+              {resendStatus === 'sent' && (
+                <p className="mt-2 text-green-400">✓ Verification email sent! Check your inbox and spam folder.</p>
+              )}
+              {resendStatus === 'error' && (
+                <div>
+                  <p className="mt-2 text-red-400">Failed to send email.</p>
+                  <button type="button" onClick={resendVerification}
+                    className="mt-1 text-yellow-300 underline hover:text-yellow-200">
+                    Try again
+                  </button>
+                </div>
+              )}
             </div>
           )}
 
           <div className="space-y-2">
             <label className="text-sm font-medium text-gray-300" htmlFor="email">Email</label>
-            <input id="email" type="email" value={email} onChange={(e) => setEmail(e.target.value)} required
+            <input id="email" type="email" autoComplete="username" value={email} onChange={(e) => setEmail(e.target.value)} required
               className="flex h-10 w-full rounded-md border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-white"
               placeholder="you@company.com" />
           </div>
 
           <div className="space-y-2">
             <label className="text-sm font-medium text-gray-300" htmlFor="password">Password</label>
-            <input id="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} required
+            <input id="password" type="password" autoComplete="current-password" value={password} onChange={(e) => setPassword(e.target.value)} required
               className="flex h-10 w-full rounded-md border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-white"
               placeholder="Your password" />
           </div>
