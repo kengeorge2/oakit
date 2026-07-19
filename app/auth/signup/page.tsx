@@ -23,6 +23,9 @@ function SignupForm() {
   const [isLoading, setIsLoading] = useState(false);
   const [step, setStep] = useState<'form' | 'verify-sent'>('form');
 
+  const [resendStatus, setResendStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
+  const [verificationLink, setVerificationLink] = useState('');
+
   const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://posapp.oakitsolutionsandsupplies.com/api/v1/client';
 
   useEffect(() => {
@@ -116,11 +119,26 @@ function SignupForm() {
 
       setStep('verify-sent');
 
-      fetch('/api/auth/send-verification', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email: form.email }),
-      }).catch(() => {});
+      try {
+        const emailRes = await fetch('/api/auth/send-verification', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: form.email }),
+        });
+        const emailData = await emailRes.json();
+        if (emailRes.ok && emailData.verification_url) {
+          setVerificationLink(emailData.verification_url);
+          setResendStatus('sent');
+        } else if (emailRes.ok) {
+          setResendStatus('sent');
+        } else {
+          console.error('[Signup] Email send failed:', emailData);
+          setResendStatus('error');
+        }
+      } catch (e) {
+        console.error('[Signup] Email send error:', e);
+        setResendStatus('error');
+      }
 
     } catch (err: any) {
       setError(err.message || 'Something went wrong');
@@ -132,6 +150,28 @@ function SignupForm() {
   const update = (field: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setForm((prev) => ({ ...prev, [field]: e.target.value }));
     if (errors[field]) setErrors((prev) => ({ ...prev, [field]: '' }));
+  };
+
+  const resendEmail = async () => {
+    setResendStatus('sending');
+    try {
+      const res = await fetch('/api/auth/send-verification', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email: form.email }),
+      });
+      const data = await res.json();
+      if (res.ok && data.verification_url) {
+        setVerificationLink(data.verification_url);
+        setResendStatus('sent');
+      } else if (res.ok) {
+        setResendStatus('sent');
+      } else {
+        setResendStatus('error');
+      }
+    } catch {
+      setResendStatus('error');
+    }
   };
 
   const selectedPlan = plans.find((p) => p.id === form.plan_id);
@@ -159,19 +199,32 @@ function SignupForm() {
         <p className="text-gray-600 text-xs">
           Don&apos;t forget to check your spam/junk folder if you don&apos;t see the email.
         </p>
+
+        {verificationLink && (
+          <div className="rounded-md bg-gray-800 p-3 text-xs">
+            <p className="text-gray-400 mb-1">Direct verification link:</p>
+            <a href={verificationLink} className="text-blue-400 break-all hover:underline">{verificationLink}</a>
+          </div>
+        )}
+
         <div className="pt-4 space-y-2">
-          <button
-            onClick={() => {
-              fetch('/api/auth/send-verification', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email: form.email }),
-              });
-            }}
-            className="text-blue-400 hover:underline text-sm"
-          >
-            Didn&apos;t receive it? Resend email
-          </button>
+          {resendStatus === 'idle' && (
+            <button onClick={resendEmail} className="text-blue-400 hover:underline text-sm">
+              Didn&apos;t receive it? Resend email
+            </button>
+          )}
+          {resendStatus === 'sending' && (
+            <p className="text-yellow-400 text-sm">Sending...</p>
+          )}
+          {resendStatus === 'sent' && (
+            <p className="text-green-400 text-sm">✓ Email sent! Check your inbox and spam folder.</p>
+          )}
+          {resendStatus === 'error' && (
+            <div>
+              <p className="text-red-400 text-sm">Failed to send email.</p>
+              <button onClick={resendEmail} className="text-blue-400 hover:underline text-sm mt-1">Try again</button>
+            </div>
+          )}
           <div>
             <Link href="/auth/signin" className="text-gray-500 hover:text-gray-300 text-sm">
               Back to Sign In

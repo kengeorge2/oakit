@@ -79,7 +79,7 @@ export async function POST(request: NextRequest) {
       console.error('[Verification] Resend error:', JSON.stringify(error));
     }
 
-    return NextResponse.json({ success: true, message: 'Verification email sent' });
+    return NextResponse.json({ success: true, message: 'Verification email sent', verification_url: verificationUrl });
   } catch (err: any) {
     console.error('[Verification] Error:', err.message);
     return NextResponse.json({ error: 'Internal server error', success: false }, { status: 500 });
