@@ -27,7 +27,7 @@ export async function sendAdminNotification(data: ContactEmailData) {
   const result = await getResend().emails.send({
     from: CONTACT_FROM,
     to: CONTACT_TO,
-    reply_to: email,
+    replyTo: email,
     subject: `New Contact Form Submission from ${name}`,
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
