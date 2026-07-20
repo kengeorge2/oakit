@@ -1,7 +1,7 @@
 import GhostContentAPI from '@tryghost/content-api';
 
-const ghostUrl = (process.env.NEXT_PUBLIC_GHOST_URL || 'https://blog.oakitsolutionsandsupplies.com').trim();
-const ghostKey = (process.env.NEXT_PUBLIC_GHOST_CONTENT_KEY || '').trim();
+const ghostUrl = (process.env.GHOST_URL || 'https://blog.oakitsolutionsandsupplies.com').trim();
+const ghostKey = (process.env.GHOST_CONTENT_KEY || '').trim();
 
 let api: InstanceType<typeof GhostContentAPI> | null = null;
 

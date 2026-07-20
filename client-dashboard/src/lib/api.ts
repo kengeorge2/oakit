@@ -52,12 +52,26 @@ export const createTicket = (data: { subject: string; description: string; prior
   apiFetch<any>('/tickets', { method: 'POST', body: JSON.stringify(data) });
 export const replyToTicket = (id: string, message: string) =>
   apiFetch<any>(`/tickets/${id}/reply`, { method: 'POST', body: JSON.stringify({ message }) });
+export const closeTicket = (id: string) =>
+  apiFetch<any>(`/tickets/${id}/close`, { method: 'POST' });
+export const reopenTicket = (id: string) =>
+  apiFetch<any>(`/tickets/${id}/reopen`, { method: 'POST' });
 
 // Billing
 export const getBilling = (params?: Record<string, string>) => {
   const query = params ? '?' + new URLSearchParams(params).toString() : '';
   return apiFetch<any>(`/billing${query}`);
 };
+export const checkout = (data: { subscription_id: string; billing_cycle: string }) =>
+  apiFetch<any>('/billing/checkout', { method: 'POST', body: JSON.stringify(data) });
+export const getInvoice = (transactionId: string) =>
+  apiFetch<any>(`/billing/invoice/${transactionId}`);
+
+// Subscriptions management
+export const changePlan = (id: string, data: { plan_id: string; billing_cycle: string }) =>
+  apiFetch<any>(`/subscriptions/${id}/change-plan`, { method: 'PUT', body: JSON.stringify(data) });
+export const cancelSubscription = (id: string) =>
+  apiFetch<any>(`/subscriptions/${id}/cancel`, { method: 'POST' });
 
 // Plans (public)
 export const getPlans = () => apiFetch<any[]>('/plans');

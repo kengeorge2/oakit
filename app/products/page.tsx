@@ -8,6 +8,14 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Our Products | OAK IT Solutions',
     description: 'Cloud-based POS, quiz platform, and tech insights from OAK IT Solutions.',
+    images: [
+      {
+        url: 'https://oakitsolutionsandsupplies.com/images/Logo.png',
+        width: 600,
+        height: 300,
+        alt: 'OAK IT Solutions Products',
+      },
+    ],
   },
 };
 

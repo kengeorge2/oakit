@@ -62,7 +62,7 @@ export const Navbar: React.FC = () => {
             {isDropdownOpen && (
               <ul className="absolute left-0 mt-2 w-48 bg-gray-800 rounded-md shadow-lg z-50 border border-gray-700">
                 <li>
-                  <Link href="/aboutUs" scroll={false} className="block px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white rounded-t-md" onClick={() => setIsDropdownOpen(false)}>
+                  <Link href="/about-us" scroll={false} className="block px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white rounded-t-md" onClick={() => setIsDropdownOpen(false)}>
                     About Us
                   </Link>
                 </li>
@@ -150,7 +150,7 @@ export const Navbar: React.FC = () => {
             {isDropdownOpen && (
               <ul className="pl-4 flex flex-col gap-2 border-l border-gray-700">
                 <li>
-                  <Link href="/aboutUs" scroll={false} className="block py-1 hover:text-white transition-colors" onClick={() => { setIsDropdownOpen(false); setIsMenuOpen(false); }}>
+                  <Link href="/about-us" scroll={false} className="block py-1 hover:text-white transition-colors" onClick={() => { setIsDropdownOpen(false); setIsMenuOpen(false); }}>
                     About Us
                   </Link>
                 </li>

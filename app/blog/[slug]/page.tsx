@@ -3,6 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getPost, getPosts } from '@/lib/ghost';
+import DOMPurify from 'isomorphic-dompurify';
 import type { Metadata } from 'next';
 
 interface PageProps {
@@ -22,7 +23,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
       description: post.excerpt,
       type: 'article',
       publishedTime: post.published_at,
-      images: post.feature_image ? [{ url: post.feature_image }] : [],
+      images: post.feature_image ? [{ url: post.feature_image }] : [{ url: 'https://oakitsolutionsandsupplies.com/images/Logo.png', width: 600, height: 300, alt: 'OAK IT Solutions' }],
     },
   };
 }
@@ -124,7 +125,7 @@ export default async function BlogPostPage({ params }: PageProps) {
             prose-code:bg-gray-100 dark:prose-code:bg-gray-800 prose-code:px-1 prose-code:rounded
             prose-pre:bg-gray-900 prose-pre:text-gray-100
             prose-blockquote:border-purple-500 prose-blockquote:text-gray-500"
-          dangerouslySetInnerHTML={{ __html: post.html }}
+          dangerouslySetInnerHTML={{ __html: DOMPurify.sanitize(post.html) }}
         />
 
         {/* Share */}

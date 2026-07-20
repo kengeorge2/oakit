@@ -19,6 +19,14 @@ export const metadata: Metadata = {
     siteName: "OAK IT Solutions",
     locale: "en_US",
     type: "website",
+    images: [
+      {
+        url: "https://oakitsolutionsandsupplies.com/images/Logo.png",
+        width: 600,
+        height: 300,
+        alt: "OAK IT Solutions",
+      },
+    ],
   },
 };
 

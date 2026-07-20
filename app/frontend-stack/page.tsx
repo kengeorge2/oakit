@@ -6,6 +6,18 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Frontend Track | OAK IT Solutions Bootcamp",
   description: "Master HTML, CSS, JavaScript, React, and Next.js in our intensive 2.5-week frontend development program.",
+  openGraph: {
+    title: "Frontend Track | OAK IT Solutions Bootcamp",
+    description: "Master HTML, CSS, JavaScript, React, and Next.js in our intensive 2.5-week frontend development program.",
+    images: [
+      {
+        url: "https://oakitsolutionsandsupplies.com/images/Logo.png",
+        width: 600,
+        height: 300,
+        alt: "OAK IT Solutions Frontend Track",
+      },
+    ],
+  },
 };
 
 const FrontendStack: React.FC = () => {

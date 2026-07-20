@@ -6,6 +6,18 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Backend Track | OAK IT Solutions Bootcamp",
   description: "Learn Node.js, Express.js, MongoDB, authentication, and API security in our intensive 2.5-week backend development program.",
+  openGraph: {
+    title: "Backend Track | OAK IT Solutions Bootcamp",
+    description: "Learn Node.js, Express.js, MongoDB, authentication, and API security in our intensive 2.5-week backend development program.",
+    images: [
+      {
+        url: "https://oakitsolutionsandsupplies.com/images/Logo.png",
+        width: 600,
+        height: 300,
+        alt: "OAK IT Solutions Backend Track",
+      },
+    ],
+  },
 };
 
 const BackendStack: React.FC = () => {

@@ -6,6 +6,18 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "About Us | OAK IT Solutions and Supplies",
   description: "Learn about OAK IT Solutions and Supplies - our mission, vision, competitive advantage, and IT services since 2015.",
+  openGraph: {
+    title: "About Us | OAK IT Solutions",
+    description: "Learn about OAK IT Solutions and Supplies - our mission, vision, competitive advantage, and IT services since 2015.",
+    images: [
+      {
+        url: "https://oakitsolutionsandsupplies.com/images/Logo.png",
+        width: 600,
+        height: 300,
+        alt: "OAK IT Solutions About",
+      },
+    ],
+  },
 };
 
 const AboutUs: React.FC = () => {

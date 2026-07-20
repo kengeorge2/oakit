@@ -7,6 +7,18 @@ import type { Metadata } from 'next';
 export const metadata: Metadata = {
   title: 'Blog | OAK IT Solutions',
   description: 'Latest news, trends, and best practices in IT from OAK IT Solutions.',
+  openGraph: {
+    title: 'Blog | OAK IT Solutions',
+    description: 'Latest news, trends, and best practices in IT from OAK IT Solutions.',
+    images: [
+      {
+        url: 'https://oakitsolutionsandsupplies.com/images/Logo.png',
+        width: 600,
+        height: 300,
+        alt: 'OAK IT Solutions Blog',
+      },
+    ],
+  },
 };
 
 export const revalidate = 3600;

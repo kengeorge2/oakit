@@ -6,6 +6,18 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
   title: "Full Stack Web Development Bootcamp | OAK IT Solutions",
   description: "Learn frontend and backend development in a 1.5-month instructor-led program. Graduate with 4 capstone projects and a portfolio.",
+  openGraph: {
+    title: "Full Stack Web Development Bootcamp | OAK IT Solutions",
+    description: "Learn frontend and backend development in a 1.5-month instructor-led program. Graduate with 4 capstone projects and a portfolio.",
+    images: [
+      {
+        url: "https://oakitsolutionsandsupplies.com/images/Logo.png",
+        width: 600,
+        height: 300,
+        alt: "OAK IT Solutions Full Stack Bootcamp",
+      },
+    ],
+  },
 };
 
 const FullStackLearnMore: React.FC = () => {

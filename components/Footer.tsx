@@ -23,7 +23,7 @@ const Footer: React.FC = () => {
               <Link href="/#services" className="text-gray-400 hover:text-white transition-colors w-fit">
                 Services
               </Link>
-              <Link href="/aboutUs" className="text-gray-400 hover:text-white transition-colors w-fit">
+              <Link href="/about-us" className="text-gray-400 hover:text-white transition-colors w-fit">
                 About
               </Link>
               <Link href="/products" className="text-gray-400 hover:text-white transition-colors w-fit">

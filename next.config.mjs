@@ -16,6 +16,14 @@ const nextConfig = {
       },
     ],
   },
+  async redirects() {
+    return [
+      { source: '/aboutUs', destination: '/about-us', permanent: true },
+      { source: '/Backendstack', destination: '/backend-stack', permanent: true },
+      { source: '/Frontendstack', destination: '/frontend-stack', permanent: true },
+      { source: '/Fullstacklearnmore', destination: '/fullstack-learn-more', permanent: true },
+    ];
+  },
 };
 
 export default nextConfig;

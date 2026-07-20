@@ -20,6 +20,18 @@ export function generateMetadata({ params }: Props): Metadata {
   return {
     title: `${service.title} | OAK IT Solutions`,
     description: service.shortDesc,
+    openGraph: {
+      title: `${service.title} | OAK IT Solutions`,
+      description: service.shortDesc,
+      images: [
+        {
+          url: 'https://oakitsolutionsandsupplies.com/images/Logo.png',
+          width: 600,
+          height: 300,
+          alt: service.title,
+        },
+      ],
+    },
   };
 }
 
