@@ -10,10 +10,10 @@ const Hero: React.FC = () => {
         <div className="flex flex-col items-center space-y-4 text-center">
           <div className="space-y-2">
             <h1 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl/none bg-gradient-to-r from-purple-500 to-lime-500 via-blue-500 text-transparent bg-clip-text">
-              Elevate Your Business with the Best IT Solutions
+              Best Outsourcing IT Solutions
             </h1>
             <p className="mx-auto max-w-[700px] text-gray-300 md:text-xl dark:text-gray-400">
-              Our team of experts provides tailored IT solutions to help your business thrive in the digital age.
+              Elevate Your Business with the Best IT Solutions. Our team of experts provides tailored IT solutions to help your business thrive in the digital age.
             </p>
           </div>
           <div className="flex flex-col sm:flex-row gap-3">
