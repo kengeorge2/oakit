@@ -66,17 +66,23 @@ export default function ServiceDetailPage({ params }: Props) {
         </div>
 
         {/* CTA */}
-        <div className="flex flex-col sm:flex-row gap-4">
-          <Link href={service.cta.href}>
-            <Button size="lg" className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600">
-              {service.cta.label}
-            </Button>
-          </Link>
-          <Link href="/#services">
-            <Button size="lg" variant="secondary">
-              View All Services
-            </Button>
-          </Link>
+        <div className="rounded-lg border border-gray-700 bg-gray-800 p-8 mt-12">
+          <h2 className="text-2xl font-bold mb-3">Ready to Get Started?</h2>
+          <p className="text-gray-400 mb-6">
+            Choose a plan that includes this service and start transforming your business today.
+          </p>
+          <div className="flex flex-col sm:flex-row gap-4">
+            <Link href="/auth/signup?plan=regular">
+              <Button size="lg" className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600">
+                Get Started — $1,500/mo
+              </Button>
+            </Link>
+            <Link href="/#servicesPricing">
+              <Button size="lg" variant="secondary">
+                View All Plans
+              </Button>
+            </Link>
+          </div>
         </div>
       </div>
     </section>
