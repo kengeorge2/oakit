@@ -237,23 +237,45 @@ docker exec classicpos-app php artisan cache:clear
 
 ---
 
+## Phase 1-5 Complete (July 22, 2026)
+
+### Phase 1: Bug Fixes
+- Fixed `sender_type` enum — added `'client'` to CHECK constraint
+- Fixed `client_user_id` not in SupportTicket fillable
+- Fixed billing controller to return subscription data
+- Added `client_user_id`, `tax_amount`, `tax_percent`, `subtotal` to payment_transactions
+- Created `password_resets` table
+
+### Phase 2: Client CRUD
+- Added ticket close/reopen endpoints
+- Added forgot password with Resend email
+- Added subscription change-plan and cancel
+- Expanded billing to show subscriptions + transactions
+
+### Phase 3: PayPal Integration
+- Client checkout endpoint (creates PayPal order)
+- PayPal callback handler (activates subscription on success)
+- PayPal capture endpoint
+- PayPal webhook handler
+- Invoice endpoint with tax breakdown
+
+### Phase 4+5: Admin Management
+- Client User CRUD (list, view, update, suspend, activate, delete)
+- Assign custom subscription with status, amount, notes
+- OAK IT Service CRUD
+- Plan-service mapping management
+
+---
+
 ## Known Issues
 
 ### Email Delivery (Resend)
-- **Status:** Registration works, but verification email not delivering
-- **Cause:** Likely `onboarding@resend.dev` sandbox address limitations or Resend free tier restrictions
-- **Workaround:** Admin can manually verify users via `php artisan tinker`:
-  ```php
-  DB::connection('landlord')->table('client_users')->where('email','user@email.com')->update(['email_verified_at'=>now()]);
-  ```
-- **Fix needed:** Verify `oakitsolutionsandsupplies.com` domain in Resend dashboard, or use a verified domain for the from address
-- **Check:** Vercel function logs for `[Verification] Resend error:` to see actual error
+- Verification emails not delivering from sandbox address
+- User needs to verify domain in Resend dashboard and update Vercel env vars
+- Workaround: Admin can manually verify users
 
 ### React Hydration Warnings (#418, #423)
-- **Status:** Console warnings on page load
-- **Cause:** Next.js SSR/client mismatch with dynamic plans data
-- **Impact:** Cosmetic only — doesn't break functionality
-- **Fix:** Can be resolved by adding `suppressHydrationWarning` or using proper Suspense boundaries
+- Console warnings on page load — cosmetic only, doesn't break functionality
 
 ---
 
