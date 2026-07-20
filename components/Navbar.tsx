@@ -99,7 +99,13 @@ export const Navbar: React.FC = () => {
           </Link>
         </nav>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
+          <Link href="/auth/signin" className="hidden lg:inline-flex text-sm font-medium text-gray-300 hover:text-white transition-colors">
+            Sign In
+          </Link>
+          <Link href="/auth/signup?plan=regular" className="hidden lg:inline-flex items-center justify-center rounded-md bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 transition-colors">
+            Get Started
+          </Link>
           <button
             onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
             className="p-2 text-gray-300 hover:text-white transition-colors"
@@ -178,6 +184,14 @@ export const Navbar: React.FC = () => {
             <Link href="/#full-stack-course" className="py-2 hover:text-white transition-colors" onClick={() => setIsMenuOpen(false)}>
               Courses
             </Link>
+            <div className="flex gap-3 pt-2 border-t border-gray-700">
+              <Link href="/auth/signin" className="flex-1 text-center py-2 border border-gray-600 rounded-md hover:bg-gray-800 transition-colors" onClick={() => setIsMenuOpen(false)}>
+                Sign In
+              </Link>
+              <Link href="/auth/signup?plan=regular" className="flex-1 text-center py-2 bg-blue-600 rounded-md hover:bg-blue-700 text-white transition-colors" onClick={() => setIsMenuOpen(false)}>
+                Get Started
+              </Link>
+            </div>
           </nav>
         </div>
       )}

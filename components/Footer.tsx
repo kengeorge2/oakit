@@ -41,6 +41,12 @@ const Footer: React.FC = () => {
               <Link href="/#full-stack-course" className="text-gray-400 hover:text-white transition-colors w-fit">
                 Bootcamp
               </Link>
+              <Link href="/auth/signin" className="text-gray-400 hover:text-white transition-colors w-fit">
+                Sign In
+              </Link>
+              <Link href="/auth/signup?plan=regular" className="text-blue-400 hover:text-blue-300 transition-colors w-fit font-medium">
+                Get Started →
+              </Link>
             </nav>
           </div>
 
