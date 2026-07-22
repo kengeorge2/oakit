@@ -37,3 +37,6 @@ next-env.d.ts
 
 # separate apps (built/deployed independently)
 /client-dashboard
+
+# opencode config (contains API keys)
+opencode.json
