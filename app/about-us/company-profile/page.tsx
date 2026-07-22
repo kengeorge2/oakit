@@ -648,8 +648,8 @@ export default function CompanyProfile() {
                 <div><b className={styles.xpB}>IT Consultant</b><span className={styles.xpSpan}>Bar Aviation Uganda Ltd</span></div>
               </li>
               <li className={styles.xpLi}>
-                <span className={styles.xpYrs}>2015 &mdash; 2022</span>
-                <div><b className={styles.xpB}>Systems Administrator</b><span className={styles.xpSpan}>Elite Insurance Brokers</span></div>
+                <span className={styles.xpYrs}>2023 &mdash; PRESENT</span>
+                <div><b className={styles.xpB}>Systems Administrator &amp; IT Support Engineer</b><span className={styles.xpSpan}>Extreeme Adventure Park, Busiika</span></div>
               </li>
             </ul>
 
