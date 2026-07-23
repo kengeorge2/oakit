@@ -3,10 +3,18 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --purple-glow: rgba(168, 85, 247, 0.12);
+    --blue-glow: rgba(59, 130, 246, 0.12);
+    --lime-glow: rgba(132, 204, 22, 0.10);
+    --card-border: rgba(255, 255, 255, 0.08);
+    --card-bg: rgba(255, 255, 255, 0.03);
+  }
+
   html {
     scroll-behavior: smooth;
   }
-  
+
   ::selection {
     @apply bg-purple-500/30 text-gray-900 dark:text-gray-100;
   }
@@ -23,4 +31,189 @@
   ::-webkit-scrollbar-thumb:hover {
     @apply bg-gray-400 dark:bg-gray-600;
   }
+}
+
+/* ─── Section gradient backgrounds ─── */
+@layer components {
+  .section-dark {
+    background:
+      radial-gradient(1200px 600px at 85% -5%, var(--purple-glow), transparent 55%),
+      radial-gradient(900px 500px at -10% 110%, var(--blue-glow), transparent 50%),
+      linear-gradient(175deg, #111827, #030712);
+    position: relative;
+  }
+
+  .section-dark-alt {
+    background:
+      radial-gradient(1000px 500px at 15% -5%, var(--blue-glow), transparent 55%),
+      radial-gradient(1100px 600px at 95% 110%, var(--purple-glow), transparent 50%),
+      linear-gradient(195deg, #111827, #030712);
+    position: relative;
+  }
+
+  .section-dark-bootcamp {
+    background:
+      radial-gradient(1000px 500px at 50% -5%, var(--lime-glow), transparent 55%),
+      radial-gradient(1100px 600px at 50% 110%, var(--purple-glow), transparent 50%),
+      linear-gradient(175deg, #111827, #030712);
+    position: relative;
+  }
+
+  /* Grid texture overlay for dark sections */
+  .grid-overlay::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 48px 48px;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .grid-overlay > * {
+    position: relative;
+    z-index: 1;
+  }
+
+  /* Card with glass effect */
+  .card-glass {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--card-border);
+    transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1),
+                box-shadow 0.35s cubic-bezier(0.2, 0.7, 0.2, 1),
+                border-color 0.35s;
+  }
+
+  .card-glass:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px -8px rgba(168, 85, 247, 0.15),
+                0 4px 16px -4px rgba(0, 0, 0, 0.3);
+    border-color: rgba(255, 255, 255, 0.15);
+  }
+
+  /* Card solid dark */
+  .card-dark {
+    background: #1f2937;
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1),
+                box-shadow 0.35s cubic-bezier(0.2, 0.7, 0.2, 1),
+                border-color 0.35s;
+  }
+
+  .card-dark:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px -8px rgba(168, 85, 247, 0.15),
+                0 4px 16px -4px rgba(0, 0, 0, 0.3);
+    border-color: rgba(255, 255, 255, 0.12);
+  }
+
+  /* Pricing card with colored border */
+  .pricing-card {
+    transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1),
+                box-shadow 0.35s cubic-bezier(0.2, 0.7, 0.2, 1),
+                border-width 0.3s;
+  }
+
+  .pricing-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 16px 48px -8px rgba(0, 0, 0, 0.4);
+  }
+
+  /* Accent bar grow on hover */
+  .accent-bar {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .accent-bar::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 3px;
+    height: 100%;
+    background: linear-gradient(180deg, #a855f7, #3b82f6);
+    transform: scaleY(0);
+    transform-origin: top;
+    transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+
+  .accent-bar:hover::after {
+    transform: scaleY(1);
+  }
+
+  /* Section number label */
+  .section-label {
+    @apply inline-block rounded-md bg-gray-700/80 px-3 py-1 text-sm font-medium text-gray-200 backdrop-blur-sm;
+  }
+
+  /* Glow button */
+  .btn-glow {
+    transition: all 0.3s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+
+  .btn-glow:hover {
+    box-shadow: 0 0 24px -4px rgba(168, 85, 247, 0.4),
+                0 0 48px -8px rgba(59, 130, 246, 0.2);
+  }
+
+  /* Smooth accordion content */
+  .accordion-content {
+    overflow: hidden;
+    transition: max-height 0.35s cubic-bezier(0.2, 0.7, 0.2, 1),
+                opacity 0.25s ease;
+  }
+
+  /* Form input glow on focus */
+  .input-glow {
+    @apply transition-all duration-300;
+  }
+
+  .input-glow:focus {
+    @apply ring-2 ring-purple-500/30 border-purple-500/50;
+    box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.1);
+  }
+}
+
+/* ─── Scroll reveal system ─── */
+@layer utilities {
+  .rv {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.2, 0.7, 0.2, 1);
+  }
+
+  .rv.rv-in {
+    opacity: 1;
+    transform: none;
+  }
+
+  .rv-d1 { transition-delay: 0.08s; }
+  .rv-d2 { transition-delay: 0.16s; }
+  .rv-d3 { transition-delay: 0.24s; }
+  .rv-d4 { transition-delay: 0.32s; }
+}
+
+/* ─── Floating bob animation ─── */
+@keyframes bob {
+  0%, 100% { transform: translateY(0); }
+  50%      { transform: translateY(6px); }
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.4; }
+  50%      { opacity: 0.8; }
 }

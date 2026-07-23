@@ -4,7 +4,7 @@ import Logo from '@/components/component/Logo';
 
 const Footer: React.FC = () => {
   return (
-    <footer className="w-full bg-gray-900 text-gray-50 border-t border-gray-800">
+    <footer className="w-full bg-gray-950 text-gray-50 border-t border-white/[0.06]">
       <div className="container mx-auto px-4 md:px-6 py-12">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
           <div className="flex flex-col gap-4">
@@ -12,7 +12,7 @@ const Footer: React.FC = () => {
               <Logo />
               <span className="text-lg font-semibold">OAK IT Solutions</span>
             </div>
-            <p className="text-gray-400 text-sm max-w-xs">
+            <p className="text-gray-400 text-sm max-w-xs leading-relaxed">
               Empowering businesses with innovative IT solutions and full-stack development training.
             </p>
           </div>
@@ -20,31 +20,31 @@ const Footer: React.FC = () => {
           <div className="flex flex-col gap-4">
             <h3 className="text-lg font-semibold">Navigation</h3>
             <nav className="flex flex-col gap-2 text-sm">
-              <Link href="/#services" className="text-gray-400 hover:text-white transition-colors w-fit">
+              <Link href="/#services" className="text-gray-400 hover:text-white transition-colors duration-200 w-fit">
                 Services
               </Link>
-              <Link href="/about-us" className="text-gray-400 hover:text-white transition-colors w-fit">
+              <Link href="/about-us" className="text-gray-400 hover:text-white transition-colors duration-200 w-fit">
                 About
               </Link>
-              <Link href="/products" className="text-gray-400 hover:text-white transition-colors w-fit">
+              <Link href="/products" className="text-gray-400 hover:text-white transition-colors duration-200 w-fit">
                 Products
               </Link>
-              <Link href="/blog" className="text-gray-400 hover:text-white transition-colors w-fit">
+              <Link href="/blog" className="text-gray-400 hover:text-white transition-colors duration-200 w-fit">
                 Blog
               </Link>
-              <Link href="/#servicesPricing" className="text-gray-400 hover:text-white transition-colors w-fit">
+              <Link href="/#servicesPricing" className="text-gray-400 hover:text-white transition-colors duration-200 w-fit">
                 Pricing
               </Link>
-              <Link href="/#contactUs" className="text-gray-400 hover:text-white transition-colors w-fit">
+              <Link href="/#contactUs" className="text-gray-400 hover:text-white transition-colors duration-200 w-fit">
                 Contact
               </Link>
-              <Link href="/#full-stack-course" className="text-gray-400 hover:text-white transition-colors w-fit">
+              <Link href="/#full-stack-course" className="text-gray-400 hover:text-white transition-colors duration-200 w-fit">
                 Bootcamp
               </Link>
-              <Link href="/auth/signin" className="text-gray-400 hover:text-white transition-colors w-fit">
+              <Link href="/auth/signin" className="text-gray-400 hover:text-white transition-colors duration-200 w-fit">
                 Sign In
               </Link>
-              <Link href="/auth/signup?plan=regular" className="text-blue-400 hover:text-blue-300 transition-colors w-fit font-medium">
+              <Link href="/auth/signup?plan=regular" className="text-purple-400 hover:text-purple-300 transition-colors duration-200 w-fit font-medium">
                 Get Started →
               </Link>
             </nav>
@@ -53,16 +53,16 @@ const Footer: React.FC = () => {
           <div className="flex flex-col gap-4">
             <h3 className="text-lg font-semibold">Products</h3>
             <nav className="flex flex-col gap-2 text-sm">
-              <a href="https://pos.oakitsolutionsandsupplies.com/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors w-fit">
+              <a href="https://pos.oakitsolutionsandsupplies.com/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors duration-200 w-fit">
                 ClassicPOS
               </a>
-              <a href="https://quizapp.oakitsolutionsandsupplies.com/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors w-fit">
+              <a href="https://quizapp.oakitsolutionsandsupplies.com/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors duration-200 w-fit">
                 QuizApp
               </a>
-              <a href="https://blog.oakitsolutionsandsupplies.com/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors w-fit">
+              <a href="https://blog.oakitsolutionsandsupplies.com/" target="_blank" rel="noopener noreferrer" className="text-gray-400 hover:text-white transition-colors duration-200 w-fit">
                 Blog
               </a>
-              <Link href="/products" className="text-gray-400 hover:text-white transition-colors w-fit">
+              <Link href="/products" className="text-gray-400 hover:text-white transition-colors duration-200 w-fit">
                 View All Products
               </Link>
             </nav>
@@ -81,7 +81,7 @@ const Footer: React.FC = () => {
                 href="#"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray-400 hover:text-white transition-colors"
+                className="text-gray-400 hover:text-white transition-colors duration-200"
                 aria-label="Twitter"
               >
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -92,7 +92,7 @@ const Footer: React.FC = () => {
                 href="#"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray-400 hover:text-white transition-colors"
+                className="text-gray-400 hover:text-white transition-colors duration-200"
                 aria-label="LinkedIn"
               >
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -103,7 +103,7 @@ const Footer: React.FC = () => {
                 href="#"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray-400 hover:text-white transition-colors"
+                className="text-gray-400 hover:text-white transition-colors duration-200"
                 aria-label="GitHub"
               >
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -115,8 +115,8 @@ const Footer: React.FC = () => {
         </div>
       </div>
 
-      <div className="border-t border-gray-800 py-4">
-        <div className="container mx-auto px-4 md:px-6 text-center text-sm text-gray-400">
+      <div className="border-t border-white/[0.06] py-4">
+        <div className="container mx-auto px-4 md:px-6 text-center text-sm text-gray-500">
           &copy; {new Date().getFullYear()} OAK IT Solutions and Supplies Ltd. All rights reserved.
         </div>
       </div>
