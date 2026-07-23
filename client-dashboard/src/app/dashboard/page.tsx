@@ -3,18 +3,41 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/features/auth/auth-provider';
 import { getDashboard } from '@/lib/api';
-import DashboardLayout from './layout';
 
 export default function DashboardPage() {
   const { user } = useAuth();
   const [data, setData] = useState<any>(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
   useEffect(() => {
-    getDashboard().then(setData).catch(() => {}).finally(() => setLoading(false));
+    getDashboard()
+      .then(setData)
+      .catch((err) => setError(err.message || 'Failed to load dashboard'))
+      .finally(() => setLoading(false));
   }, []);
 
-  if (loading) return <div className="animate-pulse space-y-4"><div className="h-32 rounded-lg bg-gray-800" /><div className="grid grid-cols-3 gap-4">{[1,2,3].map(i => <div key={i} className="h-24 rounded-lg bg-gray-800" />)}</div></div>;
+  if (loading) {
+    return (
+      <div className="animate-pulse space-y-4">
+        <div className="h-32 rounded-lg bg-gray-800" />
+        <div className="grid grid-cols-3 gap-4">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="h-24 rounded-lg bg-gray-800" />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="space-y-4">
+        <h1 className="text-2xl font-bold">Dashboard</h1>
+        <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">{error}</div>
+      </div>
+    );
+  }
 
   const sub = data?.subscription;
   const stats = data?.stats;
@@ -33,12 +56,24 @@ export default function DashboardPage() {
             </div>
             <div className="text-right">
               <p className="text-2xl font-bold">${sub.amount}</p>
-              <p className="text-sm text-gray-400">/{sub.billing_cycle}</p>
+              <p className="text-sm text-gray-400">/{sub.billing_cycle === 'yearly' ? 'year' : 'month'}</p>
             </div>
           </div>
           {sub.trial_ends_at && sub.status === 'trialing' && (
-            <p className="mt-2 text-sm text-amber-500">Trial ends {new Date(sub.trial_ends_at).toLocaleDateString()}</p>
+            <p className="mt-2 text-sm text-amber-500">
+              Trial ends {new Date(sub.trial_ends_at).toLocaleDateString()}
+            </p>
           )}
+        </div>
+      )}
+
+      {!sub && (
+        <div className="rounded-lg border border-gray-800 bg-gray-900 p-6 text-center">
+          <p className="text-gray-400 mb-2">No active subscription</p>
+          <a href="https://oakitsolutionsandsupplies.com/#pricing" target="_blank" rel="noopener noreferrer"
+            className="text-sm text-primary hover:underline">
+            View plans and subscribe →
+          </a>
         </div>
       )}
 
@@ -70,6 +105,7 @@ export default function DashboardPage() {
                 <span className={`rounded-full px-2 py-1 text-xs font-medium ${
                   ticket.status === 'open' ? 'bg-blue-900 text-blue-300' :
                   ticket.status === 'in_progress' ? 'bg-yellow-900 text-yellow-300' :
+                  ticket.status === 'waiting_reply' ? 'bg-purple-900 text-purple-300' :
                   'bg-green-900 text-green-300'
                 }`}>{ticket.status}</span>
               </div>

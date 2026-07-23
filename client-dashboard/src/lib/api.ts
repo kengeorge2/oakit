@@ -35,12 +35,12 @@ async function apiFetch<T>(path: string, options: RequestInit = {}): Promise<T> 
 export const getDashboard = () => apiFetch<any>('/dashboard');
 
 // Subscriptions
-export const getSubscriptions = () => apiFetch<any[]>('/subscriptions');
+export const getSubscriptions = () => apiFetch<any>('/subscriptions');
 export const getSubscription = (id: string) => apiFetch<any>(`/subscriptions/${id}`);
 
 // Services
-export const getServices = () => apiFetch<any[]>('/services');
-export const getSubscribedServices = () => apiFetch<any[]>('/services/subscribed');
+export const getServices = () => apiFetch<any>('/services');
+export const getSubscribedServices = () => apiFetch<any>('/services/subscribed');
 
 // Tickets
 export const getTickets = (params?: Record<string, string>) => {
@@ -74,7 +74,7 @@ export const cancelSubscription = (id: string) =>
   apiFetch<any>(`/subscriptions/${id}/cancel`, { method: 'POST' });
 
 // Plans (public)
-export const getPlans = () => apiFetch<any[]>('/plans');
+export const getPlans = () => apiFetch<any>('/plans');
 
 // Profile
 export const updateProfile = (data: { name?: string; company_name?: string; company_phone?: string }) =>

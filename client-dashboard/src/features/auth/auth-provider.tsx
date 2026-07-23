@@ -20,6 +20,7 @@ interface AuthContextType {
   register: (data: RegisterData) => Promise<void>;
   logout: () => void;
   isAuthenticated: boolean;
+  fetchUser: (token?: string) => Promise<boolean>;
 }
 
 interface RegisterData {
@@ -104,8 +105,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem('auth_token', data.token);
     setToken(data.token);
     setUser(data.user);
-
-    await new Promise(resolve => setTimeout(resolve, 100));
     router.push('/dashboard');
   };
 
@@ -145,7 +144,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, isLoading, login, register, logout, isAuthenticated: !!user }}>
+    <AuthContext.Provider value={{ user, token, isLoading, login, register, logout, isAuthenticated: !!user, fetchUser }}>
       {children}
     </AuthContext.Provider>
   );

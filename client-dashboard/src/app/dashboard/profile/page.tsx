@@ -1,12 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '@/features/auth/auth-provider';
 import { updateProfile, changePassword } from '@/lib/api';
 import PageContainer from '@/components/layout/page-container';
 
 export default function ProfilePage() {
-  const { user } = useAuth();
+  const { user, fetchUser } = useAuth();
   const [profileForm, setProfileForm] = useState({
     name: user?.name || '',
     company_name: user?.company_name || '',
@@ -18,18 +18,32 @@ export default function ProfilePage() {
     password_confirmation: '',
   });
   const [profileMsg, setProfileMsg] = useState('');
+  const [profileError, setProfileError] = useState('');
   const [passwordMsg, setPasswordMsg] = useState('');
+  const [passwordError, setPasswordError] = useState('');
   const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    if (user) {
+      setProfileForm({
+        name: user.name || '',
+        company_name: user.company_name || '',
+        company_phone: user.company_phone || '',
+      });
+    }
+  }, [user]);
 
   const handleProfile = async (e: React.FormEvent) => {
     e.preventDefault();
     setSaving(true);
     setProfileMsg('');
+    setProfileError('');
     try {
       await updateProfile(profileForm);
       setProfileMsg('Profile updated successfully.');
+      if (fetchUser) await fetchUser();
     } catch (err: any) {
-      setProfileMsg(err.message);
+      setProfileError(err.message);
     } finally {
       setSaving(false);
     }
@@ -39,8 +53,9 @@ export default function ProfilePage() {
     e.preventDefault();
     setSaving(true);
     setPasswordMsg('');
+    setPasswordError('');
     if (passwordForm.password !== passwordForm.password_confirmation) {
-      setPasswordMsg('Passwords do not match.');
+      setPasswordError('Passwords do not match.');
       setSaving(false);
       return;
     }
@@ -49,7 +64,7 @@ export default function ProfilePage() {
       setPasswordMsg('Password changed successfully.');
       setPasswordForm({ current_password: '', password: '', password_confirmation: '' });
     } catch (err: any) {
-      setPasswordMsg(err.message);
+      setPasswordError(err.message);
     } finally {
       setSaving(false);
     }
@@ -60,7 +75,8 @@ export default function ProfilePage() {
       <div className="space-y-6">
         <form onSubmit={handleProfile} className="rounded-lg border bg-card p-6 shadow-sm space-y-4">
           <h3 className="text-lg font-semibold">Profile Information</h3>
-          {profileMsg && <p className="text-sm text-muted-foreground">{profileMsg}</p>}
+          {profileMsg && <div className="rounded-md bg-green-50 p-3 text-sm text-green-700">{profileMsg}</div>}
+          {profileError && <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">{profileError}</div>}
           <div className="space-y-2">
             <label className="text-sm font-medium">Name</label>
             <input value={profileForm.name} onChange={(e) => setProfileForm({ ...profileForm, name: e.target.value })}
@@ -70,6 +86,7 @@ export default function ProfilePage() {
             <label className="text-sm font-medium">Email</label>
             <input value={user?.email || ''} disabled
               className="flex h-10 w-full rounded-md border bg-background px-3 py-2 text-sm opacity-50" />
+            <p className="text-xs text-muted-foreground">Email cannot be changed</p>
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
@@ -91,7 +108,8 @@ export default function ProfilePage() {
 
         <form onSubmit={handlePassword} className="rounded-lg border bg-card p-6 shadow-sm space-y-4">
           <h3 className="text-lg font-semibold">Change Password</h3>
-          {passwordMsg && <p className="text-sm text-muted-foreground">{passwordMsg}</p>}
+          {passwordMsg && <div className="rounded-md bg-green-50 p-3 text-sm text-green-700">{passwordMsg}</div>}
+          {passwordError && <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">{passwordError}</div>}
           <div className="space-y-2">
             <label className="text-sm font-medium">Current Password</label>
             <input type="password" value={passwordForm.current_password} onChange={(e) => setPasswordForm({ ...passwordForm, current_password: e.target.value })} required
