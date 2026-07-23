@@ -35,14 +35,14 @@ const Faq = () => {
 
   return (
     <section className="w-full py-8 md:py-16 lg:py-24 section-dark grid-overlay" id="faq">
-      <div className="container px-4 md:px-6">
+      <div className="container px-4 sm:px-6 md:px-6">
         <Reveal>
           <div className="space-y-3 text-center mb-12">
             <span className="section-label">06 — FAQ</span>
-            <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-white">
+            <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-gray-900 dark:text-white">
               Frequently Asked Questions
             </h2>
-            <p className="max-w-[600px] mx-auto text-gray-400">
+            <p className="max-w-[600px] mx-auto text-gray-600 dark:text-gray-400">
               Got questions? We have answers. Here are some of the most common questions we receive.
             </p>
           </div>
@@ -51,12 +51,12 @@ const Faq = () => {
         <div className="max-w-3xl mx-auto space-y-3">
           {faqs.map((faq, index) => (
             <Reveal key={index} delay={(index % 3) as 0 | 1 | 2}>
-              <div className="rounded-lg border border-white/[0.08] bg-white/[0.03] overflow-hidden">
+              <div className="rounded-lg border border-gray-200 dark:border-white/[0.08] bg-white dark:bg-white/[0.03] overflow-hidden">
                 <button
                   onClick={() => setOpenIndex(openIndex === index ? null : index)}
-                  className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-white/[0.04] transition-colors duration-200"
+                  className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-50 dark:hover:bg-white/[0.04] transition-colors duration-200"
                 >
-                  <span className="font-medium text-gray-100">{faq.question}</span>
+                  <span className="font-medium text-gray-900 dark:text-gray-100">{faq.question}</span>
                   <span className={`ml-4 transform transition-transform duration-300 ${openIndex === index ? 'rotate-180' : ''}`}>
                     <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M5 7.5L10 12.5L15 7.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
@@ -70,7 +70,7 @@ const Faq = () => {
                     opacity: openIndex === index ? 1 : 0,
                   }}
                 >
-                  <div className="px-6 pb-4 text-gray-400">
+                  <div className="px-6 pb-4 text-gray-600 dark:text-gray-400">
                     {faq.answer}
                   </div>
                 </div>
