@@ -706,6 +706,27 @@
   font-size: 0.96rem;
 }
 
+.linkedinLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 12px;
+  font: 600 10.5px var(--mono);
+  letter-spacing: 0.12em;
+  color: #0077b5;
+  text-decoration: none;
+  transition: color 0.25s;
+}
+
+.linkedinLink:hover {
+  color: #005f8f;
+}
+
+.linkedinIcon {
+  width: 16px;
+  height: 16px;
+}
+
 .subh {
   font: 700 11px var(--mono);
   letter-spacing: 0.26em;
