@@ -6,6 +6,8 @@ Marketing website for **OAK IT Solutions and Supplies Ltd.**, an IT services com
 
 **Live URL:** https://oakitsolutionsandsupplies.com
 **Blog URL:** https://blog.oakitsolutionsandsupplies.com
+**Dashboard URL:** https://dashboard.oakitsolutionsandsupplies.com
+**API URL:** https://posapp.oakitsolutionsandsupplies.com
 
 ---
 
@@ -109,14 +111,31 @@ npm run lint       # ESLint check
 - [x] Removed unused shadcn/ui components: `input.tsx`, `label.tsx`, `textarea.tsx`
 - [x] Moved `@tryghost/admin-api` to devDependencies
 
+### Commit e5c275d — Client Dashboard CRUD Completion (July 24, 2026)
+- [x] Fixed billing page data path (`billing?.transactions`)
+- [x] Fixed subscriptions page array access (`subscriptions?.data`)
+- [x] Fixed auth redirect (`/auth/sign-in` → `/auth/login`)
+- [x] Added ticket close/reopen buttons + inline error display
+- [x] Added subscription Change Plan modal + Cancel confirmation dialog
+- [x] Added invoice modal with tax breakdown (subtotal, VAT 18%, total) + print
+- [x] Rendered available services section with "Upgrade" CTA
+- [x] Added active route highlighting in sidebar
+- [x] Added "Forgot password?" link + `/auth/forgot-password` + `/auth/reset-password` pages
+- [x] Removed 100ms `setTimeout` hack from auth provider
+- [x] Added proper error handling across all pages
+- [x] Removed ~40 dead template files (overview charts, nav components, hooks, types, UI stubs)
+- [x] Fixed Tailwind CSS v4 PostCSS config
+- [x] Added PayPal webhook signature verification
+- [x] Removed raw token from forgotPassword API response
+
 ---
 
 ## Way Forward — Remaining Items
 
 ### High Priority
-- [ ] **API Key Security** — `NEXT_PUBLIC_GHOST_CONTENT_KEY` is exposed to the browser. Move to server-only env var (remove `NEXT_PUBLIC_` prefix).
-- [ ] **Blog HTML Sanitization** — `dangerouslySetInnerHTML` for Ghost content has no sanitization. Add DOMPurify or equivalent.
-- [ ] **Resend Domain Verification** — Contact form uses `onboarding@resend.dev`. Verify `oakitsolutionsandsupplies.com` domain in Resend dashboard to send from `info@` address.
+- [x] ~~**API Key Security** — `NEXT_PUBLIC_GHOST_CONTENT_KEY` is exposed to the browser. Move to server-only env var (remove `NEXT_PUBLIC_` prefix).~~ **Still open — needs attention**
+- [x] ~~**Blog HTML Sanitization** — `dangerouslySetInnerHTML` for Ghost content has no sanitization. Add DOMPurify or equivalent.~~ **Still open — needs attention**
+- [x] ~~**Resend Domain Verification** — Contact form uses `onboarding@resend.dev`. Verify `oakitsolutionsandsupplies.com` domain in Resend dashboard to send from `info@` address.~~ **Still open — emails not delivering**
 
 ### Medium Priority
 - [ ] **Footer Social Links** — Twitter/X, LinkedIn, GitHub icons link to `#`. Update with real company social URLs when available.
@@ -130,6 +149,11 @@ npm run lint       # ESLint check
 - [ ] **`getTags()` in lib/ghost.ts** — Exported but never imported anywhere.
 - [ ] **ServicesList Content** — Each service category shows only 3 items. Add more items as content becomes available.
 - [ ] **Services CMS Migration** — Move services config from `lib/services.ts` to Ghost CMS for admin-editable content.
+
+### New Items (discovered July 24, 2026)
+- [ ] **Admin Vue Pages** — Client user management + OAK IT service management pages missing from POS Vue SPA (API exists, frontend doesn't)
+- [ ] **Resend Email Delivery** — Verification emails not arriving. Domain `notifications.oakitsolutionsandsupplies.com` verified in Resend but from address may need updating in Vercel env vars
+- [ ] **PayPal Live Config** — Currently using sandbox credentials; need to switch to live for production
 
 ---
 

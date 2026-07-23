@@ -1,6 +1,6 @@
 # OAK IT Client Dashboard — Integration Task Log
 
-## Date: July 18-22, 2026
+## Date: July 18-24, 2026
 
 ---
 
@@ -18,7 +18,7 @@ Full SaaS client dashboard system for OAK IT Solutions customers. When users sub
 │  (Vercel)               │────▶│  (Docker)                    │◀────│  (Docker)               │
 │                         │     │                              │     │                         │
 │  oakitsolutionsandsupplies.com  │  posapp.oakitsolutionsandsupplies.com  │  dashboard.oakitsolutionsandsupplies.com  │
-│  - Marketing pages      │     │  - 19 client API endpoints   │     │  - Subscription view    │
+│  - Marketing pages      │     │  - 31 client API endpoints │     │  - Subscription view    │
 │  - Signup/Signin        │     │  - Auth + email verification │     │  - Service management   │
 │  - Pricing CTAs         │     │  - Plans, services, tickets  │     │  - Support tickets      │
 │  - Email via Resend     │     │  - PostgreSQL (landlord DB)  │     │  - Billing, profile     │
@@ -64,6 +64,8 @@ Full SaaS client dashboard system for OAK IT Solutions customers. When users sub
 | POST | `/api/v1/client/auth/login` | Login (blocks unverified) |
 | POST | `/api/v1/client/auth/generate-verification-token` | Generate email verification token |
 | POST | `/api/v1/client/auth/verify-email` | Verify email with token |
+| POST | `/api/v1/client/auth/forgot-password` | Send password reset email |
+| POST | `/api/v1/client/auth/reset-password` | Reset password with token |
 | GET | `/api/v1/client/plans` | List OAK IT plans |
 | GET | `/api/v1/client/services` | List all OAK IT services |
 
@@ -82,7 +84,21 @@ Full SaaS client dashboard system for OAK IT Solutions customers. When users sub
 | POST | `/api/v1/client/tickets` | Create support ticket |
 | GET | `/api/v1/client/tickets/{id}` | Ticket detail |
 | POST | `/api/v1/client/tickets/{id}/reply` | Reply to ticket |
+| POST | `/api/v1/client/tickets/{id}/close` | Close ticket |
+| POST | `/api/v1/client/tickets/{id}/reopen` | Reopen ticket |
+| PUT | `/api/v1/client/subscriptions/{id}/change-plan` | Change subscription plan |
+| POST | `/api/v1/client/subscriptions/{id}/cancel` | Cancel subscription |
 | GET | `/api/v1/client/billing` | Billing history |
+| POST | `/api/v1/client/billing/checkout` | Create PayPal checkout |
+| POST | `/api/v1/client/billing/paypal/capture/{orderId}` | Capture PayPal payment |
+| GET | `/api/v1/client/billing/status/{orderId}` | Check payment status |
+| GET | `/api/v1/client/billing/invoice/{transactionId}` | Get invoice data |
+
+### Webhook (no auth — called by PayPal)
+| Method | Endpoint | Purpose |
+|--------|----------|---------|
+| POST | `/api/v1/client/billing/paypal/webhook` | PayPal webhook (with signature verification) |
+| GET | `/api/v1/client/billing/paypal/callback` | PayPal return URL redirect |
 
 ---
 
@@ -139,16 +155,20 @@ Full SaaS client dashboard system for OAK IT Solutions customers. When users sub
 ### Client Dashboard (Docker — `D:\kilo\oakit\client-dashboard`)
 
 **Built from `next-shadcn-dashboard-starter` template. Key files:**
-- `src/features/auth/auth-provider.tsx` — Sanctum token auth
-- `src/lib/api.ts` — API client for all endpoints
-- `src/config/nav-config.ts` — Dashboard navigation
-- `src/app/dashboard/page.tsx` — Overview
-- `src/app/dashboard/subscriptions/page.tsx` — Subscriptions
-- `src/app/dashboard/services/page.tsx` — Services
-- `src/app/dashboard/tickets/page.tsx` — Support tickets
-- `src/app/dashboard/billing/page.tsx` — Billing
-- `src/app/dashboard/profile/page.tsx` — Profile
-- `src/components/layout/app-sidebar.tsx` — Sidebar navigation
+- `src/features/auth/auth-provider.tsx` — Sanctum token auth, exposes `fetchUser` in context
+- `src/lib/api.ts` — API client for all 31 endpoints
+- `src/app/dashboard/page.tsx` — Overview (subscription, stats, recent tickets)
+- `src/app/dashboard/subscriptions/page.tsx` — View subscriptions + Change Plan modal + Cancel confirmation
+- `src/app/dashboard/services/page.tsx` — Active services + available services with upgrade CTA
+- `src/app/dashboard/tickets/page.tsx` — Tickets CRUD + close/reopen + inline error display
+- `src/app/dashboard/billing/page.tsx` — Payment history + invoice modal with tax breakdown
+- `src/app/dashboard/profile/page.tsx` — Profile edit + password change
+- `src/app/auth/login/page.tsx` — Login with forgot password link
+- `src/app/auth/register/page.tsx` — Registration with plan selector
+- `src/app/auth/forgot-password/page.tsx` — **NEW** — Email input → reset link sent
+- `src/app/auth/reset-password/page.tsx` — **NEW** — Token+email from URL → new password form
+- `src/components/layout/sidebar.tsx` — Active route highlighting with `usePathname()`
+- `src/components/layout/page-container.tsx` — Reusable page wrapper with title/description/action
 
 ---
 
@@ -186,6 +206,14 @@ Full SaaS client dashboard system for OAK IT Solutions customers. When users sub
 11. **CORS missing oakitsolutionsandsupplies.com** — browser blocked plans fetch, added to CORS allowed origins
 12. **Laravel error response format** — frontend expected string, got nested object `{"error":{"details":{...}}}`, fixed parsing
 13. **React crash rendering object** — `setError(data.error)` where error was object, now extracts message string
+14. **Billing page always empty** — Checked `billing?.data` but API returns `{transactions: [...]}`, fixed to `billing?.transactions`
+15. **Subscriptions page crash** — Expected plain array but API returns Laravel paginated `{data: [...]}`, fixed with fallback
+16. **Auth redirect 404** — Redirected to `/auth/sign-in` (non-existent), fixed to `/auth/login`
+17. **Tailwind CSS v4 build failure** — Missing `postcss.config.mjs` + outdated `@tailwind` directives, fixed with `@import "tailwindcss"`
+18. **Missing `public/` directory** — Docker build failed without it, created empty directory
+19. **`fetchUser` type mismatch** — Auth context declared `() => Promise<boolean>` but function takes optional token param, fixed type
+20. **`useSearchParams` without Suspense** — Reset-password page needed Suspense boundary, wrapped in `<Suspense>`
+21. **Dead template code blocking build** — ~40 unused files with broken imports (missing UI modules), deleted all
 
 ---
 
@@ -265,6 +293,35 @@ docker exec classicpos-app php artisan cache:clear
 - OAK IT Service CRUD
 - Plan-service mapping management
 
+### Phase 6: Dashboard CRUD Completion (July 24, 2026)
+
+**Critical bug fixes:**
+- Fixed billing page data path (`billing?.transactions`)
+- Fixed subscriptions page array access (`subscriptions?.data`)
+- Fixed auth redirect (`/auth/sign-in` → `/auth/login`)
+
+**Feature completion:**
+- Tickets: added close/reopen buttons, replaced `alert()` with inline error/success display
+- Subscriptions: added Change Plan modal (plan selector + billing cycle toggle) + Cancel confirmation dialog
+- Billing: added invoice modal with tax breakdown (subtotal, VAT 18%, total) + print button
+- Services: rendered available services section with "Upgrade" CTA for non-subscribed services
+- Sidebar: active route highlighting with `usePathname()`
+- Login: added "Forgot password?" link
+- New pages: `/auth/forgot-password` + `/auth/reset-password` (with Suspense boundary)
+- Auth provider: removed 100ms `setTimeout` hack, exposed `fetchUser` in context
+- Profile: shows "Email cannot be changed" hint, refreshes user data after save
+- All pages: replaced silent `.catch(() => {})` with proper error state display
+
+**Backend security fixes:**
+- PayPal webhook: added signature verification via `$this->paypal->verifyWebhook()`
+- Forgot password: removed raw token from API response (was line 303)
+
+**Dead code cleanup:**
+- Removed ~40 unused template files (overview charts, nav components, hooks, types, UI stubs)
+- Fixed Tailwind CSS v4 PostCSS config (`postcss.config.mjs` + `globals.css`)
+- Added `formatBytes` utility for `file-uploader.tsx` compatibility (later deleted as dead code)
+- Created `public/` directory for Docker build
+
 ---
 
 ## Known Issues
@@ -281,14 +338,72 @@ docker exec classicpos-app php artisan cache:clear
 
 ## Testing Checklist
 
+### Signup Flow
 - [ ] `https://oakitsolutionsandsupplies.com` → Pricing → "Get Started" on Basic → goes to `/auth/signup?plan=basic`
 - [ ] Plans dropdown shows Basic ($700), Regular ($1,500), Advanced
 - [ ] All 7 fields required, validation errors shown inline
-- [ ] After submit → "Check Your Email" screen
-- [ ] Verification email received (via Resend)
+- [ ] After submit → "Check Your Email" screen with verification link
+
+### Email Verification
+- [ ] Verification email received (via Resend) — OR admin verifies manually:
+  ```php
+  docker exec classicpos-app php artisan tinker
+  DB::connection('landlord')->table('client_users')->where('email','user@email.com')->update(['email_verified_at'=>now()]);
+  ```
 - [ ] Click link → `/auth/verify?token=xxx` → verified → redirected to dashboard
-- [ ] Login at `/auth/signin` → blocked if unverified → resend option
-- [ ] Dashboard shows subscription, services, tickets, billing
-- [ ] Create ticket → appears in list
-- [ ] Profile update works
-- [ ] Logout works
+
+### Login Flow
+- [ ] Login at `/auth/login` → blocked if unverified → "Resend verification email" option
+- [ ] Login with wrong password → shows error message
+- [ ] Login rate limited after 5 failed attempts → shows "try again in X minutes"
+- [ ] "Forgot password?" link visible on login page → goes to `/auth/forgot-password`
+- [ ] Enter email → "If an account exists, a reset link has been sent"
+- [ ] Reset link → `/auth/reset-password?token=xxx&email=xxx` → set new password → redirect to login
+
+### Dashboard Overview
+- [ ] Dashboard shows current plan name, status, amount
+- [ ] Stats cards: Subscribed Services, Open Tickets, Total Tickets
+- [ ] Recent tickets list with status badges
+- [ ] No subscription → shows "View plans and subscribe" link
+
+### Services Page
+- [ ] Active services shown with "Active" badge and features list
+- [ ] Available services shown with "Upgrade to access" CTA
+- [ ] No services → "Subscribe to a plan to get started" link
+
+### Tickets (CRUD)
+- [ ] Create ticket → subject, description, priority, category → appears in list
+- [ ] Click ticket → shows full message thread
+- [ ] Reply to ticket → message appears in thread
+- [ ] Close ticket → status changes to "closed", system message added
+- [ ] Reopen ticket → status changes to "open", system message added
+- [ ] Closed ticket → reply box hidden, "reopen" button shown
+- [ ] Error messages shown inline (not `alert()`)
+
+### Subscriptions (CRUD)
+- [ ] Shows plan name, billing cycle, status, amount, dates
+- [ ] "Change Plan" button → modal with plan selector + billing cycle toggle
+- [ ] Confirm change → plan updates, modal closes, success message shown
+- [ ] "Cancel Subscription" button → confirmation dialog with warning
+- [ ] Confirm cancel → subscription cancelled, status updated
+- [ ] Active/trialing subscriptions show action buttons; cancelled don't
+
+### Billing (CRUD)
+- [ ] Payment history table with date, description, amount, tax, total, status, method
+- [ ] "View Invoice" button on completed transactions → invoice modal
+- [ ] Invoice shows: company info, client info, plan, dates, line items, subtotal, VAT (18%), total
+- [ ] Print Invoice button works
+- [ ] Pending/failed transactions don't show invoice button
+
+### Profile
+- [ ] Edit name, company name, company phone → "Profile updated successfully"
+- [ ] Email field disabled with "Email cannot be changed" hint
+- [ ] Change password → current password + new password + confirm → success message
+- [ ] Wrong current password → error shown
+
+### Logout
+- [ ] Logout → clears token, redirects to `/auth/login`
+
+### Sidebar Navigation
+- [ ] Current page highlighted in sidebar
+- [ ] All 6 nav items work: Dashboard, My Plan, Services, Tickets, Billing, Profile
