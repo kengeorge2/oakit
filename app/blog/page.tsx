@@ -2,6 +2,7 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { getPosts } from '@/lib/ghost';
+import { getBlogIllustration } from '@/components/BlogIllustrations';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -64,8 +65,11 @@ export default async function BlogPage() {
                     />
                   </div>
                 ) : (
-                  <div className="rounded-t-xl bg-gray-200 dark:bg-gray-800/50 aspect-video flex items-center justify-center">
-                    <span className="text-gray-400 dark:text-gray-500 text-sm">No image</span>
+                  <div className="aspect-video overflow-hidden">
+                    {(() => {
+                      const Illustration = getBlogIllustration(post.slug);
+                      return <Illustration className="w-full h-full" />;
+                    })()}
                   </div>
                 )}
                 <div className="space-y-3 p-6">

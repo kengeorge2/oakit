@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { getPost, getPosts } from '@/lib/ghost';
 import DOMPurify from 'isomorphic-dompurify';
+import { getBlogIllustration } from '@/components/BlogIllustrations';
 import type { Metadata } from 'next';
 
 interface PageProps {
@@ -101,8 +102,8 @@ export default async function BlogPostPage({ params }: PageProps) {
           </div>
         </header>
 
-        {/* Feature image */}
-        {post.feature_image && (
+        {/* Feature image or illustration */}
+        {post.feature_image ? (
           <div className="mb-10">
             <Image
               alt={post.title}
@@ -112,6 +113,13 @@ export default async function BlogPostPage({ params }: PageProps) {
               src={post.feature_image}
               priority
             />
+          </div>
+        ) : (
+          <div className="mb-10 rounded-xl overflow-hidden ring-1 ring-gray-200 dark:ring-gray-800">
+            {(() => {
+              const Illustration = getBlogIllustration(slug);
+              return <Illustration className="w-full h-auto" />;
+            })()}
           </div>
         )}
 
