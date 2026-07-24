@@ -720,6 +720,11 @@ export default function CompanyProfile() {
             <h4 className={styles.crowH4}>Good Times Schools</h4>
             <span className={styles.sector}>EDUCATION</span>
           </div>
+          <div className={`${styles.crow} ${styles.rv} ${styles.avoid}`}>
+            <span className={styles.crowCi}>CL&mdash;08</span>
+            <h4 className={styles.crowH4}>Gets Technical Services Ltd</h4>
+            <span className={styles.sector}>CIVIL WORKS &amp; TECHNICAL SERVICES</span>
+          </div>
         </div>
       </section>
 
