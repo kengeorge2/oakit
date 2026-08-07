@@ -2,11 +2,13 @@ version: '3.8'
 
 services:
   client-dashboard:
-    build:
-      context: .
-      dockerfile: Dockerfile.bun
-      args:
-        - NEXT_PUBLIC_API_URL=https://posapp.oakitsolutionsandsupplies.com/api/v1/client
+    image: oakit/client-dashboard:latest
+    # Or build from source:
+    # build:
+    #   context: .
+    #   dockerfile: Dockerfile.bun
+    #   args:
+    #     - NEXT_PUBLIC_API_URL=https://posapp.oakitsolutionsandsupplies.com/api/v1/client
     ports:
       - "3001:3000"
     environment:
@@ -16,7 +18,7 @@ services:
       - NEXT_PUBLIC_SENTRY_DISABLED=true
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
+      test: ["CMD", "bun", "run", "healthcheck.sh"]
       interval: 30s
       timeout: 10s
       retries: 3
