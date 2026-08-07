@@ -97,7 +97,7 @@ const ServicesPricing = () => {
                       <div className="text-4xl font-bold">
                         {price !== null ? (
                           <>
-                            ${price.toLocaleString()}
+                            USh {price.toLocaleString()}
                             <span className="text-base font-normal text-gray-500 dark:text-gray-400">
                               /{annual ? 'yr' : 'mo'}
                             </span>

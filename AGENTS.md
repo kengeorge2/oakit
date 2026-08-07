@@ -1,172 +1,51 @@
-# AGENTS.md — OAK IT Solutions Website
+# AGENTS.md — OAK IT Solutions Marketing Website
 
-## Project Overview
+## Project
 
-Marketing website for **OAK IT Solutions and Supplies Ltd.**, an IT services company based in Kampala, Uganda. Built with Next.js 14 (App Router), TypeScript, Tailwind CSS, and shadcn/ui.
+Marketing site for OAK IT Solutions (Kampala, Uganda). Next.js 14 App Router, TypeScript, Tailwind CSS 3, shadcn/ui (default style, slate theme).
 
-**Live URL:** https://oakitsolutionsandsupplies.com
-**Blog URL:** https://blog.oakitsolutionsandsupplies.com
-**Dashboard URL:** https://dashboard.oakitsolutionsandsupplies.com
-**API URL:** https://posapp.oakitsolutionsandsupplies.com
+**Live:** https://oakitsolutionsandsupplies.com · **Blog:** blog.oakitsolutionsandsupplies.com · **Dashboard:** dashboard.oakitsolutionsandsupplies.com · **API:** posapp.oakitsolutionsandsupplies.com
 
 ---
 
-## Tech Stack
-
-| Layer | Technology |
-|---|---|
-| Framework | Next.js 14.2.35 (App Router) |
-| Language | TypeScript 5 |
-| UI | React 18, shadcn/ui (Radix UI) |
-| Styling | Tailwind CSS 3.4.1 |
-| Theming | next-themes (dark/light mode) |
-| Icons | lucide-react |
-| Email | Resend |
-| Toast | Sonner |
-| CMS/Blog | Ghost Content API (`@tryghost/content-api`) |
-
----
-
-## Development Commands
+## Commands
 
 ```bash
-npm run dev        # Start dev server (localhost:3000)
-npm run build      # Production build
-npm run lint       # ESLint check
+npm run dev        # dev server (localhost:3000)
+npm run build      # production build
+npm run lint       # ESLint
+bun install        # install (bun.lock present; npm also works)
 ```
+
+No test framework is configured. No CI pipeline in this repo.
+
+---
+
+## Architecture
+
+- `app/` — Next.js App Router pages. All pages are **server components** unless they need client interactivity.
+- `components/` — Reusable UI. shadcn/ui components live in `components/ui/`.
+- `lib/` — Server-side logic only (Ghost CMS client, Resend email, pricing/config, services).
+- `scripts/` — One-off CLI scripts (blog content push). Run with Node, not browser.
+- `client-dashboard/` — **Separate Next.js app** (auth subscriptions/tickets). Excluded from this tsconfig; developed independently.
 
 ---
 
 ## Routes
 
-| Route | File | Description |
+| Route | File | Notes |
 |---|---|---|
-| `/` | `app/page.tsx` | Homepage — Hero, Pricing, Services, Testimonials, Blog, Mission, FAQ, Bootcamp, Contact |
-| `/products` | `app/products/page.tsx` | Product showcase (ClassicPOS, QuizApp, Blog) |
-| `/aboutUs` | `app/aboutUs/page.tsx` | Company info, history, milestones |
-| `/blog` | `app/blog/page.tsx` | Blog listing (Ghost CMS) |
-| `/blog/[slug]` | `app/blog/[slug]/page.tsx` | Individual blog post |
-| `/Backendstack` | `app/Backendstack/page.tsx` | Backend track curriculum |
-| `/Frontendstack` | `app/Frontendstack/page.tsx` | Frontend track curriculum |
-| `/Fullstacklearnmore` | `app/Fullstacklearnmore/page.tsx` | Full-stack bootcamp details |
-| `/services/[slug]` | `app/services/[slug]/page.tsx` | Service detail page (13 services) |
-| `/api/contact` | `app/api/contact/route.ts` | Contact form API endpoint |
+| `/` | `app/page.tsx` | Hero → Pricing → Services → Testimonials → Blog → Mission → FAQ → Bootcamp → Contact |
+| `/products` | `app/products/page.tsx` | ClassicPOS, QuizApp, Blog |
+| `/about-us` | `app/about-us/page.tsx` | Company info |
+| `/blog` | `app/blog/page.tsx` | Ghost CMS listing |
+| `/blog/[slug]` | `app/blog/[slug]/page.tsx` | Individual post (DOMPurify-sanitized) |
+| `/backend-stack` | `app/backend-stack/page.tsx` | Bootcamp curriculum |
+| `/frontend-stack` | `app/frontend-stack/page.tsx` | Bootcamp curriculum |
+| `/fullstack-learn-more` | `app/fullstack-learn-more/page.tsx` | Fullstack bootcamp |
+| `/services/[slug]` | `app/services/[slug]/page.tsx` | Dynamic service detail (13 services) |
 
----
-
-## Completed Work
-
-### Commit 9895627 — Initial Gap Fixes (14 items)
-- [x] Converted raw `**Markdown**` syntax to `<strong>` HTML in 3 bootcamp pages
-- [x] Removed invalid `text-red` HTML attribute from ServicesPricing
-- [x] Added missing `<ul>` wrapper around `<li>` elements in About page
-- [x] Fixed invalid Tailwind class `dark:hover:bg-gray-750` → `dark:hover:bg-gray-700` in FAQ
-- [x] Contact form now has loading state, success/error feedback, and mailto submission
-- [x] "Get Quote" button in Advanced pricing card now links to contact section
-- [x] Added `metadata` exports to 5 pages: About, Backendstack, Frontendstack, Fullstacklearnmore
-- [x] Removed 80+ lines of dead/commented-out code from Logo.tsx
-- [x] Deleted unused `Logo.module.css`
-- [x] Removed 13 "Add more items here" placeholder comments from ServicesList
-- [x] Removed `console.log` from ContactUs production code
-- [x] Converted 3 bootcamp pages from client to server components
-- [x] Standardized contact address between About page and Footer
-
-### Commit 4adbefe — Contact Form Resend, Data-Driven Pricing, Service Pages
-- [x] Created API route `/api/contact` with validation, honeypot spam protection, IP rate limiting
-- [x] Integrated Resend for admin notification + user auto-reply emails
-- [x] Added Sonner toast notifications for form feedback
-- [x] Created `lib/pricing.ts` config with 3-tier pricing (Basic/Regular/Advanced)
-- [x] Monthly/annual billing toggle with ~17% savings badge
-- [x] Feature comparison checklist with Lucide Check icons
-- [x] Pricing FAQ accordion below cards
-- [x] Created `lib/services.ts` with 13 service categories + Lucide icons
-- [x] Updated `ServicesList.tsx` with icons and links to detail pages
-- [x] Created `/services/[slug]` detail pages (13 routes)
-- [x] Updated sitemap with all service URLs
-
-### Commit 9895627 — Contact Form Email Fixes
-- [x] Fixed Resend lazy initialization (build was crashing without env var)
-- [x] Added detailed server-side logging for debugging email delivery
-- [x] Made admin email non-fatal (user still sees success if admin email fails)
-- [x] Fixed React hydration error (#418/#423) by extracting Toaster to client wrapper
-- [x] Changed `CONTACT_EMAIL_TO` to working email (Resend free tier restriction)
-
-### Commit c2172cc — Ghost Blog Caching
-- [x] Added in-memory cache layer with stale-while-revalidate pattern in `lib/ghost.ts`
-- [x] Cache TTL: 1 hour fresh, 24 hours stale fallback
-- [x] Added `revalidate = 3600` to homepage and Blog component
-- [x] Blog pages now resilient to Ghost downtime
-
-### Blog Content (via Ghost Admin API)
-- [x] Created 3 full blog posts with ~900-1100 words each:
-  - How Cloud-Based Accounting is Revolutionizing SME Financial Management
-  - Top 5 Technology Challenges Facing Small Businesses in Uganda
-  - Why Every Retail Business Needs a Modern POS System in 2026
-- [x] Each post has SEO meta titles/descriptions, proper tags, CTAs
-
-### Final Cleanup
-- [x] Fixed invalid Tailwind class `hover:bg-gray-750` → `hover:bg-gray-700` in ServicesPricing FAQ
-- [x] Added blog posts to sitemap (dynamic from Ghost API)
-- [x] Removed unused files: `vercel.svg`, `next.svg`, `placeholder.svg`, `placeholder-avatar.jpg`
-- [x] Removed unused shadcn/ui components: `input.tsx`, `label.tsx`, `textarea.tsx`
-- [x] Moved `@tryghost/admin-api` to devDependencies
-
-### Commit e5c275d — Client Dashboard CRUD Completion (July 24, 2026)
-- [x] Fixed billing page data path (`billing?.transactions`)
-- [x] Fixed subscriptions page array access (`subscriptions?.data`)
-- [x] Fixed auth redirect (`/auth/sign-in` → `/auth/login`)
-- [x] Added ticket close/reopen buttons + inline error display
-- [x] Added subscription Change Plan modal + Cancel confirmation dialog
-- [x] Added invoice modal with tax breakdown (subtotal, VAT 18%, total) + print
-- [x] Rendered available services section with "Upgrade" CTA
-- [x] Added active route highlighting in sidebar
-- [x] Added "Forgot password?" link + `/auth/forgot-password` + `/auth/reset-password` pages
-- [x] Removed 100ms `setTimeout` hack from auth provider
-- [x] Added proper error handling across all pages
-- [x] Removed ~40 dead template files (overview charts, nav components, hooks, types, UI stubs)
-- [x] Fixed Tailwind CSS v4 PostCSS config
-- [x] Added PayPal webhook signature verification
-- [x] Removed raw token from forgotPassword API response
-
----
-
-## Way Forward — Remaining Items
-
-### High Priority
-- [x] ~~**API Key Security** — `NEXT_PUBLIC_GHOST_CONTENT_KEY` is exposed to the browser. Move to server-only env var (remove `NEXT_PUBLIC_` prefix).~~ **Still open — needs attention**
-- [x] ~~**Blog HTML Sanitization** — `dangerouslySetInnerHTML` for Ghost content has no sanitization. Add DOMPurify or equivalent.~~ **Still open — needs attention**
-- [x] ~~**Resend Domain Verification** — Contact form uses `onboarding@resend.dev`. Verify `oakitsolutionsandsupplies.com` domain in Resend dashboard to send from `info@` address.~~ **Still open — emails not delivering**
-
-### Medium Priority
-- [ ] **Footer Social Links** — Twitter/X, LinkedIn, GitHub icons link to `#`. Update with real company social URLs when available.
-- [ ] **Route Naming** — Inconsistent conventions: `aboutUs` (camelCase), `Backendstack` (PascalCase), `Fullstacklearnmore` (no separators). Standardize to kebab-case.
-- [ ] **Loading States** — Add `loading.tsx` files for routes with server-side data fetching (blog pages).
-- [ ] **Hardcoded URLs** — Production URLs are hardcoded in 10+ files. Extract to environment variables.
-- [ ] **Missing Metadata** — No OpenGraph images configured for any pages.
-
-### Low Priority
-- [ ] **README.md** — Still the default create-next-app boilerplate. Replace with project-specific documentation.
-- [ ] **`getTags()` in lib/ghost.ts** — Exported but never imported anywhere.
-- [ ] **ServicesList Content** — Each service category shows only 3 items. Add more items as content becomes available.
-- [ ] **Services CMS Migration** — Move services config from `lib/services.ts` to Ghost CMS for admin-editable content.
-
-### New Items (discovered July 24, 2026)
-- [ ] **Admin Vue Pages** — Client user management + OAK IT service management pages missing from POS Vue SPA (API exists, frontend doesn't)
-- [ ] **Resend Email Delivery** — Verification emails not arriving. Domain `notifications.oakitsolutionsandsupplies.com` verified in Resend but from address may need updating in Vercel env vars
-- [ ] **PayPal Live Config** — Currently using sandbox credentials; need to switch to live for production
-
----
-
-## Environment Variables
-
-```
-NEXT_PUBLIC_GHOST_CONTENT_KEY=...   # Ghost CMS API key (currently exposed to client)
-RESEND_API_KEY=re_...               # Resend API for contact form emails
-CONTACT_EMAIL_TO=kengeorge2@yahoo.com  # Temp: Resend free tier can only send to signup email
-CONTACT_EMAIL_FROM=Contact Form <onboarding@resend.dev>
-```
-
-Ghost API URL fallback: `https://blog.oakitsolutionsandsupplies.com`
+Legacy URLs (`/aboutUs`, `/Backendstack`, etc.) 301-redirect to the canonical kebab-case routes in `next.config.mjs`.
 
 ---
 
@@ -174,19 +53,99 @@ Ghost API URL fallback: `https://blog.oakitsolutionsandsupplies.com`
 
 | File | Purpose |
 |---|---|
-| `app/layout.tsx` | Root layout — Navbar, Footer, ThemeProvider, metadata, ToastProvider |
-| `components/Navbar.tsx` | Fixed top nav, mobile hamburger, dark mode toggle |
-| `components/Footer.tsx` | 4-column footer with nav, products, contact, social |
-| `components/ContactUs.tsx` | Contact form with Resend API, honeypot, toast notifications |
-| `components/ServicesPricing.tsx` | Data-driven pricing cards with monthly/annual toggle |
-| `components/ServicesList.tsx` | 13-category grid with icons, links to detail pages |
-| `components/ToastProvider.tsx` | Client wrapper for Sonner Toaster |
-| `lib/ghost.ts` | Ghost CMS API client with stale-while-revalidate caching |
-| `lib/email.ts` | Resend email templates (admin notification + auto-reply) |
-| `lib/pricing.ts` | Pricing config (3 tiers, features, FAQ) |
-| `lib/services.ts` | Service categories config (13 services with icons) |
-| `lib/utils.ts` | `cn()` utility (clsx + tailwind-merge) |
-| `app/api/contact/route.ts` | Contact form API with validation, rate limiting, honeypot |
-| `app/services/[slug]/page.tsx` | Dynamic service detail pages |
-| `app/sitemap.ts` | Dynamic sitemap with services + blog posts |
-| `scripts/push-blog-content.js` | Ghost Admin API script for blog content management |
+| `app/layout.tsx` | Root layout — ThemeProvider (dark/light, default dark), Navbar, Footer, ToastProvider |
+| `app/globals.css` | Tailwind base + custom section/card/animation classes |
+| `components/ContactUs.tsx` | Contact form (client component) — submits to `/api/contact` |
+| `components/ServicesPricing.tsx` | 3-tier pricing with monthly/annual toggle |
+| `components/ServicesList.tsx` | 13-service grid with Lucide icons |
+| `components/ToastProvider.tsx` | Client wrapper around Sonner Toaster (fixes hydration) |
+| `lib/ghost.ts` | Ghost Content API client with in-memory cache (1h fresh / 24h stale) |
+| `lib/email.ts` | Resend email: admin notification + user auto-reply |
+| `lib/pricing.ts` | Pricing config — edit to change tiers/features |
+| `lib/services.ts` | Service config — edit to add/change services |
+| `app/api/contact/route.ts` | POST handler: validation, honeypot, rate limit (5/h per IP), Resend |
+| `app/sitemap.ts` | Dynamic sitemap from services + Ghost posts |
+| `scripts/push-blog-content.js` | Push blog posts to Ghost Admin API |
+
+---
+
+## Data Sources (non-obvious)
+
+**Ghost CMS** — Blog posts and pages come from `@tryghost/content-api` (Content API v5). Key env vars in `.env.local`:
+- `GHOST_URL` — Ghost instance URL
+- `GHOST_CONTENT_KEY` — Content API key (26-char hex). **No `NEXT_PUBLIC_` prefix** — this is server-only.
+
+**Resend** — Contact form emails. Key env vars:
+- `RESEND_API_KEY`
+- `CONTACT_EMAIL_TO` — comma-separated admin addresses
+- `CONTACT_EMAIL_FROM` — from address (must be a verified domain in Resend)
+
+**DOMPurify** — Ghost HTML blog content is sanitized with `isomorphic-dompurify` before rendering via `dangerouslySetInnerHTML`. Do not remove the sanitize call.
+
+---
+
+## Tailwind / Styling Conventions
+
+- Dark mode via `next-themes` with `darkMode: ["class"]` in `tailwind.config.ts`.
+- Custom section classes: `.section-dark`, `.section-dark-alt`, `.section-dark-bootcamp`, `.grid-overlay`, `.card-glass`, `.pricing-card`, `.btn-glow`, `.rv` (scroll reveal).
+- `@apply` used heavily in `globals.css` for custom component classes.
+- Icon library: `lucide-react`. All services in `lib/services.ts` reference Lucide icons.
+
+---
+
+## Contact Form Gotchas
+
+1. **Honeypot field** — `honeypot` field in the form JSON is silently accepted (bots fill it). Real submissions omit it.
+2. **Rate limiting** — 5 requests per hour per IP, in-memory Map. Clears on server restart.
+3. **Admin email is non-fatal** — if `sendAdminNotification` fails, the user still sees success. Only `sendUserAutoReply` failure returns 500.
+4. **Resend free tier** — `CONTACT_EMAIL_TO` must include the email used to sign up for Resend. Unverified recipient addresses will bounce.
+
+---
+
+## Blog Content Management
+
+Blog posts are created via `scripts/push-blog-content.js` using the Ghost **Admin API** (`@tryghost/admin-api`, devDependency only). The script reads HTML from `blog-content/` and pushes to Ghost. To add a new post:
+1. Write the HTML file in `blog-content/`
+2. Add an entry to the `posts` array in the script
+3. Run the script
+
+The Content API (server-side only) reads posts at runtime with caching.
+
+---
+
+## Service Pages
+
+13 services defined in `lib/services.ts`. Each gets an auto-generated detail page at `/services/[slug]`. To add a service:
+1. Add entry to `services` array in `lib/services.ts` (slug, title, icon from lucide-react, features, benefits, CTA)
+2. The page and sitemap update automatically — no new file needed.
+
+---
+
+## Pricing
+
+3 tiers in `lib/pricing.ts`: Basic (UGX 700k/mo), Regular (UGX 1,500k/mo), Advanced (quote-only). Annual pricing has ~17% discount. Edit the config to change prices/features.
+
+---
+
+## Environment
+
+Required vars (see `.env.local`):
+```
+GHOST_URL=https://blog.oakitsolutionsandsupplies.com
+GHOST_CONTENT_KEY=<26-char hex>
+RESEND_API_KEY=re_<key>
+CONTACT_EMAIL_TO=admin1@example.com,admin2@example.com
+CONTACT_EMAIL_FROM=website-form@notifications.oakitsolutionsandsupplies.com
+NEXT_PUBLIC_API_URL=https://posapp.oakitsolutionsandsupplies.com/api/v1/client
+```
+
+---
+
+## Remaining Known Issues
+
+- `NEXT_PUBLIC_GHOST_CONTENT_KEY` — already fixed (now server-only `GHOST_CONTENT_KEY`)
+- **Resend domain verification** — `notifications.oakitsolutionsandsupplies.com` verified in Resend; `CONTACT_EMAIL_FROM` must use this verified domain
+- **Footer social links** — Twitter/LinkedIn/GitHub hrefs are `#`
+- **Hardcoded production URLs** — scattered across components; extract to env vars when feasible
+- **Loading states** — no `loading.tsx` on blog or service pages
+- **client-dashboard** — admin Vue/Next.js pages for user and service management are missing (API exists)

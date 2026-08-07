@@ -3,7 +3,7 @@ import { Resend } from 'resend';
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://posapp.oakitsolutionsandsupplies.com/api/v1/client';
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
-const CONTACT_FROM = process.env.CONTACT_EMAIL_FROM || 'notifications@notifications.oakitsolutionsandsupplies.com';
+const CONTACT_FROM = process.env.CONTACT_EMAIL_FROM || 'OAK IT Solutions <notifications@notifications.oakitsolutionsandsupplies.com>';
 
 function extractError(data: any): string {
   if (typeof data.error === 'string') return data.error;

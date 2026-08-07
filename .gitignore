@@ -42,3 +42,5 @@ next-env.d.ts
 
 # opencode config (contains API keys)
 opencode.json
+.next/
+data/patch.json

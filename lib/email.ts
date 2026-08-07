@@ -10,7 +10,7 @@ function getResend(): Resend {
 }
 
 const CONTACT_TO = (process.env.CONTACT_EMAIL_TO || 'kokello@oakitsolutionsandsupplies.com,kengeorge2@yahoo.com').split(',');
-const CONTACT_FROM = process.env.CONTACT_EMAIL_FROM || 'website-form@notifications.oakitsolutionsandsupplies.com';
+const CONTACT_FROM = process.env.CONTACT_EMAIL_FROM || 'OAK IT Solutions <notifications@notifications.oakitsolutionsandsupplies.com>';
 
 interface ContactEmailData {
   name: string;
