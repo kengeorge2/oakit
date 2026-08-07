@@ -5,8 +5,31 @@ function getToken(): string | null {
   return localStorage.getItem('auth_token');
 }
 
+function getXsrfToken(): string | null {
+  if (typeof document === 'undefined') return null;
+  const match = document.cookie.match(/XSRF-TOKEN=([^;]+)/);
+  return match ? decodeURIComponent(match[1]) : null;
+}
+
+async function extractErrorMessage(res: Response): Promise<string> {
+  const contentType = res.headers.get('content-type') || '';
+  if (contentType.includes('application/json')) {
+    try {
+      const data = await res.json();
+      if (typeof data.error === 'string') return data.error;
+      if (data.error?.message) return data.error.message;
+      if (data.message) return data.message;
+    } catch {}
+  }
+  if (res.status === 419) return 'Session expired. Please try again.';
+  if (res.status === 401) return 'Unauthorized. Please log in again.';
+  if (res.status === 422) return 'Validation failed. Please check your input.';
+  return `API error: ${res.status}`;
+}
+
 async function apiFetch<T>(path: string, options: RequestInit = {}): Promise<T> {
   const token = getToken();
+  const xsrfToken = getXsrfToken();
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
@@ -16,16 +39,18 @@ async function apiFetch<T>(path: string, options: RequestInit = {}): Promise<T> 
   if (token) {
     headers['Authorization'] = `Bearer ${token}`;
   }
+  if (xsrfToken) {
+    headers['X-XSRF-TOKEN'] = xsrfToken;
+  }
 
   const res = await fetch(`${API_URL}${path}`, {
     ...options,
     headers,
+    credentials: 'include',
   });
 
   if (!res.ok) {
-    const data = await res.json().catch(() => ({}));
-    const errMsg = typeof data.error === 'string' ? data.error : data.error?.message || data.message || `API error: ${res.status}`;
-    throw new Error(errMsg);
+    throw new Error(await extractErrorMessage(res));
   }
 
   return res.json();

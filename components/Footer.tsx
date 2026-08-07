@@ -41,10 +41,10 @@ const Footer: React.FC = () => {
               <Link href="/#full-stack-course" className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors duration-200 w-fit">
                 Bootcamp
               </Link>
-              <Link href="/auth/signin" className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors duration-200 w-fit">
+              <Link href="https://dashboard.oakitsolutionsandsupplies.com/auth/login" target="_blank" rel="noopener noreferrer" className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors duration-200 w-fit">
                 Sign In
               </Link>
-              <Link href="/auth/signup?plan=regular" className="text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 transition-colors duration-200 w-fit font-medium">
+              <Link href="https://dashboard.oakitsolutionsandsupplies.com/auth/register" target="_blank" rel="noopener noreferrer" className="text-purple-600 dark:text-purple-400 hover:text-purple-700 dark:hover:text-purple-300 transition-colors duration-200 w-fit font-medium">
                 Get Started →
               </Link>
             </nav>

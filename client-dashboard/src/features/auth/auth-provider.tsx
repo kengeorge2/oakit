@@ -10,6 +10,7 @@ interface User {
   company_name: string | null;
   company_phone: string | null;
   email_verified_at: string | null;
+  created_at?: string;
 }
 
 interface AuthContextType {
@@ -37,6 +38,22 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://posapp.oakitsolutionsandsupplies.com/api/v1/client';
 
+async function extractErrorMessage(res: Response): Promise<string> {
+  const contentType = res.headers.get('content-type') || '';
+  if (contentType.includes('application/json')) {
+    try {
+      const data = await res.json();
+      if (typeof data.error === 'string') return data.error;
+      if (data.error?.message) return data.error.message;
+      if (data.message) return data.message;
+    } catch {}
+  }
+  if (res.status === 419) return 'Session expired. Please try again.';
+  if (res.status === 401) return 'Invalid email or password.';
+  if (res.status === 422) return 'Validation failed. Please check your input.';
+  return `Login failed (${res.status})`;
+}
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
@@ -45,10 +62,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const mountedRef = useRef(false);
 
-  const fetchUser = useCallback(async (authToken: string): Promise<boolean> => {
+  const fetchUser = useCallback(async (authToken?: string): Promise<boolean> => {
     try {
+      const headers: Record<string, string> = { 'Accept': 'application/json' };
+      if (authToken) {
+        headers['Authorization'] = `Bearer ${authToken}`;
+      }
       const res = await fetch(`${API_URL}/auth/me`, {
-        headers: { 'Authorization': `Bearer ${authToken}`, 'Accept': 'application/json' },
+        headers,
+        credentials: 'include',
       });
       if (res.ok) {
         const data = await res.json();
@@ -77,7 +99,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setToken(storedToken);
       fetchUser(storedToken).finally(() => setIsLoading(false));
     } else {
-      setIsLoading(false);
+      // Try cookie-based auth
+      fetchUser().finally(() => setIsLoading(false));
     }
   }, [fetchUser]);
 
@@ -97,8 +120,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     });
 
     if (!res.ok) {
-      const data = await res.json();
-      throw new Error(typeof data.error === 'string' ? data.error : data.error?.message || 'Login failed');
+      throw new Error(await extractErrorMessage(res));
     }
 
     const data = await res.json();
@@ -116,9 +138,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     });
 
     if (!res.ok) {
-      const errData = await res.json();
-      const msg = typeof errData.error === 'string' ? errData.error : errData.error?.message || 'Registration failed';
-      throw new Error(msg);
+      throw new Error(await extractErrorMessage(res));
     }
 
     const result = await res.json();
@@ -130,11 +150,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const logout = () => {
+  const logout = async () => {
     if (token) {
-      fetch(`${API_URL}/auth/logout`, {
+      await fetch(`${API_URL}/auth/logout`, {
         method: 'POST',
-        headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/json' },
+        headers: { 'Accept': 'application/json', 'Authorization': `Bearer ${token}` },
       }).catch(() => {});
     }
     localStorage.removeItem('auth_token');

@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '@/features/auth/auth-provider';
 import { updateProfile, changePassword } from '@/lib/api';
 import PageContainer from '@/components/layout/page-container';
+import { safeFormatDate } from '@/lib/format';
 
 export default function ProfilePage() {
   const { user, fetchUser } = useAuth();
@@ -100,6 +101,11 @@ export default function ProfilePage() {
                 className="flex h-10 w-full rounded-md border bg-background px-3 py-2 text-sm" />
             </div>
           </div>
+          {user?.created_at && (
+            <div className="text-xs text-muted-foreground">
+              Member since {safeFormatDate(user.created_at)}
+            </div>
+          )}
           <button type="submit" disabled={saving}
             className="flex h-10 items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-50">
             {saving ? 'Saving...' : 'Save Changes'}

@@ -42,8 +42,8 @@ export default function SigninPage() {
         throw new Error(extractError(data));
       }
 
-      localStorage.setItem('auth_token', data.token);
-      window.location.href = 'https://dashboard.oakitsolutionsandsupplies.com/dashboard';
+      // Redirect to dashboard with token in URL to avoid cross-origin localStorage issues
+      window.location.href = `https://dashboard.oakitsolutionsandsupplies.com/auth/login?token=${encodeURIComponent(data.token)}&redirect=/dashboard`;
     } catch (err: any) {
       setError(err.message);
     } finally {

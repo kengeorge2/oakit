@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { getSubscriptions, getPlans, changePlan, cancelSubscription } from '@/lib/api';
 import PageContainer from '@/components/layout/page-container';
+import { safeFormatDate } from '@/lib/format';
 
 export default function SubscriptionsPage() {
   const [subscriptions, setSubscriptions] = useState<any[]>([]);
@@ -126,18 +127,24 @@ export default function SubscriptionsPage() {
               <div className="mt-4 grid grid-cols-2 gap-4 text-sm">
                 <div>
                   <p className="text-muted-foreground">Start Date</p>
-                  <p className="font-medium">{sub.starts_at ? new Date(sub.starts_at).toLocaleDateString() : 'N/A'}</p>
+                  <p className="font-medium">{sub.starts_at ? safeFormatDate(sub.starts_at) : 'N/A'}</p>
                 </div>
                 {sub.ends_at && (
                   <div>
                     <p className="text-muted-foreground">End Date</p>
-                    <p className="font-medium">{new Date(sub.ends_at).toLocaleDateString()}</p>
+                    <p className="font-medium">{safeFormatDate(sub.ends_at)}</p>
                   </div>
                 )}
                 {sub.trial_ends_at && (
                   <div>
                     <p className="text-muted-foreground">Trial Ends</p>
-                    <p className="font-medium">{new Date(sub.trial_ends_at).toLocaleDateString()}</p>
+                    <p className="font-medium">{safeFormatDate(sub.trial_ends_at)}</p>
+                  </div>
+                )}
+                {sub.cancelled_at && (
+                  <div>
+                    <p className="text-muted-foreground">Cancelled</p>
+                    <p className="font-medium">{safeFormatDate(sub.cancelled_at)}</p>
                   </div>
                 )}
               </div>

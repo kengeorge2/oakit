@@ -36,7 +36,9 @@ yarn-error.log*
 next-env.d.ts
 
 # separate apps (built/deployed independently)
-/client-dashboard
+# /client-dashboard  # NOW INCLUDED - see client-dashboard/.gitignore
+
+# client-dashboard local env (already in client-dashboard/.gitignore)
 
 # opencode config (contains API keys)
 opencode.json

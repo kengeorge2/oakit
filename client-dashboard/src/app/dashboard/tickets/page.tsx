@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { getTickets, getTicket, createTicket, replyToTicket, closeTicket, reopenTicket } from '@/lib/api';
 import PageContainer from '@/components/layout/page-container';
+import { safeFormatDateTime } from '@/lib/format';
 
 export default function TicketsPage() {
   const [tickets, setTickets] = useState<any>(null);
@@ -241,7 +242,7 @@ export default function TicketsPage() {
                   }`}
                 >
                   <p className="text-xs text-muted-foreground">
-                    {msg.sender_name} ({msg.sender_type}) • {new Date(msg.created_at).toLocaleString()}
+                    {msg.sender_name} ({msg.sender_type}) • {safeFormatDateTime(msg.created_at)}
                   </p>
                   <p className="mt-1 text-sm">{msg.message}</p>
                 </div>

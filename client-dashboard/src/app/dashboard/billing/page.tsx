@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { getBilling, getInvoice } from '@/lib/api';
 import PageContainer from '@/components/layout/page-container';
+import { safeFormatDate } from '@/lib/format';
 
 interface InvoiceData {
   invoice_number: string;
@@ -90,7 +91,7 @@ export default function BillingPage() {
                 {transactions.map((txn: any) => (
                   <tr key={txn.id} className="border-b last:border-0">
                     <td className="px-4 py-3 text-sm">
-                      {new Date(txn.created_at).toLocaleDateString()}
+                      {safeFormatDate(txn.created_at)}
                     </td>
                     <td className="px-4 py-3 text-sm">{txn.description || 'N/A'}</td>
                     <td className="px-4 py-3 text-sm font-medium">
@@ -163,7 +164,7 @@ export default function BillingPage() {
               <div className="mb-4 text-sm grid grid-cols-2 gap-2">
                 <div>
                   <p className="text-gray-500">Invoice Date</p>
-                  <p>{invoice.date}</p>
+                  <p>{safeFormatDate(invoice.date)}</p>
                 </div>
                 <div>
                   <p className="text-gray-500">Status</p>
@@ -218,7 +219,11 @@ export default function BillingPage() {
               )}
 
               <button
-                onClick={() => window.print()}
+                onClick={() => {
+                  if (typeof window !== 'undefined') {
+                    window.print();
+                  }
+                }}
                 className="mt-6 w-full rounded-md bg-black px-4 py-2 text-sm font-medium text-white hover:bg-gray-800"
               >
                 Print Invoice

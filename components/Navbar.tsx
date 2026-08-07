@@ -118,10 +118,10 @@ export const Navbar: React.FC = () => {
         </nav>
 
         <div className="flex items-center gap-3">
-          <Link href="/auth/signin" className="hidden lg:inline-flex text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors duration-200">
+          <Link href="https://dashboard.oakitsolutionsandsupplies.com/auth/login" className="hidden lg:inline-flex text-sm font-medium text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors duration-200" target="_blank" rel="noopener noreferrer">
             Sign In
           </Link>
-          <Link href="/auth/signup?plan=regular" className="hidden lg:inline-flex items-center justify-center rounded-lg bg-gradient-to-r from-purple-500 to-blue-500 px-4 py-2 text-sm font-semibold text-white hover:from-purple-600 hover:to-blue-600 transition-all duration-200 btn-glow">
+          <Link href="https://dashboard.oakitsolutionsandsupplies.com/auth/register" className="hidden lg:inline-flex items-center justify-center rounded-lg bg-gradient-to-r from-purple-500 to-blue-500 px-4 py-2 text-sm font-semibold text-white hover:from-purple-600 hover:to-blue-600 transition-all duration-200 btn-glow" target="_blank" rel="noopener noreferrer">
             Get Started
           </Link>
           <button
@@ -208,10 +208,10 @@ export const Navbar: React.FC = () => {
               Courses
             </Link>
             <div className="flex gap-3 pt-2 border-t border-gray-200 dark:border-white/[0.08]">
-              <Link href="/auth/signin" className="flex-1 text-center py-2 border border-gray-300 dark:border-white/[0.1] rounded-lg hover:bg-gray-100 dark:hover:bg-white/[0.06] transition-colors" onClick={() => setIsMenuOpen(false)}>
+              <Link href="https://dashboard.oakitsolutionsandsupplies.com/auth/login" className="flex-1 text-center py-2 border border-gray-300 dark:border-white/[0.1] rounded-lg hover:bg-gray-100 dark:hover:bg-white/[0.06] transition-colors" onClick={() => setIsMenuOpen(false)} target="_blank" rel="noopener noreferrer">
                 Sign In
               </Link>
-              <Link href="/auth/signup?plan=regular" className="flex-1 text-center py-2 bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg hover:from-purple-600 hover:to-blue-600 text-white transition-all" onClick={() => setIsMenuOpen(false)}>
+              <Link href="https://dashboard.oakitsolutionsandsupplies.com/auth/register" className="flex-1 text-center py-2 bg-gradient-to-r from-purple-500 to-blue-500 rounded-lg hover:from-purple-600 hover:to-blue-600 text-white transition-all" onClick={() => setIsMenuOpen(false)} target="_blank" rel="noopener noreferrer">
                 Get Started
               </Link>
             </div>

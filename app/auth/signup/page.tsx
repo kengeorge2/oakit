@@ -119,26 +119,10 @@ function SignupForm() {
 
       setStep('verify-sent');
 
-      try {
-        const emailRes = await fetch('/api/auth/send-verification', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ email: form.email }),
-        });
-        const emailData = await emailRes.json();
-        if (emailRes.ok && emailData.verification_url) {
-          setVerificationLink(emailData.verification_url);
-          setResendStatus('sent');
-        } else if (emailRes.ok) {
-          setResendStatus('sent');
-        } else {
-          console.error('[Signup] Email send failed:', emailData);
-          setResendStatus('error');
-        }
-      } catch (e) {
-        console.error('[Signup] Email send error:', e);
-        setResendStatus('error');
-      }
+      // Redirect to dashboard registration success page
+      setTimeout(() => {
+        window.location.href = 'https://dashboard.oakitsolutionsandsupplies.com/auth/register?step=verify-sent&email=' + encodeURIComponent(form.email);
+      }, 1500);
 
     } catch (err: any) {
       setError(err.message || 'Something went wrong');
@@ -290,7 +274,7 @@ function SignupForm() {
           <option value="">Choose a plan</option>
           {plans.map((p) => (
             <option key={p.id} value={p.id}>
-              {p.name} — ${p.price_monthly}/mo{p.price_yearly > 0 ? ` ($${p.price_yearly}/yr)` : ''}
+              {p.name} — USh {p.price_monthly.toLocaleString()}/mo{p.price_yearly > 0 ? ` (USh ${p.price_yearly.toLocaleString()}/yr)` : ' (Custom Pricing)'}
             </option>
           ))}
         </select>
@@ -299,7 +283,7 @@ function SignupForm() {
 
       {selectedPlan && (
         <div className="rounded-md bg-blue-500/10 p-3 text-sm text-blue-400">
-          <p className="font-medium">{selectedPlan.name} Plan — ${selectedPlan.price_monthly}/mo</p>
+          <p className="font-medium">{selectedPlan.name} Plan — {selectedPlan.price_monthly > 0 ? `USh ${selectedPlan.price_monthly.toLocaleString()}/mo` : 'Custom Pricing'}</p>
           <p className="text-blue-300/70">{selectedPlan.description}</p>
           {selectedPlan.features && (
             <ul className="mt-2 space-y-1">

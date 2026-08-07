@@ -45,9 +45,9 @@ function VerifyForm() {
         } else {
           setStatus('success');
           setMessage('Email verified successfully! Redirecting to dashboard...');
-          localStorage.setItem('auth_token', data.token);
+          // Redirect to dashboard with token in URL
           setTimeout(() => {
-            window.location.href = 'https://dashboard.oakitsolutionsandsupplies.com/dashboard';
+            window.location.href = `https://dashboard.oakitsolutionsandsupplies.com/auth/login?token=${encodeURIComponent(data.token)}&redirect=/dashboard`;
           }, 2000);
         }
       })
@@ -92,11 +92,11 @@ function VerifyForm() {
             </div>
             <p className="text-red-400">{message}</p>
             <div className="pt-2 space-y-2">
-              <Link href="/auth/signin" className="inline-block text-blue-400 hover:underline">
+              <Link href="https://dashboard.oakitsolutionsandsupplies.com/auth/login" className="inline-block text-blue-400 hover:underline" target="_blank" rel="noopener noreferrer">
                 Go to Sign In
               </Link>
               <div>
-                <Link href="/auth/signup" className="text-gray-500 hover:text-gray-300 text-sm">
+                <Link href="https://dashboard.oakitsolutionsandsupplies.com/auth/register" className="text-gray-500 hover:text-gray-300 text-sm" target="_blank" rel="noopener noreferrer">
                   Create a new account
                 </Link>
               </div>

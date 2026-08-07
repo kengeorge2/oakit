@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/features/auth/auth-provider';
 import { getDashboard } from '@/lib/api';
+import { safeFormatDate } from '@/lib/format';
 
 export default function DashboardPage() {
   const { user } = useAuth();
@@ -61,7 +62,17 @@ export default function DashboardPage() {
           </div>
           {sub.trial_ends_at && sub.status === 'trialing' && (
             <p className="mt-2 text-sm text-amber-500">
-              Trial ends {new Date(sub.trial_ends_at).toLocaleDateString()}
+              Trial ends {safeFormatDate(sub.trial_ends_at)}
+            </p>
+          )}
+          {sub.starts_at && (
+            <p className="mt-2 text-xs text-gray-500">
+              Started {safeFormatDate(sub.starts_at)}
+            </p>
+          )}
+          {sub.ends_at && sub.status !== 'cancelled' && (
+            <p className="mt-1 text-xs text-gray-500">
+              Renews {safeFormatDate(sub.ends_at)}
             </p>
           )}
         </div>
