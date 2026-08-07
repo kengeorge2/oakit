@@ -2,24 +2,39 @@ version: '3.8'
 
 services:
   client-dashboard:
+    # Use pre-built image (recommended for production)
     image: oakit/client-dashboard:latest
-    # Or build from source:
+    
+    # OR build from source (for development)
     # build:
     #   context: .
     #   dockerfile: Dockerfile.bun
     #   args:
     #     - NEXT_PUBLIC_API_URL=https://posapp.oakitsolutionsandsupplies.com/api/v1/client
+    
     ports:
-      - "3001:3000"
+      # Dokploy will handle port mapping via its web interface
+      - "3000:3000"
+    
     environment:
       - NODE_ENV=production
       - NEXT_PUBLIC_API_URL=https://posapp.oakitsolutionsandsupplies.com/api/v1/client
       - NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=${NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY:-}
       - NEXT_PUBLIC_SENTRY_DISABLED=true
+    
     restart: unless-stopped
+    
+    # Health check for Dokploy
     healthcheck:
-      test: ["CMD", "bun", "run", "healthcheck.sh"]
+      test: ["CMD", "curl", "-f", "http://localhost:3000/"]
       interval: 30s
       timeout: 10s
       retries: 3
       start_period: 40s
+    
+    # Optional: Add volumes for persistent data if needed
+    # volumes:
+    #   - dashboard-data:/app/data
+
+# volumes:
+#   dashboard-data:
