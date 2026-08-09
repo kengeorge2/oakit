@@ -31,6 +31,17 @@ interface InvoiceData {
   tax_amount: number;
   total: number;
   currency: string;
+  display_currency?: string;
+  display_country?: string;
+  converted?: {
+    currency: string;
+    rate: number;
+    total: number;
+    subtotal: number;
+    tax_amount: number;
+    symbol: string;
+    formatted_total: string;
+  } | null;
   payment_method: string;
   status: string;
   reference: string;
@@ -328,10 +339,15 @@ export default function BillingPage() {
                   </>
                 )}
                 {/* Currency info on invoice */}
-                {localCurrency !== 'USD' && currencyInfo && (
+                {invoice.converted && (
                   <div>
                     <p className="text-gray-500">Currency</p>
-                    <p>{currencyInfo.name} ({localCurrency})</p>
+                    <p>
+                      {invoice.converted.currency} ({invoice.converted.symbol}) —{' '}
+                      <span className="text-xs text-muted-foreground">
+                        1 USD = {invoice.converted.rate.toLocaleString(undefined, { maximumFractionDigits: 2 })} {invoice.converted.currency}
+                      </span>
+                    </p>
                   </div>
                 )}
               </div>
@@ -341,7 +357,7 @@ export default function BillingPage() {
                   <tr className="border-b">
                     <th className="py-2 text-left">Description</th>
                     <th className="py-2 text-right">Amount</th>
-                    {localCurrency !== 'USD' && (
+                    {invoice.converted && (
                       <th className="py-2 text-right">Local Amount</th>
                     )}
                   </tr>
@@ -350,17 +366,11 @@ export default function BillingPage() {
                   <tr className="border-b">
                     <td className="py-2">{invoice.plan?.name || 'Subscription'} ({invoice.plan?.billing_cycle || 'monthly'})</td>
                     <td className="py-2 text-right">{invoice.currency || '$'} {invoice.subtotal?.toFixed(2)}</td>
-                    {localCurrency !== 'USD' && invoice.plan?.name && (() => {
-                      const localized = getLocalizedPrice(invoice.plan.name, invoice.subtotal);
-                      if (localized) {
-                        return (
-                          <td className="py-2 text-right">
-                            {localized.symbol} {localized.localAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
-                          </td>
-                        );
-                      }
-                      return null;
-                    })()}
+                    {invoice.converted && (
+                      <td className="py-2 text-right">
+                        {invoice.converted.symbol} {invoice.converted.subtotal.toLocaleString(undefined, { maximumFractionDigits: 2 })}
+                      </td>
+                    )}
                   </tr>
                 </tbody>
               </table>
@@ -368,15 +378,36 @@ export default function BillingPage() {
               <div className="space-y-1 text-sm">
                 <div className="flex justify-between">
                   <span>Subtotal</span>
-                  <span>{invoice.currency || '$'} {invoice.subtotal?.toFixed(2)}</span>
+                  <span>
+                    {invoice.currency || '$'} {invoice.subtotal?.toFixed(2)}
+                    {invoice.converted && (
+                      <span className="ml-2 text-muted-foreground">
+                        ({invoice.converted.symbol} {invoice.converted.subtotal.toLocaleString(undefined, { maximumFractionDigits: 2 })})
+                      </span>
+                    )}
+                  </span>
                 </div>
                 <div className="flex justify-between">
                   <span>VAT ({invoice.tax_percent}%)</span>
-                  <span>{invoice.currency || '$'} {invoice.tax_amount?.toFixed(2)}</span>
+                  <span>
+                    {invoice.currency || '$'} {invoice.tax_amount?.toFixed(2)}
+                    {invoice.converted && (
+                      <span className="ml-2 text-muted-foreground">
+                        ({invoice.converted.symbol} {invoice.converted.tax_amount.toLocaleString(undefined, { maximumFractionDigits: 2 })})
+                      </span>
+                    )}
+                  </span>
                 </div>
                 <div className="flex justify-between border-t pt-1 font-bold text-base">
                   <span>Total</span>
-                  <span>{invoice.currency || '$'} {invoice.total?.toFixed(2)}</span>
+                  <span>
+                    {invoice.currency || '$'} {invoice.total?.toFixed(2)}
+                    {invoice.converted && (
+                      <span className="ml-2 font-semibold text-muted-foreground">
+                        ({invoice.converted.formatted_total})
+                      </span>
+                    )}
+                  </span>
                 </div>
               </div>
 
