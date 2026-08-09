@@ -2,12 +2,14 @@
 
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/features/auth/auth-provider';
-import { getPlans } from '@/lib/api';
+import { getPlans, detectCurrency, getSupportedCurrencies, getCurrencyPricing } from '@/lib/api';
 import Link from 'next/link';
 
 export default function RegisterPage() {
   const { register } = useAuth();
   const [plans, setPlans] = useState<any[]>([]);
+  const [currencies, setCurrencies] = useState<any[]>([]);
+  const [planPrices, setPlanPrices] = useState<Record<string, any>>({});
   const [form, setForm] = useState({
     name: '',
     email: '',
@@ -16,13 +18,52 @@ export default function RegisterPage() {
     company_name: '',
     company_phone: '',
     plan_id: '',
+    currency: 'USD',
+    country: '',
   });
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     getPlans().then(setPlans).catch(() => {});
+    getSupportedCurrencies()
+      .then((res: any) => {
+        const obj = res?.currencies || res;
+        const list = Object.entries(obj).map(([code, info]: any) => ({
+          code,
+          name: info?.name || code,
+        }));
+        setCurrencies(list);
+      })
+      .catch(() => {});
+    // Auto-detect user's country/currency
+    detectCurrency()
+      .then((detected: any) => {
+        const cur = detected?.currency || 'USD';
+        setForm((prev) => ({
+          ...prev,
+          currency: cur,
+          country: detected?.detected_country || detected?.country || '',
+        }));
+        if (cur !== 'USD') {
+          getCurrencyPricing(cur)
+            .then((pricing: any) => setPlanPrices(pricing))
+            .catch(() => {});
+        }
+      })
+      .catch(() => {});
   }, []);
+
+  // Fetch plan prices when currency changes
+  const onCurrencyChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const cur = e.target.value;
+    setForm((prev) => ({ ...prev, currency: cur }));
+    if (cur !== 'USD') {
+      getCurrencyPricing(cur).then(setPlanPrices).catch(() => setPlanPrices({}));
+    } else {
+      setPlanPrices({});
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -86,12 +127,35 @@ export default function RegisterPage() {
             <select id="plan_id" value={form.plan_id} onChange={update('plan_id')} required
               className="flex h-10 w-full rounded-md border bg-background px-3 py-2 text-sm">
               <option value="">Choose a plan</option>
-              {plans.map((p) => (
-                <option key={p.id} value={p.id}>
-                  {p.name} — ${p.price_monthly}/mo{p.price_yearly > 0 ? ` ($${p.price_yearly}/yr)` : ''}
+              {plans.map((p) => {
+                const lp = planPrices?.plans?.find((x: any) => x.id === p.id);
+                const isConverted = !!lp && form.currency !== 'USD';
+                const monthly = isConverted ? lp.pricing?.monthly?.converted : p.price_monthly;
+                const yearly = isConverted ? lp.pricing?.yearly?.converted : p.price_yearly;
+                const symbol = isConverted ? (lp.currency_symbol || planPrices?.currency_symbol || '$') : '$';
+                return (
+                  <option key={p.id} value={p.id}>
+                    {p.name} — {symbol} {Number(monthly).toLocaleString()}/mo{yearly > 0 ? ` (${symbol} ${Number(yearly).toLocaleString()}/yr)` : ''}
+                  </option>
+                );
+              })}
+            </select>
+          </div>
+
+          <div className="space-y-2">
+            <label className="text-sm font-medium" htmlFor="currency">Preferred Currency</label>
+            <select id="currency" value={form.currency} onChange={onCurrencyChange}
+              className="flex h-10 w-full rounded-md border bg-background px-3 py-2 text-sm">
+              {currencies.length === 0 && <option value={form.currency}>{form.currency}</option>}
+              {currencies.map((cur: any) => (
+                <option key={cur.code} value={cur.code}>
+                  {cur.code} — {cur.name}
                 </option>
               ))}
             </select>
+            <p className="text-xs text-muted-foreground">
+              Prices are shown in your local currency at checkout
+            </p>
           </div>
 
           <div className="space-y-2">
