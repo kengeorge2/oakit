@@ -86,7 +86,7 @@ export default function ServiceDetailPage({ params }: Props) {
           <div className="flex flex-col sm:flex-row gap-4">
             <Link href="/auth/signup?plan=regular">
               <Button size="lg" className="bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600">
-                Get Started — $1,500/mo
+                Get Started — $1,000/mo
               </Button>
             </Link>
             <Link href="/#servicesPricing">

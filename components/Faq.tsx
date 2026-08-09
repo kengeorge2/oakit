@@ -10,7 +10,7 @@ const faqs = [
   },
   {
     question: "How much does a POS system cost?",
-    answer: "Our POS systems start from $700/month for up to 50 users. For 50-150 users, plans start from $1,500/month. Enterprise solutions with 150+ users are custom-quoted based on your specific requirements."
+    answer: "Our IT support plans start from $250/month for up to 50 workers. For growing teams, our Regular plan is $1,000/month with priority support. Enterprise solutions are custom-quoted."
   },
   {
     question: "Do you offer training for new systems?",
