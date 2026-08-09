@@ -14,14 +14,15 @@ export const pricingTiers: PricingTier[] = [
     id: 'basic',
     name: 'Basic',
     description: 'For small teams getting started',
-    monthlyPrice: 700,
-    annualPrice: 7000,
+    monthlyPrice: 250,
+    annualPrice: 2400,
     features: [
       'IT Support (Business Hours)',
       'Remote Monitoring',
       'Basic Security Patch Management',
       'Email & Phone Support',
       'Monthly Health Reports',
+      'Up to 50 Support Workers',
     ],
     cta: { label: 'Get Started', href: '/auth/signup?plan=basic', variant: 'default' },
     popular: false,
@@ -30,8 +31,8 @@ export const pricingTiers: PricingTier[] = [
     id: 'regular',
     name: 'Regular',
     description: 'For growing businesses',
-    monthlyPrice: 1500,
-    annualPrice: 15000,
+    monthlyPrice: 1000,
+    annualPrice: 9600,
     features: [
       'Everything in Basic',
       '24/7 Monitoring & Alerting',
@@ -39,6 +40,7 @@ export const pricingTiers: PricingTier[] = [
       'Backup Management',
       'Quarterly Business Reviews',
       'Priority Response (4hr SLA)',
+      'Up to 50 Support Workers',
     ],
     cta: { label: 'Get Started', href: '/auth/signup?plan=regular', variant: 'default' },
     popular: true,
@@ -57,6 +59,7 @@ export const pricingTiers: PricingTier[] = [
       'Compliance Support (ISO, GDPR)',
       'On-site Support Available',
       'Custom Integrations',
+      'Unlimited Support Workers',
     ],
     cta: { label: 'Request Quote', href: '/#contactUs', variant: 'outline' },
     popular: false,
@@ -65,8 +68,8 @@ export const pricingTiers: PricingTier[] = [
 
 export const pricingFaq = [
   {
-    question: 'What\'s included in the Basic plan?',
-    answer: 'The Basic plan covers business-hours IT support, remote monitoring, basic security patch management, email & phone support, and monthly health reports. It\'s designed for teams of 10-50 users.',
+    question: "What's included in the Basic plan?",
+    answer: "The Basic plan covers business-hours IT support, remote monitoring, basic security patch management, email & phone support, and monthly health reports. It's designed for teams of up to 50 workers.",
   },
   {
     question: 'Can I upgrade or downgrade my plan?',
@@ -78,10 +81,14 @@ export const pricingFaq = [
   },
   {
     question: 'Are there discounts for annual billing?',
-    answer: 'Yes! Annual billing saves you approximately 17% compared to monthly billing. Contact us for enterprise multi-year discounts.',
+    answer: 'Yes! Annual billing saves you approximately 20% compared to monthly billing. Contact us for enterprise multi-year discounts.',
   },
   {
     question: 'What support response times are guaranteed?',
     answer: 'Basic: Next business day. Regular: 4-hour response SLA. Advanced: Custom SLA based on your requirements, with options for 1-hour or immediate response.',
+  },
+  {
+    question: 'Can I pay in my local currency?',
+    answer: 'Yes! We support multiple currencies including USD, UGX, and others. Your PayPal account will handle currency conversion automatically based on your location.',
   },
 ];
