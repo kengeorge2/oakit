@@ -87,7 +87,7 @@ export const getBilling = (params?: Record<string, string>) => {
   const query = params ? '?' + new URLSearchParams(params).toString() : '';
   return apiFetch<any>(`/billing${query}`);
 };
-export const checkout = (data: { subscription_id: string; billing_cycle: string }) =>
+export const checkout = (data: { subscription_id: string; billing_cycle: string; currency?: string }) =>
   apiFetch<any>('/billing/checkout', { method: 'POST', body: JSON.stringify(data) });
 export const getInvoice = (transactionId: string) =>
   apiFetch<any>(`/billing/invoice/${transactionId}`);
@@ -100,6 +100,12 @@ export const cancelSubscription = (id: string) =>
 
 // Plans (public)
 export const getPlans = () => apiFetch<any>('/plans');
+
+// Currency (public - no auth required)
+export const detectCurrency = () => apiFetch<any>('/currency/detect');
+export const getCurrencyPricing = (currency: string) =>
+  apiFetch<any>(`/currency/pricing?currency=${encodeURIComponent(currency)}`);
+export const getSupportedCurrencies = () => apiFetch<any>('/currency/supported');
 
 // Profile
 export const updateProfile = (data: { name?: string; company_name?: string; company_phone?: string }) =>

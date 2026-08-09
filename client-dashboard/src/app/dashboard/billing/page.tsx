@@ -1,9 +1,24 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { getBilling, getInvoice } from '@/lib/api';
+import { useEffect, useState, useCallback } from 'react';
+import { getBilling, getInvoice, detectCurrency, getCurrencyPricing } from '@/lib/api';
 import PageContainer from '@/components/layout/page-container';
 import { safeFormatDate } from '@/lib/format';
+
+interface CurrencyInfo {
+  symbol: string;
+  name: string;
+  country: string;
+}
+
+interface PlanLocalizedPrice {
+  id: string;
+  name: string;
+  price_usd: number;
+  price_local: number;
+  currency: string;
+  currency_info: CurrencyInfo;
+}
 
 interface InvoiceData {
   invoice_number: string;
@@ -21,12 +36,54 @@ interface InvoiceData {
   reference: string;
 }
 
+function formatCurrency(amount: number, currency: string, symbol?: string): string {
+  if (symbol) {
+    return `${symbol}${amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+  }
+  return `${currency} ${amount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+}
+
 export default function BillingPage() {
   const [billing, setBilling] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [invoice, setInvoice] = useState<InvoiceData | null>(null);
   const [loadingInvoice, setLoadingInvoice] = useState<string | null>(null);
+
+  // Currency state
+  const [currencyInfo, setCurrencyInfo] = useState<CurrencyInfo | null>(null);
+  const [localCurrency, setLocalCurrency] = useState('USD');
+  const [localizedPricing, setLocalizedPricing] = useState<PlanLocalizedPrice[]>([]);
+  const [loadingCurrency, setLoadingCurrency] = useState(true);
+
+  // Fetch currency info and localized pricing
+  useEffect(() => {
+    const loadCurrencyData = async () => {
+      try {
+        const detected = await detectCurrency();
+        if (detected?.currency) {
+          setLocalCurrency(detected.currency);
+          setCurrencyInfo(detected.currency_info || { symbol: detected.currency, name: detected.currency, country: detected.detected_country || '' });
+
+          // Fetch localized pricing for plans
+          if (detected.currency !== 'USD') {
+            const pricing = await getCurrencyPricing(detected.currency);
+            if (pricing?.plans) {
+              setLocalizedPricing(pricing.plans);
+            } else if (Array.isArray(pricing)) {
+              setLocalizedPricing(pricing);
+            }
+          }
+        }
+      } catch (err) {
+        // Currency detection is non-critical, silently fall back to USD
+        console.warn('Currency detection failed:', err);
+      } finally {
+        setLoadingCurrency(false);
+      }
+    };
+    loadCurrencyData();
+  }, []);
 
   useEffect(() => {
     getBilling()
@@ -47,6 +104,44 @@ export default function BillingPage() {
     }
   };
 
+  // Helper to get localized price for a plan
+  const getLocalizedPrice = useCallback(
+    (planName: string, usdAmount: number): { localAmount: number; symbol: string } | null => {
+      if (localCurrency === 'USD') return null;
+      const match = localizedPricing.find(
+        (p) => p.name?.toLowerCase() === planName?.toLowerCase()
+      );
+      if (match) {
+        return {
+          localAmount: match.price_local,
+          symbol: match.currency_info?.symbol || localCurrency,
+        };
+      }
+      return null;
+    },
+    [localizedPricing, localCurrency]
+  );
+
+  // Helper to format price with both USD and local currency
+  const formatDualPrice = useCallback(
+    (usdAmount: number, planName?: string, txnCurrency?: string): string => {
+      // If the transaction already has a non-USD currency, show it directly
+      if (txnCurrency && txnCurrency !== 'USD' && txnCurrency !== '$') {
+        return `${txnCurrency}${usdAmount}`;
+      }
+
+      const usd = `$${Number(usdAmount).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+      if (localCurrency === 'USD' || !currencyInfo) return usd;
+
+      const localized = planName ? getLocalizedPrice(planName, usdAmount) : null;
+      if (localized) {
+        return `${usd} (${localized.symbol}${localized.localAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })})`;
+      }
+      return usd;
+    },
+    [localCurrency, currencyInfo, getLocalizedPrice]
+  );
+
   if (loading) {
     return (
       <PageContainer pageTitle="Billing" pageDescription="Loading...">
@@ -66,6 +161,55 @@ export default function BillingPage() {
       <div className="space-y-4">
         {error && (
           <div className="rounded-md bg-destructive/10 p-3 text-sm text-destructive">{error}</div>
+        )}
+
+        {/* Currency Info Banner */}
+        {!loadingCurrency && localCurrency !== 'USD' && currencyInfo && (
+          <div className="rounded-lg border bg-blue-50 p-4 text-sm text-blue-800 dark:bg-blue-950 dark:text-blue-200">
+            <div className="flex items-center gap-2">
+              <span className="text-lg">{currencyInfo.symbol}</span>
+              <div>
+                <p className="font-medium">
+                  Showing prices in {currencyInfo.name} ({localCurrency})
+                </p>
+                <p className="text-xs opacity-75">
+                  Detected region: {currencyInfo.country}. USD amounts shown with local equivalents.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Current Plan / Subscription Summary */}
+        {billing?.subscription && (
+          <div className="rounded-lg border bg-card p-6 shadow-sm">
+            <h3 className="text-lg font-semibold mb-2">Current Subscription</h3>
+            <div className="flex items-start justify-between">
+              <div>
+                <p className="text-sm text-muted-foreground">Plan</p>
+                <p className="font-medium">{billing.subscription.plan?.name || 'N/A'}</p>
+                <p className="text-sm text-muted-foreground capitalize">
+                  Billing: {billing.subscription.billing_cycle || 'monthly'}
+                </p>
+              </div>
+              <div className="text-right">
+                <p className="text-2xl font-bold">
+                  {formatDualPrice(
+                    billing.subscription.amount || billing.subscription.plan?.price_monthly || 0,
+                    billing.subscription.plan?.name
+                  )}
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  /{billing.subscription.billing_cycle === 'yearly' ? 'year' : 'month'}
+                </p>
+                {localCurrency !== 'USD' && currencyInfo && (
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Base price: $250–$1,000 USD
+                  </p>
+                )}
+              </div>
+            </div>
+          </div>
         )}
 
         {transactions.length === 0 ? (
@@ -95,15 +239,15 @@ export default function BillingPage() {
                     </td>
                     <td className="px-4 py-3 text-sm">{txn.description || 'N/A'}</td>
                     <td className="px-4 py-3 text-sm font-medium">
-                      {txn.currency || '$'}{txn.subtotal || txn.amount}
+                      {formatDualPrice(txn.subtotal || txn.amount, txn.description, txn.currency)}
                     </td>
                     <td className="px-4 py-3 text-sm text-muted-foreground">
                       {txn.tax_amount > 0
-                        ? `${txn.currency || '$'}${txn.tax_amount} (${txn.tax_percent}%)`
+                        ? formatDualPrice(txn.tax_amount, txn.description, txn.currency)
                         : '-'}
                     </td>
                     <td className="px-4 py-3 text-sm font-semibold">
-                      {txn.currency || '$'}{txn.amount}
+                      {formatDualPrice(txn.amount, txn.description, txn.currency)}
                     </td>
                     <td className="px-4 py-3">
                       <span
@@ -139,6 +283,7 @@ export default function BillingPage() {
           </div>
         )}
 
+        {/* Invoice Modal */}
         {invoice && (
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
             <div className="w-full max-w-lg max-h-[90vh] overflow-y-auto rounded-lg bg-white p-8 text-black shadow-xl">
@@ -182,6 +327,13 @@ export default function BillingPage() {
                     </div>
                   </>
                 )}
+                {/* Currency info on invoice */}
+                {localCurrency !== 'USD' && currencyInfo && (
+                  <div>
+                    <p className="text-gray-500">Currency</p>
+                    <p>{currencyInfo.name} ({localCurrency})</p>
+                  </div>
+                )}
               </div>
 
               <table className="w-full text-sm mb-4">
@@ -189,12 +341,26 @@ export default function BillingPage() {
                   <tr className="border-b">
                     <th className="py-2 text-left">Description</th>
                     <th className="py-2 text-right">Amount</th>
+                    {localCurrency !== 'USD' && (
+                      <th className="py-2 text-right">Local Amount</th>
+                    )}
                   </tr>
                 </thead>
                 <tbody>
                   <tr className="border-b">
                     <td className="py-2">{invoice.plan?.name || 'Subscription'} ({invoice.plan?.billing_cycle || 'monthly'})</td>
-                    <td className="py-2 text-right">{invoice.currency} {invoice.subtotal?.toFixed(2)}</td>
+                    <td className="py-2 text-right">{invoice.currency || '$'} {invoice.subtotal?.toFixed(2)}</td>
+                    {localCurrency !== 'USD' && invoice.plan?.name && (() => {
+                      const localized = getLocalizedPrice(invoice.plan.name, invoice.subtotal);
+                      if (localized) {
+                        return (
+                          <td className="py-2 text-right">
+                            {localized.symbol} {localized.localAmount.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                          </td>
+                        );
+                      }
+                      return null;
+                    })()}
                   </tr>
                 </tbody>
               </table>
@@ -202,15 +368,15 @@ export default function BillingPage() {
               <div className="space-y-1 text-sm">
                 <div className="flex justify-between">
                   <span>Subtotal</span>
-                  <span>{invoice.currency} {invoice.subtotal?.toFixed(2)}</span>
+                  <span>{invoice.currency || '$'} {invoice.subtotal?.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>VAT ({invoice.tax_percent}%)</span>
-                  <span>{invoice.currency} {invoice.tax_amount?.toFixed(2)}</span>
+                  <span>{invoice.currency || '$'} {invoice.tax_amount?.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between border-t pt-1 font-bold text-base">
                   <span>Total</span>
-                  <span>{invoice.currency} {invoice.total?.toFixed(2)}</span>
+                  <span>{invoice.currency || '$'} {invoice.total?.toFixed(2)}</span>
                 </div>
               </div>
 

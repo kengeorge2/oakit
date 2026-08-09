@@ -1,9 +1,24 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { getSubscriptions, getPlans, changePlan, cancelSubscription } from '@/lib/api';
+import { useEffect, useState, useCallback } from 'react';
+import { getSubscriptions, getPlans, changePlan, cancelSubscription, detectCurrency, getCurrencyPricing } from '@/lib/api';
 import PageContainer from '@/components/layout/page-container';
 import { safeFormatDate } from '@/lib/format';
+
+interface CurrencyInfo {
+  symbol: string;
+  name: string;
+  country: string;
+}
+
+interface PlanLocalizedPrice {
+  id: string;
+  name: string;
+  price_usd: number;
+  price_local: number;
+  currency: string;
+  currency_info: CurrencyInfo;
+}
 
 export default function SubscriptionsPage() {
   const [subscriptions, setSubscriptions] = useState<any[]>([]);
@@ -21,6 +36,39 @@ export default function SubscriptionsPage() {
   const [showCancelConfirm, setShowCancelConfirm] = useState(false);
   const [cancelling, setCancelling] = useState(false);
 
+  // Currency state
+  const [currencyInfo, setCurrencyInfo] = useState<CurrencyInfo | null>(null);
+  const [localCurrency, setLocalCurrency] = useState('USD');
+  const [localizedPricing, setLocalizedPricing] = useState<PlanLocalizedPrice[]>([]);
+  const [loadingCurrency, setLoadingCurrency] = useState(true);
+
+  // Fetch currency info and localized pricing
+  useEffect(() => {
+    const loadCurrencyData = async () => {
+      try {
+        const detected = await detectCurrency();
+        if (detected?.currency) {
+          setLocalCurrency(detected.currency);
+          setCurrencyInfo(detected.currency_info || { symbol: detected.currency, name: detected.currency, country: detected.detected_country || '' });
+
+          if (detected.currency !== 'USD') {
+            const pricing = await getCurrencyPricing(detected.currency);
+            if (pricing?.plans) {
+              setLocalizedPricing(pricing.plans);
+            } else if (Array.isArray(pricing)) {
+              setLocalizedPricing(pricing);
+            }
+          }
+        }
+      } catch (err) {
+        console.warn('Currency detection failed:', err);
+      } finally {
+        setLoadingCurrency(false);
+      }
+    };
+    loadCurrencyData();
+  }, []);
+
   const loadData = async () => {
     try {
       const [subs, plns] = await Promise.all([getSubscriptions(), getPlans()]);
@@ -34,6 +82,39 @@ export default function SubscriptionsPage() {
   };
 
   useEffect(() => { loadData(); }, []);
+
+  // Helper to get localized price for a plan
+  const getLocalizedPrice = useCallback(
+    (planName: string): { localAmount: number; symbol: string } | null => {
+      if (localCurrency === 'USD') return null;
+      const match = localizedPricing.find(
+        (p) => p.name?.toLowerCase() === planName?.toLowerCase()
+      );
+      if (match) {
+        return {
+          localAmount: match.price_local,
+          symbol: match.currency_info?.symbol || localCurrency,
+        };
+      }
+      return null;
+    },
+    [localizedPricing, localCurrency]
+  );
+
+  // Helper to format price with both USD and local currency
+  const formatDualPrice = useCallback(
+    (usdAmount: number, planName?: string): string => {
+      const usd = `$${Number(usdAmount).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
+      if (localCurrency === 'USD' || !currencyInfo) return usd;
+
+      const localized = planName ? getLocalizedPrice(planName) : null;
+      if (localized) {
+        return `${usd} (${localized.symbol}${localized.localAmount.toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })})`;
+      }
+      return usd;
+    },
+    [localCurrency, currencyInfo, getLocalizedPrice]
+  );
 
   const handleChangePlan = async () => {
     if (!selectedSub || !newPlanId) return;
@@ -105,6 +186,23 @@ export default function SubscriptionsPage() {
           <div className="rounded-md bg-green-50 p-3 text-sm text-green-700">{success}</div>
         )}
 
+        {/* Currency Info Banner */}
+        {!loadingCurrency && localCurrency !== 'USD' && currencyInfo && (
+          <div className="rounded-lg border bg-blue-50 p-4 text-sm text-blue-800 dark:bg-blue-950 dark:text-blue-200">
+            <div className="flex items-center gap-2">
+              <span className="text-lg">{currencyInfo.symbol}</span>
+              <div>
+                <p className="font-medium">
+                  Prices shown in {currencyInfo.name} ({localCurrency})
+                </p>
+                <p className="text-xs opacity-75">
+                  USD equivalents displayed alongside local prices.
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
+
         {subscriptions.length === 0 ? (
           <div className="rounded-lg border bg-card p-12 text-center shadow-sm">
             <p className="text-muted-foreground">No subscriptions yet.</p>
@@ -119,7 +217,9 @@ export default function SubscriptionsPage() {
                   <p className="text-sm text-muted-foreground capitalize">Status: {sub.status}</p>
                 </div>
                 <div className="text-right">
-                  <p className="text-2xl font-bold">${sub.amount}</p>
+                  <p className="text-2xl font-bold">
+                    {formatDualPrice(sub.amount || sub.plan?.price_monthly || 0, sub.plan?.name)}
+                  </p>
                   <p className="text-sm text-muted-foreground">/{sub.billing_cycle === 'yearly' ? 'year' : 'month'}</p>
                 </div>
               </div>
@@ -197,7 +297,7 @@ export default function SubscriptionsPage() {
                   >
                     {plans.map((p) => (
                       <option key={p.id} value={p.id}>
-                        {p.name} — ${p.price_monthly}/mo
+                        {p.name} — {formatDualPrice(p.price_monthly, p.name)}/mo
                       </option>
                     ))}
                   </select>

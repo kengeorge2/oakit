@@ -1,13 +1,27 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import { pricingTiers, pricingFaq } from '@/lib/pricing';
-import { Check } from 'lucide-react';
+import {
+  pricingTiers as staticTiers,
+  pricingFaq,
+  detectCurrency,
+  getSupportedCurrencies,
+  fetchPricingForCurrency,
+  mapApiPlansToTiers,
+  formatPrice,
+  type ConvertedPricingTier,
+  type PricingTier,
+  type CurrencyInfo,
+  type DetectedCurrencyResponse,
+  type SupportedCurrenciesResponse,
+} from '@/lib/pricing';
+import { Check, ChevronDown } from 'lucide-react';
 import Reveal from '@/components/Reveal';
 
+// Colors for each tier
 const tierColors: Record<string, { border: string; gradient: string; hoverBorder: string; shadow: string }> = {
   basic: { border: 'border-purple-500', gradient: 'from-purple-500 to-indigo-500', hoverBorder: 'hover:border-purple-400', shadow: 'hover:shadow-purple-500/20' },
   regular: { border: 'border-blue-500', gradient: 'from-blue-500 to-purple-500', hoverBorder: 'hover:border-blue-400', shadow: 'hover:shadow-blue-500/20' },
@@ -20,9 +34,149 @@ const tierDescColors: Record<string, string> = {
   advanced: 'from-lime-500 to-purple-500',
 };
 
+/**
+ * Normalize an API tier ID to match our local tier color maps.
+ * The API returns slugs like 'oakit-basic'; we map them to 'basic'.
+ */
+function normalizeTierId(apiId: string): string {
+  const id = apiId.replace(/^oakit-/, '').toLowerCase();
+  if (tierColors[id]) return id;
+  // Fallback: try partial match
+  for (const key of Object.keys(tierColors)) {
+    if (id.includes(key)) return key;
+  }
+  return 'basic';
+}
+
+/**
+ * Map a ConvertedPricingTier from the API into the same shape the UI
+ * already uses (PricingTier), so the rendering code barely changes.
+ */
+function apiTierToDisplayTier(
+  api: ConvertedPricingTier,
+  _annual: boolean,
+): PricingTier {
+  const normalizedId = normalizeTierId(api.id);
+  return {
+    id: normalizedId,
+    name: api.name,
+    description: api.description,
+    monthlyPrice: api.monthlyPrice,
+    annualPrice: api.annualPrice,
+    features: api.features,
+    cta: {
+      label: normalizedId === 'advanced' ? 'Request Quote' : 'Get Started',
+      href: normalizedId === 'advanced' ? '/#contactUs' : '/auth/signup?plan=' + normalizedId,
+      variant: normalizedId === 'advanced' ? 'outline' : 'default',
+    },
+    popular: api.popular,
+  };
+}
+
+// ---- types for the dropdown ----
+interface CurrencyOption {
+  code: string;
+  symbol: string;
+  name: string;
+}
+
 const ServicesPricing = () => {
   const [annual, setAnnual] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+
+  // Currency state
+  const [selectedCurrency, setSelectedCurrency] = useState<string>('USD');
+  const [currencySymbol, setCurrencySymbol] = useState<string>('$');
+  const [supportedCurrencies, setSupportedCurrencies] = useState<CurrencyOption[]>([]);
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  // API pricing state
+  const [apiTiers, setApiTiers] = useState<ConvertedPricingTier[] | null>(null);
+  const [apiLoading, setApiLoading] = useState<boolean>(false);
+  const [apiError, setApiError] = useState<boolean>(false);
+
+  // 1. On mount: detect currency, load supported currencies
+  useEffect(() => {
+    let cancelled = false;
+
+    async function init() {
+      // Fetch supported currencies for the dropdown
+      const supported = await getSupportedCurrencies();
+      if (cancelled || !supported) return;
+
+      const options: CurrencyOption[] = Object.entries(supported.currencies).map(
+        ([code, info]) => ({
+          code,
+          symbol: info.symbol,
+          name: info.name,
+        }),
+      );
+      // Sort: USD first, then alphabetical
+      options.sort((a, b) => {
+        if (a.code === 'USD') return -1;
+        if (b.code === 'USD') return 1;
+        return a.code.localeCompare(b.code);
+      });
+      setSupportedCurrencies(options);
+
+      // Detect user's currency
+      const detected = await detectCurrency();
+      if (cancelled) return;
+
+      if (detected && detected.currency) {
+        setSelectedCurrency(detected.currency);
+        setCurrencySymbol(detected.currency_info?.symbol ?? '$');
+      }
+    }
+
+    init();
+    return () => { cancelled = true; };
+  }, []);
+
+  // 2. Fetch pricing whenever selectedCurrency changes
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadPricing() {
+      setApiLoading(true);
+      setApiError(false);
+      setApiTiers(null);
+
+      const response = await fetchPricingForCurrency(selectedCurrency);
+      if (cancelled) return;
+
+      if (response && response.plans && response.plans.length > 0) {
+        setApiTiers(mapApiPlansToTiers(response));
+        // Update symbol from the response
+        if (response.plans[0]) {
+          setCurrencySymbol(response.plans[0].currency_symbol);
+        }
+      } else {
+        setApiError(true);
+        setCurrencySymbol('$');
+      }
+      setApiLoading(false);
+    }
+
+    loadPricing();
+    return () => { cancelled = true; };
+  }, [selectedCurrency]);
+
+  // 3. Currency switcher handler
+  const handleCurrencyChange = useCallback((code: string, symbol: string) => {
+    setSelectedCurrency(code);
+    setCurrencySymbol(symbol);
+    setDropdownOpen(false);
+  }, []);
+
+  // Determine which tiers to render
+  let displayTiers: PricingTier[];
+  if (apiTiers && !apiError) {
+    displayTiers = apiTiers.map((t) => apiTierToDisplayTier(t, annual));
+  } else {
+    // Fallback to static USD data
+    displayTiers = staticTiers;
+  }
 
   return (
     <section className="w-full py-8 md:py-16 lg:py-24 section-dark-alt grid-overlay" id="servicesPricing">
@@ -39,26 +193,57 @@ const ServicesPricing = () => {
           </div>
         </Reveal>
 
-        {/* Monthly / Annual Toggle */}
+        {/* Monthly / Annual Toggle + Currency Selector */}
         <Reveal delay={1}>
-          <div className="flex items-center gap-3 text-gray-500 dark:text-gray-400 text-sm">
-            <span className={!annual ? 'text-gray-900 dark:text-white font-medium' : ''}>Monthly</span>
-            <button
-              onClick={() => setAnnual(!annual)}
-              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-300 ${
-                annual ? 'bg-blue-600' : 'bg-gray-400 dark:bg-gray-600'
-              }`}
-              aria-label="Toggle annual billing"
-            >
-              <span
-                className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-300 shadow-sm ${
-                  annual ? 'translate-x-6' : 'translate-x-1'
-                }`}
-              />
-            </button>
-            <span className={annual ? 'text-gray-900 dark:text-white font-medium' : ''}>
-              Annual <span className="text-green-500 dark:text-green-400 text-xs font-semibold">Save ~17%</span>
-            </span>
+          <div className="flex flex-wrap items-center gap-4 text-gray-500 dark:text-gray-400 text-sm">
+            <div className="flex items-center gap-3">
+              <span className={!annual ? 'text-gray-900 dark:text-white font-medium' : ''}>Monthly</span>
+              <button
+                onClick={() => setAnnual(!annual)}
+                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors duration-300 ${annual ? 'bg-blue-600' : 'bg-gray-400 dark:bg-gray-600'}`}
+                aria-label="Toggle annual billing"
+              >
+                <span className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform duration-300 shadow-sm ${annual ? 'translate-x-6' : 'translate-x-1'}`} />
+              </button>
+              <span className={annual ? 'text-gray-900 dark:text-white font-medium' : ''}>
+                Annual <span className="text-green-500 dark:text-green-400 text-xs font-semibold">Save ~17%</span>
+              </span>
+            </div>
+
+            {/* Currency Dropdown */}
+            {supportedCurrencies.length > 0 && (
+              <div className="relative ml-auto">
+                <button
+                  onClick={() => setDropdownOpen(!dropdownOpen)}
+                  className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-gray-200 dark:border-white/[0.1] bg-white dark:bg-gray-800 text-gray-900 dark:text-gray-100 hover:border-blue-400 dark:hover:border-blue-500 transition-colors text-sm font-medium"
+                  aria-label="Select currency"
+                >
+                  <span>{currencySymbol}</span>
+                  <span>{selectedCurrency}</span>
+                  <ChevronDown className={`w-3.5 h-3.5 transition-transform ${dropdownOpen ? 'rotate-180' : ''}`} />
+                </button>
+                {dropdownOpen && (
+                  <>
+                    {/* Backdrop to close dropdown */}
+                    <div className="fixed inset-0 z-40" onClick={() => setDropdownOpen(false)} />
+                    <div className="absolute right-0 top-full mt-1 z-50 w-56 max-h-72 overflow-y-auto rounded-lg border border-gray-200 dark:border-white/[0.1] bg-white dark:bg-gray-800 shadow-xl dark:shadow-black/30">
+                      {supportedCurrencies.map((c) => (
+                        <button
+                          key={c.code}
+                          onClick={() => handleCurrencyChange(c.code, c.symbol)}
+                          className={`w-full text-left px-4 py-2 text-sm hover:bg-gray-100 dark:hover:bg-white/[0.06] transition-colors flex items-center justify-between ${selectedCurrency === c.code ? 'bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 font-medium' : 'text-gray-700 dark:text-gray-300'}`}
+                        >
+                          <span>{c.name}</span>
+                          <span className="text-gray-400 dark:text-gray-500 text-xs ml-2">
+                            {c.code} ({c.symbol})
+                          </span>
+                        </button>
+                      ))}
+                    </div>
+                  </>
+                )}
+              </div>
+            )}
           </div>
         </Reveal>
 
@@ -68,19 +253,23 @@ const ServicesPricing = () => {
 
         {/* Pricing Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-end py-8 md:py-12 container mx-auto">
-          {pricingTiers.map((tier, idx) => {
+          {displayTiers.map((tier, idx) => {
             const colors = tierColors[tier.id] || tierColors.basic;
             const descColor = tierDescColors[tier.id] || 'from-gray-500 to-gray-400';
             const price = annual ? tier.annualPrice : tier.monthlyPrice;
             const isPopular = tier.popular;
 
+            // Format price string
+            let priceDisplay: string;
+            if (price !== null) {
+              priceDisplay = formatPrice(price, currencySymbol);
+            } else {
+              priceDisplay = '';
+            }
+
             return (
               <Reveal key={tier.id} delay={idx as 0 | 1 | 2}>
-                <Card
-                  className={`pricing-card bg-white dark:bg-gray-800/80 backdrop-blur-sm text-gray-900 dark:text-gray-200 border-2 ${colors.border} ${colors.hoverBorder} ${colors.shadow} shadow-md dark:shadow-xl dark:shadow-black/10 ${
-                    isPopular ? 'relative ring-2 ring-blue-500/50 md:-translate-y-2' : ''
-                  }`}
-                >
+                <Card className={`pricing-card bg-white dark:bg-gray-800/80 backdrop-blur-sm text-gray-900 dark:text-gray-200 border-2 ${colors.border} ${colors.hoverBorder} ${colors.shadow} shadow-md dark:shadow-xl dark:shadow-black/10 ${isPopular ? 'relative ring-2 ring-blue-500/50 md:-translate-y-2' : ''}`}>
                   {isPopular && (
                     <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gradient-to-r from-blue-500 to-purple-500 text-white text-xs font-bold px-4 py-1 rounded-full shadow-lg">
                       Most Popular
@@ -97,7 +286,7 @@ const ServicesPricing = () => {
                       <div className="text-4xl font-bold">
                         {price !== null ? (
                           <>
-                            USh {price.toLocaleString()}
+                            {priceDisplay}
                             <span className="text-base font-normal text-gray-500 dark:text-gray-400">
                               /{annual ? 'yr' : 'mo'}
                             </span>
@@ -116,10 +305,7 @@ const ServicesPricing = () => {
                       </ul>
                       <div className="flex justify-center pb-6">
                         <Link href={tier.id === 'advanced' ? '/#contactUs' : tier.cta.href}>
-                          <Button
-                            className={`w-full py-3 bg-gradient-to-r ${colors.gradient} hover:brightness-110 text-gray-200 btn-glow`}
-                            variant={tier.cta.variant === 'outline' ? 'outline' : 'default'}
-                          >
+                          <Button className={`w-full py-3 bg-gradient-to-r ${colors.gradient} hover:brightness-110 text-gray-200 btn-glow`} variant={tier.cta.variant === 'outline' ? 'outline' : 'default'}>
                             {tier.cta.label}
                           </Button>
                         </Link>
@@ -138,10 +324,7 @@ const ServicesPricing = () => {
             <h3 className="text-2xl font-bold text-center text-gray-900 dark:text-white mb-6">Pricing Questions</h3>
             <div className="space-y-3">
               {pricingFaq.map((faq, index) => (
-                <div
-                  key={index}
-                  className="rounded-lg border border-gray-200 dark:border-white/[0.08] bg-gray-50 dark:bg-white/[0.03] overflow-hidden"
-                >
+                <div key={index} className="rounded-lg border border-gray-200 dark:border-white/[0.08] bg-gray-50 dark:bg-white/[0.03] overflow-hidden">
                   <button
                     onClick={() => setOpenFaq(openFaq === index ? null : index)}
                     className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-gray-100 dark:hover:bg-white/[0.04] transition-colors duration-200"
