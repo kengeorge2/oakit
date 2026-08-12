@@ -44,3 +44,7 @@ next-env.d.ts
 opencode.json
 .next/
 data/patch.json
+
+# Playwright
+test-results/
+playwright-report/
