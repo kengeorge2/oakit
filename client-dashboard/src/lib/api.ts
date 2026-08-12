@@ -49,6 +49,16 @@ async function apiFetch<T>(path: string, options: RequestInit = {}): Promise<T> 
     credentials: 'include',
   });
 
+  // F-7: Global auth interceptor
+  if (res.status === 401 || res.status === 419) {
+    localStorage.removeItem('auth_token');
+    if (typeof window !== 'undefined' && !window.location.pathname.startsWith('/auth')) {
+      const reason = res.status === 419 ? 'session_expired' : 'unauthorized';
+      window.location.href = `/auth/login?reason=${reason}`;
+    }
+    throw new Error(res.status === 419 ? 'Session expired. Please log in again.' : 'Unauthorized. Please log in again.');
+  }
+
   if (!res.ok) {
     throw new Error(await extractErrorMessage(res));
   }

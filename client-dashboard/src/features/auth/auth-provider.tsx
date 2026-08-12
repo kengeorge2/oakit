@@ -57,6 +57,24 @@ async function extractErrorMessage(res: Response): Promise<string> {
   return `Login failed (${res.status})`;
 }
 
+// F-7: Consistent XSRF token extraction for auth calls
+function getXsrfHeader(): string | undefined {
+  if (typeof document === 'undefined') return undefined;
+  const match = document.cookie.match(/XSRF-TOKEN=([^;]+)/);
+  return match ? decodeURIComponent(match[1]) : undefined;
+}
+
+function authHeaders(extra: Record<string, string> = {}): Record<string, string> {
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+    ...extra,
+  };
+  const xsrf = getXsrfHeader();
+  if (xsrf) headers['X-XSRF-TOKEN'] = xsrf;
+  return headers;
+}
+
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [token, setToken] = useState<string | null>(null);
@@ -140,7 +158,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const login = async (email: string, password: string) => {
     const res = await fetch(`${API_URL}/auth/login`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      headers: authHeaders(),
       body: JSON.stringify({ email, password }),
     });
 
@@ -158,7 +176,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const register = async (data: RegisterData) => {
     const res = await fetch(`${API_URL}/auth/register`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      headers: authHeaders(),
       body: JSON.stringify(data),
     });
 
@@ -179,7 +197,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (token) {
       await fetch(`${API_URL}/auth/logout`, {
         method: 'POST',
-        headers: { 'Accept': 'application/json', 'Authorization': `Bearer ${token}` },
+        headers: authHeaders({ 'Authorization': `Bearer ${token}` }),
       }).catch(() => {});
     }
     localStorage.removeItem('auth_token');
