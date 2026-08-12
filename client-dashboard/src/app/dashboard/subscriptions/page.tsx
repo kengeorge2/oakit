@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { getSubscriptions, getPlans, changePlan, cancelSubscription, detectCurrency, getCurrencyPricing } from '@/lib/api';
 import PageContainer from '@/components/layout/page-container';
-import { safeFormatDate } from '@/lib/format';
+import { safeFormatDate, formatMoney, getPersistedCurrency, setPersistedCurrency } from '@/lib/format';
 
 interface CurrencyInfo {
   symbol: string;
@@ -46,18 +46,25 @@ export default function SubscriptionsPage() {
   useEffect(() => {
     const loadCurrencyData = async () => {
       try {
+        const persisted = getPersistedCurrency();
         const detected = await detectCurrency();
-        if (detected?.currency) {
-          setLocalCurrency(detected.currency);
-          setCurrencyInfo(detected.currency_info || { symbol: detected.currency, name: detected.currency, country: detected.detected_country || '' });
+        const detectedCode = detected?.currency;
 
-          if (detected.currency !== 'USD') {
-            const pricing = await getCurrencyPricing(detected.currency);
-            if (pricing?.plans) {
-              setLocalizedPricing(pricing.plans);
-            } else if (Array.isArray(pricing)) {
-              setLocalizedPricing(pricing);
-            }
+        // Priority: persisted choice > detected > USD
+        const effective = persisted || detectedCode || 'USD';
+        setLocalCurrency(effective);
+        setPersistedCurrency(effective);
+        setCurrencyInfo(
+          detected?.currency_info ||
+            { symbol: effective, name: effective, country: detected?.detected_country || '' }
+        );
+
+        if (effective !== 'USD') {
+          const pricing = await getCurrencyPricing(effective);
+          if (pricing?.plans) {
+            setLocalizedPricing(pricing.plans);
+          } else if (Array.isArray(pricing)) {
+            setLocalizedPricing(pricing);
           }
         }
       } catch (err) {
@@ -104,7 +111,7 @@ export default function SubscriptionsPage() {
   // Helper to format price with both USD and local currency
   const formatDualPrice = useCallback(
     (usdAmount: number, planName?: string): string => {
-      const usd = `$${Number(usdAmount).toLocaleString(undefined, { minimumFractionDigits: 0, maximumFractionDigits: 0 })}`;
+      const usd = formatMoney(Number(usdAmount) || 0, 'USD', '$', 0);
       if (localCurrency === 'USD' || !currencyInfo) return usd;
 
       const localized = planName ? getLocalizedPrice(planName) : null;

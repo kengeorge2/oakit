@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from 'react';
 import { getBilling, getInvoice, detectCurrency, getCurrencyPricing } from '@/lib/api';
 import PageContainer from '@/components/layout/page-container';
-import { safeFormatDate } from '@/lib/format';
+import { safeFormatDate, formatMoney, getPersistedCurrency, setPersistedCurrency } from '@/lib/format';
 
 interface CurrencyInfo {
   symbol: string;
@@ -71,19 +71,26 @@ export default function BillingPage() {
   useEffect(() => {
     const loadCurrencyData = async () => {
       try {
+        const persisted = getPersistedCurrency();
         const detected = await detectCurrency();
-        if (detected?.currency) {
-          setLocalCurrency(detected.currency);
-          setCurrencyInfo(detected.currency_info || { symbol: detected.currency, name: detected.currency, country: detected.detected_country || '' });
+        const detectedCode = detected?.currency;
 
-          // Fetch localized pricing for plans
-          if (detected.currency !== 'USD') {
-            const pricing = await getCurrencyPricing(detected.currency);
-            if (pricing?.plans) {
-              setLocalizedPricing(pricing.plans);
-            } else if (Array.isArray(pricing)) {
-              setLocalizedPricing(pricing);
-            }
+        // Priority: persisted choice > detected > USD
+        const effective = persisted || detectedCode || 'USD';
+        setLocalCurrency(effective);
+        setPersistedCurrency(effective);
+        setCurrencyInfo(
+          detected?.currency_info ||
+            { symbol: effective, name: effective, country: detected?.detected_country || '' }
+        );
+
+        // Fetch localized pricing for plans
+        if (effective !== 'USD') {
+          const pricing = await getCurrencyPricing(effective);
+          if (pricing?.plans) {
+            setLocalizedPricing(pricing.plans);
+          } else if (Array.isArray(pricing)) {
+            setLocalizedPricing(pricing);
           }
         }
       } catch (err) {
@@ -215,7 +222,7 @@ export default function BillingPage() {
                 </p>
                 {localCurrency !== 'USD' && currencyInfo && (
                   <p className="text-xs text-muted-foreground mt-1">
-                    Base price: $250–$1,000 USD
+                    Base price: {formatMoney(250, 'USD', '$', 0)}–{formatMoney(1000, 'USD', '$', 0)} USD
                   </p>
                 )}
               </div>
@@ -365,7 +372,7 @@ export default function BillingPage() {
                 <tbody>
                   <tr className="border-b">
                     <td className="py-2">{invoice.plan?.name || 'Subscription'} ({invoice.plan?.billing_cycle || 'monthly'})</td>
-                    <td className="py-2 text-right">{invoice.currency || '$'} {invoice.subtotal?.toFixed(2)}</td>
+                    <td className="py-2 text-right">{formatMoney(Number(invoice.subtotal) || 0, invoice.currency || 'USD', invoice.converted?.symbol)}</td>
                     {invoice.converted && (
                       <td className="py-2 text-right">
                         {invoice.converted.symbol} {invoice.converted.subtotal.toLocaleString(undefined, { maximumFractionDigits: 2 })}
@@ -390,7 +397,7 @@ export default function BillingPage() {
                 <div className="flex justify-between">
                   <span>VAT ({invoice.tax_percent}%)</span>
                   <span>
-                    {invoice.currency || '$'} {invoice.tax_amount?.toFixed(2)}
+                    {formatMoney(Number(invoice.tax_amount) || 0, invoice.currency || 'USD', invoice.converted?.symbol)}
                     {invoice.converted && (
                       <span className="ml-2 text-muted-foreground">
                         ({invoice.converted.symbol} {invoice.converted.tax_amount.toLocaleString(undefined, { maximumFractionDigits: 2 })})
@@ -401,7 +408,7 @@ export default function BillingPage() {
                 <div className="flex justify-between border-t pt-1 font-bold text-base">
                   <span>Total</span>
                   <span>
-                    {invoice.currency || '$'} {invoice.total?.toFixed(2)}
+                    {formatMoney(Number(invoice.total) || 0, invoice.currency || 'USD', invoice.converted?.symbol)}
                     {invoice.converted && (
                       <span className="ml-2 font-semibold text-muted-foreground">
                         ({invoice.converted.formatted_total})

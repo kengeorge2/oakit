@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useAuth } from '@/features/auth/auth-provider';
 import { getDashboard } from '@/lib/api';
-import { safeFormatDate } from '@/lib/format';
+import { safeFormatDate, formatMoney } from '@/lib/format';
 
 export default function DashboardPage() {
   const { user } = useAuth();
@@ -56,7 +56,7 @@ export default function DashboardPage() {
               <p className="text-sm text-gray-400 capitalize">Status: {sub.status}</p>
             </div>
             <div className="text-right">
-              <p className="text-2xl font-bold">${sub.amount}</p>
+              <p className="text-2xl font-bold">{formatMoney(Number(sub.amount) || 0, sub.currency || 'USD')}</p>
               <p className="text-sm text-gray-400">/{sub.billing_cycle === 'yearly' ? 'year' : 'month'}</p>
             </div>
           </div>
