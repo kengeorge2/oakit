@@ -48,3 +48,8 @@ data/patch.json
 # Playwright
 test-results/
 playwright-report/
+
+# Admin dashboard
+admin-dashboard/.next/
+admin-dashboard/node_modules/
+admin-dashboard/test-results/
