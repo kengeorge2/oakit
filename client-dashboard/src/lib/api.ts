@@ -110,5 +110,7 @@ export const getSupportedCurrencies = () => apiFetch<any>('/currency/supported')
 // Profile
 export const updateProfile = (data: { name?: string; company_name?: string; company_phone?: string }) =>
   apiFetch<any>('/auth/profile', { method: 'PUT', body: JSON.stringify(data) });
+export const completeOnboarding = (data: { company_name?: string; currency?: string; country?: string }) =>
+  apiFetch<any>('/auth/onboarding-complete', { method: 'POST', body: JSON.stringify(data) });
 export const changePassword = (data: { current_password: string; password: string; password_confirmation: string }) =>
   apiFetch<any>('/auth/change-password', { method: 'PUT', body: JSON.stringify(data) });
