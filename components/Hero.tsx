@@ -23,7 +23,7 @@ const Hero: React.FC = () => {
           </div>
           <div className="flex flex-col sm:flex-row gap-4 pt-4 animate-fade-in-up" style={{ animationDelay: '0.15s' }}>
             <Link
-              href="/auth/signup?plan=regular"
+              href="https://dashboard.oakitsolutionsandsupplies.com/auth/register?plan=regular"
               className="btn-glow inline-flex h-12 items-center justify-center rounded-lg bg-gradient-to-r from-purple-500 to-blue-500 px-8 py-3 text-sm font-semibold text-white shadow-lg shadow-purple-500/20 border-4 border-lime-500 hover:border-lime-400 transition-all duration-300"
             >
               Get Started
