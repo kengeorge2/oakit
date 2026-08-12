@@ -29,7 +29,7 @@ const Hero: React.FC = () => {
               Get Started
             </Link>
             <Link
-              href="/#servicesPricing"
+              href="/#pricing"
               className="inline-flex h-12 items-center justify-center rounded-lg border border-gray-300 dark:border-gray-600 bg-gray-100/80 dark:bg-white/5 backdrop-blur-sm px-8 py-3 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-white/10 hover:text-gray-900 dark:hover:text-white hover:border-gray-400 dark:hover:border-gray-500 transition-all duration-300"
             >
               View Plans

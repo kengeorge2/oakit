@@ -179,7 +179,7 @@ const ServicesPricing = () => {
   }
 
   return (
-    <section className="w-full py-8 md:py-16 lg:py-24 section-dark-alt grid-overlay" id="servicesPricing">
+    <section className="w-full py-8 md:py-16 lg:py-24 section-dark-alt grid-overlay" id="pricing" aria-label="Pricing">
       <div className="mt-12 space-y-6 p-6 md:p-8 rounded-xl bg-gray-100/80 dark:bg-white/[0.02] border border-gray-200 dark:border-white/[0.05] backdrop-blur-sm">
         <Reveal>
           <div className="space-y-3">

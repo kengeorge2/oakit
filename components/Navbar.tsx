@@ -109,7 +109,7 @@ export const Navbar: React.FC = () => {
           <Link href="/#contactUs" className="hover:text-gray-900 dark:hover:text-white transition-colors duration-200">
             Contact
           </Link>
-          <Link href="/#servicesPricing" className="hover:text-gray-900 dark:hover:text-white transition-colors duration-200">
+          <Link href="/#pricing" className="hover:text-gray-900 dark:hover:text-white transition-colors duration-200">
             Pricing
           </Link>
           <Link href="/#full-stack-course" className="hover:text-gray-900 dark:hover:text-white transition-colors duration-200">
@@ -201,7 +201,7 @@ export const Navbar: React.FC = () => {
             <Link href="/#contactUs" className="py-2 hover:text-gray-900 dark:hover:text-white transition-colors" onClick={() => setIsMenuOpen(false)}>
               Contact
             </Link>
-            <Link href="/#servicesPricing" className="py-2 hover:text-gray-900 dark:hover:text-white transition-colors" onClick={() => setIsMenuOpen(false)}>
+            <Link href="/#pricing" className="py-2 hover:text-gray-900 dark:hover:text-white transition-colors" onClick={() => setIsMenuOpen(false)}>
               Pricing
             </Link>
             <Link href="/#full-stack-course" className="py-2 hover:text-gray-900 dark:hover:text-white transition-colors" onClick={() => setIsMenuOpen(false)}>

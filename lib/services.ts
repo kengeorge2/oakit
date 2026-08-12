@@ -1,3 +1,10 @@
+/**
+ * Static service catalog — 13 IT services offered by OAK IT Solutions.
+ *
+ * NOTE: This is intentionally static. The backend /api/v1/client/services
+ * endpoint returns subscribed services for dashboard users, but the marketing
+ * catalog is curated and rarely changes. API integration is deferred to Sprint 5.
+ */
 import type { LucideIcon } from 'lucide-react';
 import {
   Workflow,

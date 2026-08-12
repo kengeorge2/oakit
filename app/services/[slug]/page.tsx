@@ -89,7 +89,7 @@ export default function ServiceDetailPage({ params }: Props) {
                 Get Started — $1,000/mo
               </Button>
             </Link>
-            <Link href="/#servicesPricing">
+            <Link href="/#pricing">
               <Button size="lg" variant="secondary">
                 View All Plans
               </Button>

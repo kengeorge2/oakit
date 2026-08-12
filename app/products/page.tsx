@@ -207,7 +207,7 @@ export default function ProductsPage() {
               Contact Us
             </Link>
             <Link
-              href="/#servicesPricing"
+              href="/#pricing"
               className="inline-flex items-center justify-center rounded-md border border-gray-900 dark:border-gray-50 px-6 py-3 text-sm font-medium text-gray-900 dark:text-gray-50 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
             >
               View Pricing

@@ -6,6 +6,7 @@ import ServicesList from "@/components/ServicesList";
 import Testimonial from "@/components/Testimonial";
 import Mission from "@/components/Mission";
 import Faq from "@/components/Faq";
+import DesktopDownload from "@/components/DesktopDownload";
 import FullStackCourse from "@/components/FullStackCourse";
 
 export const revalidate = 3600;
@@ -20,6 +21,7 @@ export default function Home() {
       <Blog />
       <Mission />
       <Faq />
+      <DesktopDownload />
       <FullStackCourse />
       <ContactUs />
     </main>
