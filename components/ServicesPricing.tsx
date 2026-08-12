@@ -66,7 +66,7 @@ function apiTierToDisplayTier(
     features: api.features,
     cta: {
       label: normalizedId === 'advanced' ? 'Request Quote' : 'Get Started',
-      href: normalizedId === 'advanced' ? '/#contactUs' : '/auth/signup?plan=' + normalizedId,
+      href: normalizedId === 'advanced' ? '/#contactUs' : 'https://dashboard.oakitsolutionsandsupplies.com/dashboard/checkout?plan=' + normalizedId,
       variant: normalizedId === 'advanced' ? 'outline' : 'default',
     },
     popular: api.popular,
