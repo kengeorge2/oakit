@@ -10,6 +10,7 @@ interface User {
   company_name: string | null;
   company_phone: string | null;
   email_verified_at: string | null;
+  onboarding_completed?: boolean;
   created_at?: string;
 }
 
@@ -96,6 +97,28 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     if (mountedRef.current) return;
     mountedRef.current = true;
 
+    // F-1: Token handoff from URL (email verification, post-registration)
+    const urlParams = new URLSearchParams(window.location.search);
+    const urlToken = urlParams.get('token');
+    const redirectPath = urlParams.get('redirect') || '/dashboard';
+
+    if (urlToken) {
+      localStorage.setItem('auth_token', urlToken);
+      setToken(urlToken);
+      // Clean URL (remove token from address bar)
+      window.history.replaceState({}, '', window.location.pathname);
+      fetchUser(urlToken)
+        .then((ok) => {
+          if (ok) router.push(redirectPath);
+          setIsLoading(false);
+        })
+        .catch(() => {
+          router.push('/auth/login');
+          setIsLoading(false);
+        });
+      return;
+    }
+
     const storedToken = localStorage.getItem('auth_token');
     if (storedToken) {
       setToken(storedToken);
@@ -104,7 +127,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       // Try cookie-based auth
       fetchUser().finally(() => setIsLoading(false));
     }
-  }, [fetchUser]);
+  }, [fetchUser, router]);
 
   useEffect(() => {
     if (isLoading) return;
