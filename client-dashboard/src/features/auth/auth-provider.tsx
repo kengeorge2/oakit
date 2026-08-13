@@ -30,11 +30,15 @@ interface RegisterData {
   email: string;
   password: string;
   password_confirmation: string;
-  company_name?: string;
-  company_phone?: string;
-  plan_id: string;
+  business_name: string;
+  business_type: string;
+  location: string;
+  timezone: string;
+  plan: string;
+  billing_cycle: string;
   currency?: string;
   country?: string;
+  referral_code?: string;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
