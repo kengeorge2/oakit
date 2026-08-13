@@ -4,8 +4,20 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '@/features/auth/auth-provider';
 import { getPlans, detectCurrency, getSupportedCurrencies, getCurrencyPricing } from '@/lib/api';
 import Link from 'next/link';
+import { Suspense } from 'react';
+import { useSearchParams } from 'next/navigation';
 
 export default function RegisterPage() {
+  return (
+    <Suspense>
+      <RegisterContent />
+    </Suspense>
+  );
+}
+
+function RegisterContent() {
+  const searchParams = useSearchParams();
+  const initialPlan = searchParams.get('plan') || '';
   const { register } = useAuth();
   const [plans, setPlans] = useState<any[]>([]);
   const [currencies, setCurrencies] = useState<any[]>([]);
@@ -17,7 +29,7 @@ export default function RegisterPage() {
     password_confirmation: '',
     company_name: '',
     company_phone: '',
-    plan_id: '',
+    plan_id: initialPlan,
     currency: 'USD',
     country: '',
   });
@@ -25,7 +37,13 @@ export default function RegisterPage() {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    getPlans().then(setPlans).catch(() => {});
+    getPlans().then((data: any[]) => {
+        setPlans(data);
+        if (initialPlan && data.length) {
+          const match = data.find((p: any) => p.slug?.includes(initialPlan) || p.name?.toLowerCase().includes(initialPlan));
+          if (match) setForm((prev: any) => ({ ...prev, plan_id: match.id }));
+        }
+      }).catch(() => {});
     getSupportedCurrencies()
       .then((res: any) => {
         const obj = res?.currencies || res;

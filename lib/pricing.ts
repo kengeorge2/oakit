@@ -24,7 +24,7 @@ export const pricingTiers: PricingTier[] = [
       'Monthly Health Reports',
       'Up to 50 Support Workers',
     ],
-    cta: { label: 'Get Started', href: 'https://dashboard.oakitsolutionsandsupplies.com/dashboard/checkout?plan=basic', variant: 'default' },
+    cta: { label: 'Get Started', href: 'https://dashboard.oakitsolutionsandsupplies.com/auth/register?plan=basic', variant: 'default' },
     popular: false,
   },
   {
@@ -42,7 +42,7 @@ export const pricingTiers: PricingTier[] = [
       'Priority Response (4hr SLA)',
       'Up to 50 Support Workers',
     ],
-    cta: { label: 'Get Started', href: 'https://dashboard.oakitsolutionsandsupplies.com/dashboard/checkout?plan=regular', variant: 'default' },
+    cta: { label: 'Get Started', href: 'https://dashboard.oakitsolutionsandsupplies.com/auth/register?plan=regular', variant: 'default' },
     popular: true,
   },
   {
