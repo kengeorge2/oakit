@@ -199,6 +199,34 @@ function RegisterContent() {
             </select>
           </div>
 
+          {/* Selected plan summary */}
+          {form.plan && plans.length > 0 && (() => {
+            const selected = plans.find((p: any) => (p.slug || p.name?.toLowerCase()) === form.plan);
+            if (!selected) return null;
+            return (
+              <div key="plan-summary" className="rounded-lg border border-blue-800/50 bg-blue-900/20 p-4 space-y-3">
+                <div className="flex items-center justify-between">
+                  <h3 className="font-semibold text-white">{selected.name}</h3>
+                  <span className="text-lg font-bold text-blue-400">
+                    ${'{'}selected.price_monthly{'}'}/mo
+                  </span>
+                </div>
+                {selected.features && selected.features.length > 0 && (
+                  <ul className="space-y-1">
+                    {selected.features.map((f: string, i: number) => (
+                      <li key={i} className="flex items-center gap-2 text-sm text-gray-300">
+                        <span className="text-green-400">✓</span> {f}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+                <p className="text-xs text-gray-500">
+                  {selected.max_branches} branch(es), {selected.max_users_per_branch} users/branch
+                </p>
+              </div>
+            );
+          })()}
+
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-2">
               <label className="text-sm font-medium text-gray-300" htmlFor="billing_cycle">Billing Cycle *</label>

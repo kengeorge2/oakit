@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/features/auth/auth-provider';
-import { updateProfile, completeOnboarding, getPlans, getSupportedCurrencies } from '@/lib/api';
+import { updateProfile, completeOnboarding, getPlans, getSupportedCurrencies, getSubscriptions } from '@/lib/api';
 import { setPersistedCurrency } from '@/lib/format';
 
 const STEPS = ['company', 'currency', 'plan', 'ticket'] as const;
@@ -33,12 +33,18 @@ export default function OnboardingWizard({ onComplete }: Props) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  // Load currency options + plans once
+  // Load currency options + plans + user's active subscription
   useEffect(() => {
-    Promise.all([getSupportedCurrencies(), getPlans()])
-      .then(([curData, planData]) => {
+    Promise.all([getSupportedCurrencies(), getPlans(), getSubscriptions()])
+      .then(([curData, planData, subsData]) => {
         if (curData?.currencies) setCurrencyOptions(curData.currencies);
         setPlans(planData || []);
+        // Pre-select plan from active subscription
+        const subs = Array.isArray(subsData) ? subsData : (subsData?.data || []);
+        const active = subs.find((s: any) => s.status === 'active' || s.status === 'trialing');
+        if (active?.plan?.id) {
+          setData((prev: any) => ({ ...prev, plan_id: active.plan.id }));
+        }
       })
       .catch(() => {});
   }, []);
