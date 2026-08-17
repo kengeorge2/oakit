@@ -3,8 +3,6 @@
 import { Download } from 'lucide-react';
 import Reveal from '@/components/Reveal';
 
-const GITHUB_RELEASES_URL = 'https://github.com/kengeorge2/oakit/releases/latest';
-
 export default function DesktopDownload() {
   return (
     <section className="w-full py-20 section-dark" id="download">
@@ -18,20 +16,27 @@ export default function DesktopDownload() {
         <Reveal>
           <div className="flex flex-wrap justify-center gap-4">
             <a
-              href={`${GITHUB_RELEASES_URL}/download/classicpos-windows.exe`}
+              href="https://github.com/kengeorge2/oakit/releases"
+              target="_blank"
+              rel="noopener noreferrer"
               className="inline-flex items-center gap-2 rounded-lg bg-blue-600 px-6 py-3 font-medium text-white transition hover:bg-blue-500"
             >
               <Download className="h-5 w-5" />
-              Windows (.exe)
+              Download for Windows
             </a>
             <a
-              href={`${GITHUB_RELEASES_URL}/download/classicpos-linux.deb`}
+              href="https://github.com/kengeorge2/oakit/releases"
+              target="_blank"
+              rel="noopener noreferrer"
               className="inline-flex items-center gap-2 rounded-lg border border-blue-600 px-6 py-3 font-medium text-blue-600 transition hover:bg-blue-600/10 dark:text-blue-400 dark:border-blue-400"
             >
               <Download className="h-5 w-5" />
-              Linux (.deb)
+              Download for Linux
             </a>
           </div>
+          <p className="mt-4 text-sm text-gray-500 dark:text-gray-400">
+            View all releases on GitHub
+          </p>
         </Reveal>
       </div>
     </section>
