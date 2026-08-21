@@ -93,6 +93,7 @@ function RegisterContent() {
         <div className="text-center">
           <h1 className="text-2xl font-bold text-white">OAK IT Solutions</h1>
           <p className="mt-2 text-gray-400">Create your merchant account</p>
+          <p className="text-sm text-green-400 font-semibold">Start your 3-day free trial. No credit card required.</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4 rounded-lg border border-gray-800 bg-gray-900 p-6 shadow-sm">

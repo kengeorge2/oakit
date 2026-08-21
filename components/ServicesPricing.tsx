@@ -65,7 +65,7 @@ function apiTierToDisplayTier(
     annualPrice: api.annualPrice,
     features: api.features,
     cta: {
-      label: normalizedId === 'advanced' ? 'Request Quote' : 'Get Started',
+      label: normalizedId === 'advanced' ? 'Request Quote' : 'Start 3-Day Free Trial',
       href: normalizedId === 'advanced' ? '/#contactUs' : 'https://dashboard.oakitsolutionsandsupplies.com/auth/register?plan=' + normalizedId,
       variant: normalizedId === 'advanced' ? 'outline' : 'default',
     },

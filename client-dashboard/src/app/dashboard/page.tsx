@@ -62,7 +62,7 @@ export default function DashboardPage() {
           </div>
           {sub.trial_ends_at && sub.status === 'trialing' && (
             <p className="mt-2 text-sm text-amber-500">
-              Trial ends {safeFormatDate(sub.trial_ends_at)}
+              Trial ends {safeFormatDate(sub.trial_ends_at)} — {Math.max(0, Math.ceil((new Date(sub.trial_ends_at).getTime() - Date.now()) / (1000 * 60 * 60 * 24)))} days left
             </p>
           )}
           {sub.starts_at && (
